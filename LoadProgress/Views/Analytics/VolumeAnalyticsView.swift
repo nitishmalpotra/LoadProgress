@@ -41,10 +41,21 @@ struct VolumeAnalyticsView: View {
                             x: .value("Volume", data.volume),
                             y: .value("Muscle Group", data.muscleGroup.rawValue)
                         )
-                        .foregroundStyle(by: .value("Muscle Group", data.muscleGroup.rawValue))
+                        .foregroundStyle(Color.blue.gradient)
+                        .cornerRadius(8)
                     }
-                    .frame(height: 200)
+                    .chartXAxis(.hidden)
+                    .chartYAxis {
+                        AxisMarks { value in
+                            AxisValueLabel()
+                                .font(.system(size: 12, weight: .medium))
+                        }
+                    }
+                    // Make the chart taller to get thicker bars
+                    .frame(height: 300)
                     .chartLegend(.hidden)
+                    // Add more padding for a cleaner look
+                    .padding(.vertical, 12)
                     
                     // Volume Stats
                     ForEach(volumeByMuscleGroup) { data in

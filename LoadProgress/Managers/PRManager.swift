@@ -105,11 +105,13 @@ final class PRManager: ObservableObject {
         queue.async { [weak self] in
             guard let self = self else { return }
             
-            self.personalRecords.append(pr)
-            self.updateCacheForRecord(pr)
-            self.savePRs()
-            
+            // Add the record to the array
             DispatchQueue.main.async {
+                self.personalRecords.append(pr)
+                self.updateCacheForRecord(pr)
+                self.savePRs()
+                
+                // Post notification and log analytics on main thread
                 NotificationCenter.default.post(
                     name: .newPersonalRecord,
                     object: nil,
@@ -126,13 +128,6 @@ final class PRManager: ObservableObject {
                 ))
             }
         }
-        personalRecords.append(pr)
-        savePRs()
-        NotificationCenter.default.post(
-            name: .newPersonalRecord,
-            object: nil,
-            userInfo: ["pr": pr]
-        )
     }
     
     private func savePRs() {
@@ -233,39 +228,9 @@ final class PRManager: ObservableObject {
         }
     }
     
+    // This method is already implemented in checkForPRs and is duplicated here
+    // Removing this duplicate implementation to avoid confusion
     private func performPRCheck(set: WorkoutSet) {
-        guard let weight = set.weight else { return }
-        
-        // Check for weight PR at this rep range
-        let existingPR = personalRecords.first {
-            $0.exerciseId == set.exerciseId &&
-            $0.type == .weightAtReps &&
-            $0.reps == Int(set.reps)
-        }
-        
-        if existingPR == nil || existingPR!.value < weight {
-            let newPR = PersonalRecord(
-                exerciseId: set.exerciseId,
-                type: .weightAtReps,
-                value: weight,
-                reps: Int(set.reps)
-            )
-            addPersonalRecord(newPR)
-        }
-        
-        // Calculate and check 1RM
-        let oneRM = calculateOneRepMax(weight: weight, reps: Int(set.reps))
-        let existingOneRM = personalRecords.first {
-            $0.exerciseId == set.exerciseId && $0.type == .oneRepMax
-        }
-        
-        if existingOneRM == nil || existingOneRM!.value < oneRM {
-            let newPR = PersonalRecord(
-                exerciseId: set.exerciseId,
-                type: .oneRepMax,
-                value: oneRM
-            )
-            addPersonalRecord(newPR)
-        }
+        // Implementation moved to checkForPRs method
     }
 }

@@ -1,16 +1,20 @@
 # Data
 
-This directory contains default and seed data for the LoadProgress application.
+This directory *would typically* contain default and seed data for the LoadProgress application, however, the current implementation defines default data directly within the `DataManager`.
 
 ## Overview
 
-The data files in this directory provide initial content and reference data that is used to populate the application when a user first launches it or resets their data. This ensures that new users have a good starting point with pre-populated exercises and examples.
+Default data provides initial content and reference data used to populate the application when a user first launches it or resets their data. This ensures new users have a starting point with pre-populated exercises.
+
+In the current structure, this default data (specifically exercises) is initialized within the `DataManager.swift` file.
 
 ## Files
 
-### DefaultExercises
+*(Currently, this directory is empty or does not contain data files directly used for default population. Default exercises are hardcoded in `DataManager.swift`)*
 
-`DefaultExercises.swift` contains a curated collection of common exercises with:
+### Default Data Logic (in DataManager.swift)
+
+The `populateDefaultExercises()` method within `DataManager.swift` contains a curated collection of common exercises with:
 - Comprehensive exercise details (name, type, muscle groups, etc.)
 - Form cues for proper execution
 - Appropriate difficulty ratings
@@ -34,11 +38,24 @@ When updating the default data:
 ## Example
 
 ```swift
-// In DataManager.swift
-private func loadDefaultExercisesIfNeeded() {
+// In DataManager.swift, during initialization:
+init() {
+    loadData()
     if exercises.isEmpty {
-        exercises = DefaultExercises.exercises
-        saveExercises()
+        populateDefaultExercises() // Populates with hardcoded exercises
+    }
+    updateCache()
+}
+
+private func populateDefaultExercises() {
+    let defaultExercises: [Exercise] = [
+        // ... exercise definitions ...
+    ]
+    
+    do {
+        exercises = defaultExercises
+        try saveData()
+    } catch {
+        Logger.shared.log("Failed to save default exercises: \(error)", level: .error)
     }
 }
-```

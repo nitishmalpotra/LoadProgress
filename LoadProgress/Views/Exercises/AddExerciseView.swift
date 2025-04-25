@@ -146,32 +146,27 @@ struct AddExerciseView: View {
     }
     
     private func saveExercise() {
-        do {
-            // Create custom icon from exercise name
-            let icon = ExerciseIcon.custom(name)
-            
-            // Filter out empty form cues
-            let validFormCues = formCues.filter {
-                !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-            }
-            
-            let exercise = Exercise(
-                name: name.trimmingCharacters(in: .whitespacesAndNewlines),
-                type: type,
-                muscleGroup: muscleGroup,
-                secondaryMuscleGroups: Array(secondaryMuscleGroups),
-                icon: icon,
-                difficulty: difficulty,
-                equipment: Array(equipment),
-                description: description.trimmingCharacters(in: .whitespacesAndNewlines),
-                formCues: validFormCues
-            )
-            
-            dataManager.addExercise(exercise)
-            dismiss()
-        } catch {
-            errorMessage = error.localizedDescription
-            showingError = true
+        // Create custom icon from exercise name
+        let icon = ExerciseIcon.custom(name)
+        
+        // Filter out empty form cues
+        let validFormCues = formCues.filter {
+            !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         }
+        
+        let exercise = Exercise(
+            name: name.trimmingCharacters(in: .whitespacesAndNewlines),
+            type: type,
+            muscleGroup: muscleGroup,
+            secondaryMuscleGroups: Array(secondaryMuscleGroups),
+            icon: icon,
+            difficulty: difficulty,
+            equipment: Array(equipment),
+            description: description.trimmingCharacters(in: .whitespacesAndNewlines),
+            formCues: validFormCues
+        )
+        
+        dataManager.addExercise(exercise)
+        dismiss()
     }
 }

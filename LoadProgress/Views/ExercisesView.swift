@@ -2,10 +2,13 @@ import SwiftUI
 
 struct ExercisesView: View {
     @EnvironmentObject var dataManager: DataManager
-    @State private var showingAddExercise = false
-    @State private var searchText = ""
     @State private var selectedTab: Exercise.ExerciseType = .weightTraining
+    @State private var searchText = ""
+    @State private var showingAddExercise = false
     
+    // Add environment variable for reduce motion
+    @Environment(\.accessibilityReduceMotion) var reduceMotion
+
     var filteredExercises: [Exercise] {
         if searchText.isEmpty {
             return dataManager.exercises.filter { $0.type == selectedTab }
@@ -33,14 +36,16 @@ struct ExercisesView: View {
                     }
                 }
                 .pickerStyle(.segmented)
-                .padding()
+                .padding() // Standard padding
                 .background(Color(.systemBackground))
                 
                 ScrollView {
-                    LazyVStack(spacing: 16, pinnedViews: .sectionHeaders) {
+                    // Use standard spacing for LazyVStack
+                    LazyVStack(spacing: 16, pinnedViews: .sectionHeaders) { 
                         ForEach(groupedExercises, id: \.0) { muscleGroup, exercises in
                             Section {
-                                VStack(spacing: 8) {
+                                // Use standard spacing for inner VStack
+                                VStack(spacing: 12) { 
                                     ForEach(exercises) { exercise in
                                         NavigationLink(destination: ExerciseDetailView(exercise: exercise)) {
                                             ExerciseCardView(exercise: exercise)
@@ -67,6 +72,8 @@ struct ExercisesView: View {
             .sheet(isPresented: $showingAddExercise) {
                 AddExerciseView()
             }
+            // Add reduce motion check for animation
+            .animation(reduceMotion ? .none : .default, value: showingAddExercise) 
         }
     }
 }
@@ -97,8 +104,26 @@ struct MuscleGroupHeader: View {
                 .font(.title3)
                 .foregroundColor(.blue)
             
-            Text(muscleGroup.rawValue)
-                .font(.title3.bold())
+            VStack(alignment: .leading, spacing: 4) {
+                Text(muscleGroup.rawValue)
+                    .font(.headline)
+                    .padding(.bottom, 5)
+
+                // Use explicit cases for muscle groups, remove default
+                switch muscleGroup {
+                case .chest: Text("Chest Exercises").font(.subheadline).foregroundColor(.secondary)
+                case .back: Text("Back Exercises").font(.subheadline).foregroundColor(.secondary)
+                case .legs: Text("Leg Exercises").font(.subheadline).foregroundColor(.secondary)
+                case .shoulders: Text("Shoulder Exercises").font(.subheadline).foregroundColor(.secondary)
+                case .arms: Text("Arm Exercises").font(.subheadline).foregroundColor(.secondary)
+                case .core: Text("Core Exercises").font(.subheadline).foregroundColor(.secondary)
+                case .fullBody: Text("Full Body Exercises").font(.subheadline).foregroundColor(.secondary)
+                case .forearms: Text("Forearm Exercises").font(.subheadline).foregroundColor(.secondary)
+                case .glutes: Text("Glute Exercises").font(.subheadline).foregroundColor(.secondary)
+                case .upperBack: Text("Upper Back Exercises").font(.subheadline).foregroundColor(.secondary)
+                case .lowerBack: Text("Lower Back Exercises").font(.subheadline).foregroundColor(.secondary)
+                }
+            }
             
             Spacer()
             
@@ -112,6 +137,9 @@ struct MuscleGroupHeader: View {
         }
         .padding()
         .background(Color(.systemBackground))
+        // Accessibility Improvement
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(muscleGroup.rawValue) Exercises Section Header")
     }
 }
 
@@ -210,9 +238,21 @@ struct ExerciseCardView: View {
                 .font(.subheadline)
                 .foregroundColor(.secondary)
         }
-        .padding()
+        .padding() // Standard padding
         .background(Color(.systemBackground))
         .cornerRadius(12)
-        .shadow(color: .black.opacity(0.05), radius: 5)
+        .shadow(color: .black.opacity(0.05), radius: 5) // Keep existing shadow or refine if needed
+        // Accessibility Improvement
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(exercise.name), \(exercise.muscleGroup.rawValue)")
+        .accessibilityHint("View details for this exercise")
     }
-} 
+}
+
+// MARK: - Preview
+struct ExercisesView_Previews: PreviewProvider {
+    static var previews: some View {
+        ExercisesView()
+            .environmentObject(DataManager.preview)
+    }
+}

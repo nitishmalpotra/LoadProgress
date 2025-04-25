@@ -5,12 +5,12 @@ struct WorkoutSetRow: View {
     let set: WorkoutSet
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 8) { 
             Text(exercise.name)
                 .font(.headline)
                 .foregroundColor(.primary)
             
-            HStack(spacing: 12) {
+            HStack(spacing: 16) { 
                 if exercise.type == .weightTraining, let weight = set.weight {
                     MetricView(
                         value: String(format: "%.1f", weight),
@@ -22,9 +22,9 @@ struct WorkoutSetRow: View {
                 
                 // Reps is non-optional
                 MetricView(
-                    value: String(format: "%.0f", set.reps),
+                    value: String(set.reps),
                     unit: "reps",
-                    icon: "repeat",
+                    icon: "figure.run.circle.fill", 
                     color: .green
                 )
                 
@@ -35,13 +35,18 @@ struct WorkoutSetRow: View {
                     .foregroundColor(.secondary)
             }
         }
-        .padding(.vertical, 8)
-        .padding(.horizontal, 4)
+        .padding(.vertical, 10) 
+        .padding(.horizontal, 4) 
         .background(Color(.systemBackground))
         .cornerRadius(10)
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(exercise.name) workout set")
-        .accessibilityValue("Weight: \(set.weight?.description ?? "none"), Reps: \(String(set.reps))")
+        .accessibilityLabel("\(exercise.name) workout set on \(set.date, style: .date)") 
+        .accessibilityValue("Weight: \(formattedWeight(set.weight)), Reps: \(String(set.reps))") 
+    }
+    
+    private func formattedWeight(_ weight: Double?) -> String {
+        guard let weight = weight else { return "none" }
+        return String(format: "%.1f kg", weight)
     }
 }
 

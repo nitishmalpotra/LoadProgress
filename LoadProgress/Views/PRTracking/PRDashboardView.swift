@@ -54,6 +54,7 @@ struct PRDashboardView: View {
                     }
                 }
             }
+            .listStyle(.insetGrouped)
             .navigationTitle("Personal Records")
             .alert("New Personal Record! 🎉", isPresented: $showingPRAlert) {
                 Button("OK", role: .cancel) {}
@@ -208,7 +209,7 @@ struct PRRow: View {
             
             Spacer()
             
-            VStack(alignment: .trailing) {
+            VStack(alignment: .trailing, spacing: 4) {
                 Text(String(format: "%.1f", pr.value))
                     .font(.headline)
                 Text(pr.date.formatted(date: .abbreviated, time: .omitted))
@@ -216,6 +217,10 @@ struct PRRow: View {
                     .foregroundStyle(.secondary)
             }
         }
+        .padding(.vertical, 8)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Personal Record for \(exercise?.name ?? "Unknown Exercise")")
+        .accessibilityValue("\(String(format: "%.1f", pr.value)) on \(pr.date, style: .date)")
     }
 }
 

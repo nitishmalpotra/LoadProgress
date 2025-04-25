@@ -4,7 +4,7 @@ This directory contains manager classes that handle business logic and data oper
 
 ## Overview
 
-Managers serve as the bridge between the data layer and the UI, implementing business logic, data processing, and state management. They follow the singleton pattern to provide global access to their functionality throughout the app.
+Managers serve as the bridge between the data layer and the UI, implementing business logic, data processing, and state management. They are typically implemented as classes conforming to `ObservableObject`, allowing SwiftUI views to react to changes. Instances are often created as `@StateObject` in the main app structure and injected into the view hierarchy using `.environmentObject()` for access where needed.
 
 ## Managers
 
@@ -65,4 +65,3 @@ struct LoadProgressApp: App {
         }
     }
 }
-```

@@ -27,6 +27,7 @@ struct ContentView: View {
     
     var body: some View {
         TabView {
+            // Using standard Label ensures good accessibility support
             WorkoutLogView()
                 .tabItem {
                     Label("Workout", systemImage: "figure.strengthtraining.traditional")
@@ -52,6 +53,7 @@ struct ContentView: View {
                     Label("Progress", systemImage: "chart.line.uptrend.xyaxis")
                 }
         }
+        // EnvironmentObjects are correctly applied
         .environmentObject(dataManager)
         .environmentObject(prManager)
         .onAppear {

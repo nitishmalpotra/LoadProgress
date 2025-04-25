@@ -15,6 +15,7 @@ LoadProgress is an iOS application designed for tracking workout progress with a
 - **Volume Analytics**: Analyze your workout volume and intensity
 - **Rest Timer**: Built-in timer for tracking rest periods between sets
 - **Form Check**: Tools to help ensure proper exercise form
+- **Splash Screen**: Initial loading screen for better user experience
 
 ## Architecture
 
@@ -29,8 +30,8 @@ LoadProgress follows the MVVM (Model-View-ViewModel) architecture pattern for cl
 
 ### Prerequisites
 
-- Xcode 14.0+
-- iOS 16.0+
+- Xcode 15.0+
+- iOS 18.0+
 - Swift 5.0+
 
 ### Installation

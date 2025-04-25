@@ -38,6 +38,8 @@ struct ProgressView: View {
             .sorted { $0.name < $1.name }
     }
     
+    @Environment(\.accessibilityReduceMotion) var reduceMotion
+    
     var body: some View {
         NavigationView {
             ScrollView {
@@ -50,7 +52,7 @@ struct ProgressView: View {
                         }
                     }
                     .pickerStyle(.menu)
-                    .onChange(of: selectedType) { _ in
+                    .onChange(of: selectedType) { _, _ in
                         selectedMuscleGroup = nil
                         selectedExercise = nil
                     }
@@ -64,7 +66,7 @@ struct ProgressView: View {
                             }
                         }
                         .pickerStyle(.menu)
-                        .onChange(of: selectedMuscleGroup) { _ in
+                        .onChange(of: selectedMuscleGroup) { _, _ in
                             selectedExercise = nil
                         }
                     }
@@ -89,6 +91,7 @@ struct ProgressView: View {
                         }
                         .pickerStyle(.segmented)
                         .padding(.horizontal)
+                        .padding(.bottom, 8)
                         
                         // Progress Charts
                         VStack(alignment: .leading, spacing: 20) {
@@ -100,17 +103,22 @@ struct ProgressView: View {
                                 color: .blue,
                                 unit: "kg"
                             )
+                            .padding(.horizontal)
+                            .padding(.bottom, 16)
+                            .animation(reduceMotion ? .none : .easeInOut(duration: 0.3), value: exercise)
                             
                             ProgressCard<Double>(
                                 title: "Reps Progress",
                                 exercise: exercise,
                                 timeRange: timeRange,
-                                metric: \.reps, // Using the non-optional initializer
+                                metric: \.reps,
                                 color: .green,
                                 unit: "reps"
                             )
+                            .padding(.horizontal)
+                            .padding(.bottom, 16)
+                            .animation(reduceMotion ? .none : .easeInOut(duration: 0.3), value: exercise)
                         }
-                        .padding(.horizontal)
                     } else {
                         ContentUnavailableView(
                             "Select an Exercise",
@@ -190,28 +198,28 @@ struct ProgressCard<T: BinaryFloatingPoint & Plottable>: View {
             Text(title)
                 .font(.headline)
             
-            Chart {
-                ForEach(filteredSets) { set in
-                    if let value = metricPath.getValue(from: set) {
-                        LineMark(
-                            x: .value("Date", set.date),
-                            y: .value("Value", value)
-                        )
-                        .foregroundStyle(color)
-                        
-                        PointMark(
-                            x: .value("Date", set.date),
-                            y: .value("Value", value)
-                        )
-                        .foregroundStyle(color)
+            if filteredSets.isEmpty {
+                Text("No data available for this metric.")
+                    .font(.subheadline)
+            } else {
+                Chart {
+                    ForEach(filteredSets) { set in
+                        if let value = metricPath.getValue(from: set) {
+                            LineMark(
+                                x: .value("Date", set.date),
+                                y: .value("Value", value)
+                            )
+                            .foregroundStyle(color)
+                            .interpolationMethod(.catmullRom)
+                        }
                     }
                 }
-            }
-            .frame(height: 200)
-            .chartYAxis {
-                AxisMarks(position: .leading)
+                .frame(height: 200)
+                .chartYAxis {
+                    AxisMarks(position: .leading)
+                }
             }
         }
         .cardStyle()
     }
-} 
+}

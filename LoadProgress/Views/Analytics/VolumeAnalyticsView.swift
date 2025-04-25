@@ -6,7 +6,8 @@ struct VolumeAnalyticsView: View {
     @State private var selectedMuscleGroup: Exercise.MuscleGroup?
     @State private var timeRange: TimeRange = .week
     @State private var showingVolumeGuide = false
-    
+    @Environment(\.accessibilityReduceMotion) var reduceMotion
+
     enum TimeRange: String, CaseIterable {
         case week = "Week"
         case month = "Month"
@@ -32,6 +33,8 @@ struct VolumeAnalyticsView: View {
                         }
                     }
                     .pickerStyle(.segmented)
+                    .padding(.horizontal)
+                    .padding(.bottom, 8)
                 }
                 
                 // Volume Overview
@@ -73,6 +76,8 @@ struct VolumeAnalyticsView: View {
                             data: volumeProgressData(for: muscleGroup),
                             timeRange: timeRange
                         )
+                        .padding(.vertical, 8)
+                        .animation(reduceMotion ? .none : .easeInOut(duration: 0.3), value: volumeProgressData(for: muscleGroup))
                         .frame(height: 200)
                         
                         // Exercise Breakdown
@@ -109,7 +114,7 @@ struct VolumeAnalyticsView: View {
         let exerciseCount: Int
     }
     
-    struct VolumeProgressPoint: Identifiable {
+    struct VolumeProgressPoint: Identifiable, Equatable {
         let id = UUID()
         let date: Date
         let volume: Double
@@ -237,22 +242,18 @@ struct VolumeProgressChart: View {
                 y: .value("Volume", point.volume)
             )
             .interpolationMethod(.catmullRom)
+            .foregroundStyle(.blue)
             
             AreaMark(
                 x: .value("Date", point.date),
                 y: .value("Volume", point.volume)
             )
             .foregroundStyle(.blue.opacity(0.1))
-            
-            PointMark(
-                x: .value("Date", point.date),
-                y: .value("Volume", point.volume)
-            )
-            .foregroundStyle(.blue)
+            .interpolationMethod(.catmullRom)
         }
         .chartXAxis {
             AxisMarks(values: .stride(by: .day, count: timeRange == .week ? 1 : 7)) { value in
-                if let date = value.as(Date.self) {
+                if value.as(Date.self) != nil {
                     AxisValueLabel(format: .dateTime.day().month())
                 }
             }

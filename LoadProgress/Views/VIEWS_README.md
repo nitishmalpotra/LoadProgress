@@ -4,11 +4,11 @@ This directory contains all the SwiftUI views for the LoadProgress application.
 
 ## Overview
 
-The views in this directory follow a hierarchical structure, organized by feature and responsibility. All UI components are built using SwiftUI, with a focus on reusability, composability, and performance.
+The views in this directory follow a hierarchical structure. Some primary views reside directly in this folder, while others are organized into subdirectories by feature and responsibility. All UI components are built using SwiftUI, with a focus on reusability, composability, and performance.
 
 ## Directory Structure
 
-- **Root Views**: Main navigation and container views
+- **Root (`Views/`)**: Contains some primary views like `ExercisesView`, `WorkoutLogView`, `SplashScreenView`, etc.
 - **Exercises/**: Views related to exercise browsing and management
 - **Components/**: Reusable UI components used across multiple screens
 - **Analytics/**: Data visualization and analytics views
@@ -17,9 +17,11 @@ The views in this directory follow a hierarchical structure, organized by featur
 
 ## Key Views
 
-### ContentView
+*(Note: `ContentView` is the main app view, typically configured in `LoadProgressApp.swift`, not listed here)*
 
-The main container view that handles top-level navigation and app structure.
+### SplashScreenView
+
+The initial view shown when the app launches.
 
 ### ExercisesView
 
@@ -28,6 +30,10 @@ Displays a list of exercises organized by muscle group and type, with filtering 
 ### WorkoutLogView
 
 Allows users to log and review their workout sessions.
+
+### AddWorkoutView
+
+Provides the interface for adding new workout sets for an exercise.
 
 ### ProgressView
 

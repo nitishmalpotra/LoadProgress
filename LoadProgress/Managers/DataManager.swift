@@ -3,6 +3,17 @@ import SwiftUI
 
 /// Manages the persistence and state of exercises and workout data
 final class DataManager: ObservableObject {
+    // MARK: - Preview Instance
+    static var preview: DataManager = {
+        let manager = DataManager()
+        // Optionally add sample data here if needed for previews
+        // For example:
+        // manager.exercises = SampleData.exercises
+        // manager.workoutSets = SampleData.workoutSets
+        // manager.updateCache()
+        return manager
+    }()
+
     // MARK: - Published Properties
     @Published private(set) var exercises: [Exercise] = []
     @Published private(set) var workoutSets: [WorkoutSet] = []
@@ -220,4 +231,4 @@ final class DataManager: ObservableObject {
             Logger.shared.log("Failed to save default exercises: \(error)", level: .error)
         }
     }
-} 
+}

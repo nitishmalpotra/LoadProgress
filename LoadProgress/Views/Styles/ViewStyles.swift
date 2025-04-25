@@ -6,10 +6,10 @@ struct ViewStyles {
     struct CardStyle: ViewModifier {
         func body(content: Content) -> some View {
             content
-                .padding()
+                .padding() // Standard padding
                 .background(Color(.systemBackground))
-                .cornerRadius(12)
-                .shadow(color: .black.opacity(0.05), radius: 5)
+                .cornerRadius(12) // Consistent corner radius
+                .shadow(color: .black.opacity(0.04), radius: 4, x: 0, y: 2) // Subtler shadow
         }
     }
     

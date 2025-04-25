@@ -15,17 +15,17 @@ struct WorkoutLogView: View {
     
     var body: some View {
         NavigationView {
-            VStack(spacing: 16) {
+            VStack(alignment: .leading, spacing: 16) {
                 // Date Picker with custom styling
                 DatePicker("Select Date",
                           selection: $selectedDate,
                           displayedComponents: .date)
                     .datePickerStyle(.graphical)
-                    .padding()
+                    .padding(.horizontal)
+                    .padding(.bottom, 8)
                     .background(Color(.systemBackground))
                     .cornerRadius(12)
                     .shadow(color: .black.opacity(0.05), radius: 5)
-                    .padding(.horizontal)
                 
                 // Workout List
                 WorkoutListForDate(date: selectedDate)

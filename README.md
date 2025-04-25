@@ -26,6 +26,19 @@ LoadProgress follows the MVVM (Model-View-ViewModel) architecture pattern for cl
 - **Managers**: Business logic and data handling
 - **Utilities**: Helper functions and extensions
 
+## Screenshots
+| Splash Screen | Home Screen | Exercise Log |
+| --- | --- | --- |
+| ![](pics/01.png) | ![](pics/02.png) | ![](pics/03.png) |
+---
+| Volume Analysis | Exercise List | Add Exercise |
+| --- | --- | --- |
+| ![](pics/04.png) | ![](pics/05.png) | ![](pics/06.png) |
+---
+| Progress Trend | Volume Guide |  |
+| --- | --- | --- |
+| ![](pics/07.png) | ![](pics/08.png) |  |
+
 ## Getting Started
 
 ### Prerequisites

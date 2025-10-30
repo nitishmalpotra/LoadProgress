@@ -12,7 +12,7 @@ struct VolumeAnalyticsView: View {
         case week = "Week"
         case month = "Month"
         case threeMonths = "3 Months"
-        
+
         var days: Int {
             switch self {
             case .week: return 7
@@ -21,91 +21,103 @@ struct VolumeAnalyticsView: View {
             }
         }
     }
-    
+
     var body: some View {
-        NavigationView {
-            List {
-                // Time Range Selection
-                Section {
-                    Picker("Time Range", selection: $timeRange) {
-                        ForEach(TimeRange.allCases, id: \.self) { range in
-                            Text(range.rawValue).tag(range)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                    .padding(.horizontal)
-                    .padding(.bottom, 8)
-                }
-                
-                // Volume Overview
-                Section("Volume Overview") {
-                    Chart(volumeByMuscleGroup) { data in
-                        BarMark(
-                            x: .value("Volume", data.volume),
-                            y: .value("Muscle Group", data.muscleGroup.rawValue)
-                        )
-                        .foregroundStyle(Color.blue.gradient)
-                        .cornerRadius(8)
-                    }
-                    .chartXAxis(.hidden)
-                    .chartYAxis {
-                        AxisMarks { value in
-                            AxisValueLabel()
-                                .font(.system(size: 12, weight: .medium))
-                        }
-                    }
-                    // Make the chart taller to get thicker bars
-                    .frame(height: 300)
-                    .chartLegend(.hidden)
-                    // Add more padding for a cleaner look
-                    .padding(.vertical, 12)
-                    
-                    // Volume Stats
-                    ForEach(volumeByMuscleGroup) { data in
-                        VolumeStatRow(data: data)
-                            .onTapGesture {
-                                selectedMuscleGroup = data.muscleGroup
+        NavigationStack {
+            ZStack {
+                AppTheme.Colors.backgroundGradient
+                    .ignoresSafeArea()
+
+                ScrollView {
+                    VStack(spacing: AppTheme.Metrics.verticalSpacing) {
+                        Picker("Time Range", selection: $timeRange) {
+                            ForEach(TimeRange.allCases, id: \.self) { range in
+                                Text(range.rawValue).tag(range)
                             }
-                    }
-                }
-                
-                // Detailed Analysis
-                if let muscleGroup = selectedMuscleGroup {
-                    Section("Detailed Analysis: \(muscleGroup.rawValue)") {
-                        VolumeProgressChart(
-                            data: volumeProgressData(for: muscleGroup),
-                            timeRange: timeRange
-                        )
-                        .padding(.vertical, 8)
-                        .animation(reduceMotion ? .none : .easeInOut(duration: 0.3), value: volumeProgressData(for: muscleGroup))
-                        .frame(height: 200)
-                        
-                        // Exercise Breakdown
-                        ForEach(exercisesForMuscleGroup(muscleGroup)) { exercise in
-                            ExerciseVolumeRow(
-                                exercise: exercise,
-                                volume: totalVolume(for: exercise)
-                            )
                         }
-                    }
-                }
-                
-                // Volume Guidelines
-                Section {
-                    Button("View Volume Guidelines") {
-                        showingVolumeGuide = true
+                        .pickerStyle(.segmented)
+                        .padding(.horizontal, AppTheme.Metrics.horizontalPadding)
+                        .padding(.top, AppTheme.Metrics.verticalSpacing)
+
+                        glassSection(title: "Volume Overview") {
+                            Chart(volumeByMuscleGroup) { data in
+                                BarMark(
+                                    x: .value("Volume", data.volume),
+                                    y: .value("Muscle Group", data.muscleGroup.rawValue)
+                                )
+                                .foregroundStyle(AppTheme.Colors.primaryAccent.gradient)
+                                .cornerRadius(12)
+                            }
+                            .frame(height: 280)
+                            .chartXAxis(.hidden)
+                            .chartYAxis {
+                                AxisMarks { value in
+                                    AxisValueLabel()
+                                        .font(.system(size: 12, weight: .medium, design: .rounded))
+                                }
+                            }
+
+                            VStack(spacing: 12) {
+                                ForEach(volumeByMuscleGroup) { data in
+                                    VolumeStatRow(data: data)
+                                        .onTapGesture {
+                                            withAnimation(reduceMotion ? .none : .easeInOut) {
+                                                selectedMuscleGroup = data.muscleGroup
+                                            }
+                                        }
+                                }
+                            }
+                        }
+
+                        if let muscleGroup = selectedMuscleGroup {
+                            glassSection(title: "Detailed Analysis: \(muscleGroup.rawValue)") {
+                                VolumeProgressChart(
+                                    data: volumeProgressData(for: muscleGroup),
+                                    timeRange: timeRange
+                                )
+                                .frame(height: 220)
+                                .animation(reduceMotion ? .none : .easeInOut(duration: 0.35), value: selectedMuscleGroup)
+
+                                Divider().background(Color.white.opacity(0.1))
+
+                                VStack(alignment: .leading, spacing: 12) {
+                                    Text("Exercise Breakdown")
+                                        .font(AppTheme.Fonts.headline())
+                                        .foregroundStyle(.secondary)
+
+                                    ForEach(exercisesForMuscleGroup(muscleGroup)) { exercise in
+                                        ExerciseVolumeRow(
+                                            exercise: exercise,
+                                            volume: totalVolume(for: exercise)
+                                        )
+                                    }
+                                }
+                            }
+                        }
+
+                        Button("View Volume Guidelines") {
+                            showingVolumeGuide = true
+                            HapticManager.shared.playSelection()
+                        }
+                        .buttonStyle(SecondaryButtonStyle())
+                        .padding(.horizontal, AppTheme.Metrics.horizontalPadding)
+                        .padding(.bottom, AppTheme.Metrics.verticalSpacing)
                     }
                 }
             }
             .navigationTitle("Volume Analytics")
+            .toolbarBackground(.ultraThinMaterial, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
             .sheet(isPresented: $showingVolumeGuide) {
                 VolumeGuideView()
+                    .presentationDetents([.medium, .large])
+                    .presentationBackground(.ultraThinMaterial)
             }
         }
     }
-    
+
     // MARK: - Data Models
-    
+
     struct VolumeData: Identifiable {
         let id = UUID()
         let muscleGroup: Exercise.MuscleGroup
@@ -113,15 +125,15 @@ struct VolumeAnalyticsView: View {
         let setCount: Int
         let exerciseCount: Int
     }
-    
+
     struct VolumeProgressPoint: Identifiable, Equatable {
         let id = UUID()
         let date: Date
         let volume: Double
     }
-    
+
     // MARK: - Computed Properties
-    
+
     private var volumeByMuscleGroup: [VolumeData] {
         Exercise.MuscleGroup.allCases.map { group in
             let exercises = exercisesForMuscleGroup(group)
@@ -131,7 +143,7 @@ struct VolumeAnalyticsView: View {
             let setCount = exercises.reduce(0) { sum, exercise in
                 sum + workoutSets(for: exercise).count
             }
-            
+
             return VolumeData(
                 muscleGroup: group,
                 volume: volume,
@@ -141,26 +153,36 @@ struct VolumeAnalyticsView: View {
         }
         .sorted { $0.volume > $1.volume }
     }
-    
+
     // MARK: - Helper Methods
-    
+
+    private func glassSection<Content: View>(title: String, @ViewBuilder content: () -> Content) -> some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text(title)
+                .font(AppTheme.Fonts.title())
+            content()
+        }
+        .glassCard()
+        .padding(.horizontal, AppTheme.Metrics.horizontalPadding)
+    }
+
     private func exercisesForMuscleGroup(_ group: Exercise.MuscleGroup) -> [Exercise] {
         dataManager.exercises
             .filter { $0.muscleGroup == group }
             .sorted { $0.name < $1.name }
     }
-    
+
     private func workoutSets(for exercise: Exercise) -> [WorkoutSet] {
         let cutoffDate = Calendar.current.date(
             byAdding: .day,
             value: -timeRange.days,
             to: Date()
         ) ?? Date()
-        
+
         return dataManager.workoutSets
             .filter { $0.exerciseId == exercise.id && $0.date >= cutoffDate }
     }
-    
+
     private func totalVolume(for exercise: Exercise) -> Double {
         workoutSets(for: exercise).reduce(0.0) { sum, set in
             if let weight = set.weight {
@@ -169,7 +191,7 @@ struct VolumeAnalyticsView: View {
             return sum
         }
     }
-    
+
     private func volumeProgressData(for muscleGroup: Exercise.MuscleGroup) -> [VolumeProgressPoint] {
         let calendar = Calendar.current
         let endDate = Date()
@@ -178,14 +200,14 @@ struct VolumeAnalyticsView: View {
             value: -timeRange.days,
             to: endDate
         ) ?? endDate
-        
+
         var points: [VolumeProgressPoint] = []
         var currentDate = startDate
-        
+
         while currentDate <= endDate {
             let dayStart = calendar.startOfDay(for: currentDate)
             let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart) ?? currentDate
-            
+
             let dayVolume = dataManager.workoutSets
                 .filter { set in
                     guard let exercise = dataManager.exercises.first(where: { $0.id == set.exerciseId }),
@@ -198,11 +220,11 @@ struct VolumeAnalyticsView: View {
                     }
                     return sum
                 }
-            
+
             points.append(VolumeProgressPoint(date: currentDate, volume: dayVolume))
             currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate) ?? endDate
         }
-        
+
         return points
     }
 }
@@ -211,30 +233,32 @@ struct VolumeAnalyticsView: View {
 
 struct VolumeStatRow: View {
     let data: VolumeAnalyticsView.VolumeData
-    
+
     var body: some View {
         HStack {
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 4) {
                 Text(data.muscleGroup.rawValue)
-                    .font(.headline)
+                    .font(AppTheme.Fonts.headline())
                 Text("\(data.exerciseCount) exercises, \(data.setCount) sets")
-                    .font(.caption)
+                    .font(AppTheme.Fonts.subheadline())
                     .foregroundStyle(.secondary)
             }
-            
+
             Spacer()
-            
-            Text(String(format: "%.0f kg", data.volume))
-                .font(.headline)
-                .foregroundColor(.blue)
+
+            Text(String(format: "%.0f", data.volume))
+                .font(AppTheme.Fonts.title())
+                .foregroundColor(AppTheme.Colors.primaryAccent)
+                .accessibilityLabel("Total volume \(String(format: "%.0f", data.volume))")
         }
+        .padding(.vertical, 6)
     }
 }
 
 struct VolumeProgressChart: View {
     let data: [VolumeAnalyticsView.VolumeProgressPoint]
     let timeRange: VolumeAnalyticsView.TimeRange
-    
+
     var body: some View {
         Chart(data) { point in
             LineMark(
@@ -242,14 +266,14 @@ struct VolumeProgressChart: View {
                 y: .value("Volume", point.volume)
             )
             .interpolationMethod(.catmullRom)
-            .foregroundStyle(.blue)
-            
+            .foregroundStyle(AppTheme.Colors.primaryAccent)
+
             AreaMark(
                 x: .value("Date", point.date),
                 y: .value("Volume", point.volume)
             )
-            .foregroundStyle(.blue.opacity(0.1))
             .interpolationMethod(.catmullRom)
+            .foregroundStyle(AppTheme.Colors.primaryAccent.opacity(0.15))
         }
         .chartXAxis {
             AxisMarks(values: .stride(by: .day, count: timeRange == .week ? 1 : 7)) { value in
@@ -258,78 +282,82 @@ struct VolumeProgressChart: View {
                 }
             }
         }
+        .chartYAxis {
+            AxisMarks(position: .leading)
+        }
+        .accessibilityLabel("Volume trend chart")
     }
 }
 
 struct ExerciseVolumeRow: View {
     let exercise: Exercise
     let volume: Double
-    
+
     var body: some View {
         HStack {
             Text(exercise.name)
-                .font(.subheadline)
+                .font(AppTheme.Fonts.subheadline())
             Spacer()
-            Text(String(format: "%.0f kg", volume))
-                .font(.subheadline)
+            Text(String(format: "%.0f", volume))
+                .font(AppTheme.Fonts.subheadline())
                 .foregroundStyle(.secondary)
         }
+        .padding(.vertical, 4)
     }
 }
 
 struct VolumeGuideView: View {
     var body: some View {
-        NavigationView {
-            List {
-                Section("Weekly Volume Recommendations") {
-                    ForEach(Exercise.MuscleGroup.allCases, id: \.self) { group in
-                        VStack(alignment: .leading) {
-                            Text(group.rawValue)
-                                .font(.headline)
-                            Text(volumeGuide(for: group))
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    Section("Weekly Volume Recommendations") {
+                        ForEach(Exercise.MuscleGroup.allCases, id: \.self) { group in
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text(group.rawValue)
+                                    .font(AppTheme.Fonts.headline())
+                                Text(volumeGuide(for: group))
+                                    .font(AppTheme.Fonts.subheadline())
+                                    .foregroundStyle(.secondary)
+                            }
+                            .glassCard()
                         }
-                        .padding(.vertical, 4)
+                    }
+
+                    Section("Important Notes") {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("• Volume recommendations are general guidelines and should be adjusted based on individual recovery capacity and goals")
+                            Text("• Progressive overload should be implemented gradually")
+                            Text("• Pay attention to form and technique as volume increases")
+                            Text("• Rest and recovery are crucial for optimal results")
+                        }
+                        .font(AppTheme.Fonts.subheadline())
+                        .foregroundStyle(.secondary)
+                        .glassCard()
                     }
                 }
-                
-                Section("Important Notes") {
-                    Text("• Volume recommendations are general guidelines and should be adjusted based on individual recovery capacity and goals")
-                    Text("• Progressive overload should be implemented gradually")
-                    Text("• Pay attention to form and technique as volume increases")
-                    Text("• Rest and recovery are crucial for optimal results")
-                }
+                .padding(.horizontal, AppTheme.Metrics.horizontalPadding)
+                .padding(.vertical, AppTheme.Metrics.verticalSpacing)
             }
+            .background(AppTheme.Colors.backgroundGradient.ignoresSafeArea())
             .navigationTitle("Volume Guidelines")
             .navigationBarTitleDisplayMode(.inline)
         }
     }
-    
+
     private func volumeGuide(for group: Exercise.MuscleGroup) -> String {
         switch group {
-        case .chest:
-            return "10-20 sets per week"
-        case .back:
-            return "10-20 sets per week"
-        case .legs:
-            return "12-20 sets per week"
-        case .shoulders:
-            return "8-16 sets per week"
-        case .arms:
-            return "6-12 sets per week"
-        case .core:
-            return "8-16 sets per week"
-        case .fullBody:
-            return "Depends on exercise selection"
-        case .forearms:
-            return "4-8 sets per week"
-        case .glutes:
-            return "8-16 sets per week"
-        case .upperBack:
-            return "10-20 sets per week"
-        case .lowerBack:
-            return "6-12 sets per week"
+        case .chest: return "10-20 sets per week"
+        case .back: return "10-20 sets per week"
+        case .legs: return "12-20 sets per week"
+        case .shoulders: return "8-16 sets per week"
+        case .arms: return "6-12 sets per week"
+        case .core: return "8-16 sets per week"
+        case .fullBody: return "Depends on exercise selection"
+        case .forearms: return "4-8 sets per week"
+        case .glutes: return "8-16 sets per week"
+        case .upperBack: return "10-20 sets per week"
+        case .lowerBack: return "6-12 sets per week"
         }
     }
 }

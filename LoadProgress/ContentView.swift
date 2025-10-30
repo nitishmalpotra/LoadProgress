@@ -12,48 +12,49 @@ struct ContentView: View {
     @StateObject private var prManager: PRManager
     @State private var showingError = false
     @State private var errorMessage = ""
-    
+    @State private var selection: Int = 0
+
     init() {
-        let manager = DataManager()
-        _dataManager = StateObject(wrappedValue: manager)
-        _prManager = StateObject(wrappedValue: PRManager(dataManager: manager))
+        let sharedManager = DataManager()
+        _dataManager = StateObject(wrappedValue: sharedManager)
+        _prManager = StateObject(wrappedValue: PRManager(dataManager: sharedManager))
+        UITabBar.appearance().scrollEdgeAppearance = UITabBarAppearance()
     }
-    
+
     private func showError(_ message: String) {
         errorMessage = message
         showingError = true
         Logger.shared.log(message, level: .error)
     }
-    
+
     var body: some View {
-        TabView {
-            // Using standard Label ensures good accessibility support
-            WorkoutLogView()
-                .tabItem {
-                    Label("Workout", systemImage: "figure.strengthtraining.traditional")
-                }
-            
-            PRDashboardView()
-                .tabItem {
-                    Label("Records", systemImage: "trophy.fill")
-                }
-            
-            VolumeAnalyticsView()
-                .tabItem {
-                    Label("Analytics", systemImage: "chart.bar.fill")
-                }
-            
-            ExercisesView()
-                .tabItem {
-                    Label("Exercises", systemImage: "dumbbell.fill")
-                }
-            
-            ProgressView()
-                .tabItem {
-                    Label("Progress", systemImage: "chart.line.uptrend.xyaxis")
-                }
+        ZStack {
+            AppTheme.Colors.backgroundGradient
+                .ignoresSafeArea()
+
+            TabView(selection: $selection) {
+                WorkoutLogView()
+                    .tabItem { Label("Workout", systemImage: "figure.strengthtraining.traditional") }
+                    .tag(0)
+
+                PRDashboardView()
+                    .tabItem { Label("Records", systemImage: "trophy.fill") }
+                    .tag(1)
+
+                VolumeAnalyticsView()
+                    .tabItem { Label("Analytics", systemImage: "chart.bar.fill") }
+                    .tag(2)
+
+                ExercisesView()
+                    .tabItem { Label("Exercises", systemImage: "dumbbell.fill") }
+                    .tag(3)
+
+                ProgressView()
+                    .tabItem { Label("Progress", systemImage: "chart.line.uptrend.xyaxis") }
+                    .tag(4)
+            }
+            .accentColor(AppTheme.Colors.primaryAccent)
         }
-        // EnvironmentObjects are correctly applied
         .environmentObject(dataManager)
         .environmentObject(prManager)
         .onAppear {

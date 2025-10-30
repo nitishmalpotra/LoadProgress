@@ -3,23 +3,36 @@ import SwiftUI
 struct SplashScreenView: View {
     var body: some View {
         ZStack {
-            // You can customize the background color or add an image here
-            Color.blue.ignoresSafeArea() // Example background
-            
-            VStack {
-                Image(systemName: "figure.strengthtraining.traditional") // Example icon
+            LinearGradient(
+                colors: [AppTheme.Colors.primaryAccent.opacity(0.6), Color(.systemBackground)],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .ignoresSafeArea()
+
+            VStack(spacing: 20) {
+                Image(systemName: "figure.strengthtraining.traditional")
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 100, height: 100)
+                    .frame(width: 120, height: 120)
                     .foregroundColor(.white)
-                
+                    .symbolRenderingMode(.palette)
+                    .shadow(color: AppTheme.Colors.shadow, radius: 14, x: 0, y: 6)
+
                 Text("LoadProgress")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
+                    .font(.system(.largeTitle, design: .rounded).weight(.bold))
                     .foregroundColor(.white)
-                    .padding(.top)
+
+                Text("Track. Progress. Evolve.")
+                    .font(AppTheme.Fonts.subheadline())
+                    .foregroundStyle(.white.opacity(0.9))
             }
+            .padding()
+            .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 28, style: .continuous))
+            .shadow(color: AppTheme.Colors.shadow, radius: 20, x: 0, y: 10)
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("LoadProgress starting")
     }
 }
 

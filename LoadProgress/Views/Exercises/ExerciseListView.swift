@@ -5,27 +5,25 @@ struct ExerciseListView: View {
     @State private var showingAddExercise = false
     @State private var searchText = ""
     @State private var selectedMuscleGroup: Exercise.MuscleGroup?
-    
+
     private var filteredExercises: [Exercise] {
         var exercises = dataManager.exercises
-        
-        // Apply muscle group filter
+
         if let muscleGroup = selectedMuscleGroup {
-            exercises = exercises.filter { 
+            exercises = exercises.filter {
                 $0.muscleGroup == muscleGroup || $0.secondaryMuscleGroups.contains(muscleGroup)
             }
         }
-        
-        // Apply search filter
+
         if !searchText.isEmpty {
             exercises = exercises.filter {
                 $0.name.localizedCaseInsensitiveContains(searchText)
             }
         }
-        
+
         return exercises.sorted { $0.name < $1.name }
     }
-    
+
     private var groupedExercises: [(String, [Exercise])] {
         Dictionary(grouping: filteredExercises) {
             $0.muscleGroup.rawValue
@@ -33,119 +31,148 @@ struct ExerciseListView: View {
         .map { ($0.key, $0.value.sorted { $0.name < $1.name }) }
         .sorted { $0.0 < $1.0 }
     }
-    
+
     var body: some View {
-        NavigationView {
-            List {
-                if !searchText.isEmpty || selectedMuscleGroup != nil {
-                    // Show flat list when searching or filtering
-                    ForEach(filteredExercises) { exercise in
-                        ExerciseRow(exercise: exercise)
-                    }
-                } else {
-                    // Show grouped list
-                    ForEach(groupedExercises, id: \.0) { group, exercises in
-                        Section(group) {
-                            ForEach(exercises) { exercise in
-                                ExerciseRow(exercise: exercise)
+        NavigationStack {
+            ZStack {
+                AppTheme.Colors.backgroundGradient
+                    .ignoresSafeArea()
+
+                ScrollView {
+                    VStack(spacing: AppTheme.Metrics.verticalSpacing) {
+                        filterMenu
+
+                        if !searchText.isEmpty || selectedMuscleGroup != nil {
+                            LazyVStack(spacing: AppTheme.Metrics.verticalSpacing) {
+                                ForEach(filteredExercises) { exercise in
+                                    ExerciseRow(exercise: exercise)
+                                }
                             }
+                            .padding(.horizontal, AppTheme.Metrics.horizontalPadding)
+                        } else {
+                            LazyVStack(spacing: AppTheme.Metrics.verticalSpacing) {
+                                ForEach(groupedExercises, id: \.0) { group, exercises in
+                                    VStack(alignment: .leading, spacing: 12) {
+                                        Text(group)
+                                            .font(AppTheme.Fonts.title())
+                                            .foregroundStyle(.secondary)
+                                        ForEach(exercises) { exercise in
+                                            ExerciseRow(exercise: exercise)
+                                        }
+                                    }
+                                }
+                            }
+                            .padding(.horizontal, AppTheme.Metrics.horizontalPadding)
                         }
                     }
+                    .padding(.vertical, AppTheme.Metrics.verticalSpacing)
                 }
             }
-            .searchable(text: $searchText, prompt: "Search exercises")
             .navigationTitle("Exercises")
+            .searchable(text: $searchText, prompt: "Search exercises")
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Menu {
-                        Button {
-                            selectedMuscleGroup = nil
-                        } label: {
-                            Label("All Muscles", systemImage: "line.3.horizontal")
-                        }
-                        
-                        Divider()
-                        
-                        ForEach(Exercise.MuscleGroup.allCases, id: \.self) { group in
-                            Button {
-                                selectedMuscleGroup = group
-                            } label: {
-                                Label(group.rawValue, systemImage: selectedMuscleGroup == group ? "checkmark" : "")
-                            }
-                        }
-                    } label: {
-                        Label("Filter", systemImage: "line.3.horizontal.decrease.circle")
-                            .foregroundStyle(selectedMuscleGroup != nil ? .blue : .primary)
-                    }
-                }
-                
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         showingAddExercise = true
+                        HapticManager.shared.playSelection()
                     } label: {
-                        Image(systemName: "plus")
+                        Image(systemName: "plus.circle.fill")
+                            .font(.title2)
+                            .symbolRenderingMode(.hierarchical)
                     }
                 }
             }
+            .toolbarBackground(.ultraThinMaterial, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
             .sheet(isPresented: $showingAddExercise) {
                 AddExerciseView()
+                    .presentationDetents([.medium, .large])
+                    .presentationBackground(.ultraThinMaterial)
             }
+        }
+    }
+
+    private var filterMenu: some View {
+        Menu {
+            Button {
+                selectedMuscleGroup = nil
+            } label: {
+                Label("All Muscles", systemImage: "line.3.horizontal")
+            }
+
+            Divider()
+
+            ForEach(Exercise.MuscleGroup.allCases, id: \.self) { group in
+                Button {
+                    selectedMuscleGroup = group
+                } label: {
+                    Label(group.rawValue, systemImage: selectedMuscleGroup == group ? "checkmark" : "")
+                }
+            }
+        } label: {
+            Label("Filter", systemImage: "line.3.horizontal.decrease.circle")
+                .padding(.horizontal, AppTheme.Metrics.horizontalPadding)
+                .padding(.vertical, 8)
+                .glassBackground()
         }
     }
 }
 
 struct ExerciseRow: View {
     let exercise: Exercise
-    
+
     var body: some View {
         NavigationLink {
             ExerciseDetailView(exercise: exercise)
         } label: {
-            HStack {
-                // Icon with background for custom exercises
+            HStack(spacing: 14) {
                 Group {
                     switch exercise.icon {
                     case .custom(let name):
                         Text(String(name.prefix(1)).uppercased())
-                            .font(.headline)
+                            .font(AppTheme.Fonts.headline())
                             .foregroundStyle(.white)
-                            .frame(width: 32, height: 32)
-                            .background(.blue)
+                            .frame(width: 40, height: 40)
+                            .background(AppTheme.Colors.primaryAccent)
                             .clipShape(Circle())
                     default:
                         Image(systemName: exercise.icon.systemName)
                             .font(.title3)
-                            .frame(width: 32, height: 32)
+                            .frame(width: 40, height: 40)
+                            .foregroundStyle(AppTheme.Colors.primaryAccent)
+                            .background(.ultraThinMaterial)
+                            .clipShape(Circle())
                     }
                 }
-                
-                VStack(alignment: .leading) {
+
+                VStack(alignment: .leading, spacing: 4) {
                     Text(exercise.name)
-                        .font(.headline)
-                    
-                    HStack {
+                        .font(AppTheme.Fonts.headline())
+                    HStack(spacing: 6) {
                         Text(exercise.muscleGroup.rawValue)
-                            .font(.caption)
+                            .font(AppTheme.Fonts.subheadline())
                             .foregroundStyle(.secondary)
-                        
                         if !exercise.secondaryMuscleGroups.isEmpty {
                             Text("+ \(exercise.secondaryMuscleGroups.count)")
-                                .font(.caption2)
+                                .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
                     }
                 }
-                
+
                 Spacer()
-                
-                // Difficulty indicator
+
                 Circle()
                     .fill(difficultyColor)
-                    .frame(width: 8, height: 8)
+                    .frame(width: 10, height: 10)
+                    .accessibilityHidden(true)
             }
+            .padding(AppTheme.Metrics.cardPadding)
+            .glassBackground()
         }
+        .buttonStyle(.plain)
     }
-    
+
     private var difficultyColor: Color {
         switch exercise.difficulty {
         case .beginner:

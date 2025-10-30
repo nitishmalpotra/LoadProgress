@@ -7,12 +7,13 @@ struct ProgressView: View {
     @State private var selectedMuscleGroup: Exercise.MuscleGroup?
     @State private var selectedExercise: Exercise?
     @State private var timeRange: TimeRange = .month
-    
+    @Environment(\.accessibilityReduceMotion) var reduceMotion
+
     enum TimeRange: String, CaseIterable {
         case week = "Week"
         case month = "Month"
         case year = "Year"
-        
+
         var days: Int {
             switch self {
             case .week: return 7
@@ -21,7 +22,7 @@ struct ProgressView: View {
             }
         }
     }
-    
+
     var filteredMuscleGroups: [Exercise.MuscleGroup] {
         guard let type = selectedType else { return [] }
         return Array(Set(dataManager.exercises
@@ -29,7 +30,7 @@ struct ProgressView: View {
             .map { $0.muscleGroup }))
             .sorted { $0.rawValue < $1.rawValue }
     }
-    
+
     var filteredExercises: [Exercise] {
         guard let type = selectedType,
               let muscleGroup = selectedMuscleGroup else { return [] }
@@ -37,102 +38,104 @@ struct ProgressView: View {
             .filter { $0.type == type && $0.muscleGroup == muscleGroup }
             .sorted { $0.name < $1.name }
     }
-    
-    @Environment(\.accessibilityReduceMotion) var reduceMotion
-    
+
     var body: some View {
-        NavigationView {
-            ScrollView {
-                VStack(spacing: 16) {
-                    // Exercise Type Picker
-                    Picker("Type", selection: $selectedType) {
-                        Text("Select Type").tag(Optional<Exercise.ExerciseType>.none)
-                        ForEach(Exercise.ExerciseType.allCases, id: \.self) { type in
-                            Text(type.rawValue).tag(Optional(type))
-                        }
-                    }
-                    .pickerStyle(.menu)
-                    .onChange(of: selectedType) { _, _ in
-                        selectedMuscleGroup = nil
-                        selectedExercise = nil
-                    }
-                    
-                    // Muscle Group Picker
-                    if selectedType != nil {
-                        Picker("Muscle Group", selection: $selectedMuscleGroup) {
-                            Text("Select Muscle Group").tag(Optional<Exercise.MuscleGroup>.none)
-                            ForEach(filteredMuscleGroups, id: \.self) { group in
-                                Text(group.rawValue).tag(Optional(group))
+        NavigationStack {
+            ZStack {
+                AppTheme.Colors.backgroundGradient
+                    .ignoresSafeArea()
+
+                ScrollView {
+                    VStack(spacing: AppTheme.Metrics.verticalSpacing) {
+                        selectionSection
+
+                        if let exercise = selectedExercise {
+                            Picker("Time Range", selection: $timeRange) {
+                                ForEach(TimeRange.allCases, id: \.self) { range in
+                                    Text(range.rawValue).tag(range)
+                                }
                             }
-                        }
-                        .pickerStyle(.menu)
-                        .onChange(of: selectedMuscleGroup) { _, _ in
-                            selectedExercise = nil
-                        }
-                    }
-                    
-                    // Exercise Picker
-                    if selectedMuscleGroup != nil {
-                        Picker("Exercise", selection: $selectedExercise) {
-                            Text("Select Exercise").tag(Optional<Exercise>.none)
-                            ForEach(filteredExercises) { exercise in
-                                Text(exercise.name).tag(Optional(exercise))
+                            .pickerStyle(.segmented)
+                            .padding(.horizontal, AppTheme.Metrics.horizontalPadding)
+
+                            VStack(spacing: AppTheme.Metrics.verticalSpacing) {
+                                ProgressCard<Double>(
+                                    title: "Weight Progress",
+                                    exercise: exercise,
+                                    timeRange: timeRange,
+                                    metric: \.weight,
+                                    color: .blue,
+                                    unit: SettingsManager.shared.useMetricSystem ? "kg" : "lb"
+                                )
+
+                                ProgressCard<Double>(
+                                    title: "Reps Progress",
+                                    exercise: exercise,
+                                    timeRange: timeRange,
+                                    metric: \.reps,
+                                    color: .green,
+                                    unit: "reps"
+                                )
                             }
-                        }
-                        .pickerStyle(.menu)
-                    }
-                    
-                    if let exercise = selectedExercise {
-                        // Time Range Picker
-                        Picker("Time Range", selection: $timeRange) {
-                            ForEach(TimeRange.allCases, id: \.self) { range in
-                                Text(range.rawValue).tag(range)
-                            }
-                        }
-                        .pickerStyle(.segmented)
-                        .padding(.horizontal)
-                        .padding(.bottom, 8)
-                        
-                        // Progress Charts
-                        VStack(alignment: .leading, spacing: 20) {
-                            ProgressCard<Double>(
-                                title: "Weight Progress",
-                                exercise: exercise,
-                                timeRange: timeRange,
-                                metric: \.weight,
-                                color: .blue,
-                                unit: "kg"
+                            .padding(.horizontal, AppTheme.Metrics.horizontalPadding)
+                            .animation(reduceMotion ? .none : .easeInOut(duration: 0.35), value: exercise.id)
+                        } else {
+                            ContentUnavailableView(
+                                "Select an Exercise",
+                                systemImage: "dumbbell.fill",
+                                description: Text("Choose an exercise to view your progress over time")
                             )
-                            .padding(.horizontal)
-                            .padding(.bottom, 16)
-                            .animation(reduceMotion ? .none : .easeInOut(duration: 0.3), value: exercise)
-                            
-                            ProgressCard<Double>(
-                                title: "Reps Progress",
-                                exercise: exercise,
-                                timeRange: timeRange,
-                                metric: \.reps,
-                                color: .green,
-                                unit: "reps"
-                            )
-                            .padding(.horizontal)
-                            .padding(.bottom, 16)
-                            .animation(reduceMotion ? .none : .easeInOut(duration: 0.3), value: exercise)
+                            .padding(.top, 40)
                         }
-                    } else {
-                        ContentUnavailableView(
-                            "Select an Exercise",
-                            systemImage: "dumbbell.fill",
-                            description: Text("Choose an exercise to view your progress over time")
-                        )
-                        .padding(.top, 40)
+                    }
+                    .padding(.vertical, AppTheme.Metrics.verticalSpacing)
+                }
+            }
+            .navigationTitle("Progress")
+            .toolbarBackground(.ultraThinMaterial, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+        }
+    }
+
+    private var selectionSection: some View {
+        VStack(spacing: AppTheme.Metrics.verticalSpacing) {
+            Picker("Type", selection: $selectedType) {
+                Text("Select Type").tag(Optional<Exercise.ExerciseType>.none)
+                ForEach(Exercise.ExerciseType.allCases, id: \.self) { type in
+                    Text(type.rawValue).tag(Optional(type))
+                }
+            }
+            .pickerStyle(.menu)
+            .onChange(of: selectedType) { _, _ in
+                selectedMuscleGroup = nil
+                selectedExercise = nil
+            }
+
+            if selectedType != nil {
+                Picker("Muscle Group", selection: $selectedMuscleGroup) {
+                    Text("Select Muscle Group").tag(Optional<Exercise.MuscleGroup>.none)
+                    ForEach(filteredMuscleGroups, id: \.self) { group in
+                        Text(group.rawValue).tag(Optional(group))
                     }
                 }
-                .padding(.top)
+                .pickerStyle(.menu)
+                .onChange(of: selectedMuscleGroup) { _, _ in
+                    selectedExercise = nil
+                }
             }
-            .background(Color(.systemGroupedBackground))
-            .navigationTitle("Progress")
+
+            if selectedMuscleGroup != nil {
+                Picker("Exercise", selection: $selectedExercise) {
+                    Text("Select Exercise").tag(Optional<Exercise>.none)
+                    ForEach(filteredExercises) { exercise in
+                        Text(exercise.name).tag(Optional(exercise))
+                    }
+                }
+                .pickerStyle(.menu)
+            }
         }
+        .glassCard()
+        .padding(.horizontal, AppTheme.Metrics.horizontalPadding)
     }
 }
 
@@ -140,7 +143,7 @@ struct ProgressView: View {
 enum MetricKeyPath<T> {
     case optional(KeyPath<WorkoutSet, T?>)
     case nonOptional(KeyPath<WorkoutSet, T>)
-    
+
     func getValue(from set: WorkoutSet) -> T? {
         switch self {
         case .optional(let keyPath):
@@ -158,8 +161,7 @@ struct ProgressCard<T: BinaryFloatingPoint & Plottable>: View {
     let metricPath: MetricKeyPath<T>
     let color: Color
     let unit: String
-    
-    // Init for optional metrics like weight
+
     init(title: String, exercise: Exercise, timeRange: ProgressView.TimeRange, metric: KeyPath<WorkoutSet, T?>, color: Color, unit: String) {
         self.title = title
         self.exercise = exercise
@@ -168,8 +170,7 @@ struct ProgressCard<T: BinaryFloatingPoint & Plottable>: View {
         self.color = color
         self.unit = unit
     }
-    
-    // Init for non-optional metrics like reps
+
     init(title: String, exercise: Exercise, timeRange: ProgressView.TimeRange, metric: KeyPath<WorkoutSet, T>, color: Color, unit: String) {
         self.title = title
         self.exercise = exercise
@@ -178,29 +179,38 @@ struct ProgressCard<T: BinaryFloatingPoint & Plottable>: View {
         self.color = color
         self.unit = unit
     }
-    
+
     @EnvironmentObject var dataManager: DataManager
-    
+
     var filteredSets: [WorkoutSet] {
         let cutoffDate = Calendar.current.date(
             byAdding: .day,
             value: -timeRange.days,
             to: Date()
         ) ?? Date()
-        
+
         return dataManager.workoutSets
             .filter { $0.exerciseId == exercise.id && $0.date >= cutoffDate }
             .sorted { $0.date < $1.date }
     }
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text(title)
-                .font(.headline)
-            
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(title)
+                        .font(AppTheme.Fonts.headline())
+                    Text(unit)
+                        .font(AppTheme.Fonts.subheadline())
+                        .foregroundStyle(.secondary)
+                }
+                Spacer()
+            }
+
             if filteredSets.isEmpty {
                 Text("No data available for this metric.")
-                    .font(.subheadline)
+                    .font(AppTheme.Fonts.subheadline())
+                    .foregroundStyle(.secondary)
             } else {
                 Chart {
                     ForEach(filteredSets) { set in
@@ -211,15 +221,20 @@ struct ProgressCard<T: BinaryFloatingPoint & Plottable>: View {
                             )
                             .foregroundStyle(color)
                             .interpolationMethod(.catmullRom)
+                            AreaMark(
+                                x: .value("Date", set.date),
+                                y: .value("Value", value)
+                            )
+                            .foregroundStyle(color.opacity(0.15))
                         }
                     }
                 }
-                .frame(height: 200)
+                .frame(height: 220)
                 .chartYAxis {
                     AxisMarks(position: .leading)
                 }
             }
         }
-        .cardStyle()
+        .glassCard()
     }
 }

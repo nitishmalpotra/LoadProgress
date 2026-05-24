@@ -19,7 +19,7 @@ This is a dynamic, live tracking document containing structured, production-grad
 - `[x]` **Prompt 1**: Repository Clean-up & Web Project Initialization
 - `[x]` **Prompt 2**: IndexedDB Data Layer (Dexie.js)
 - `[x]` **Prompt 3**: Zustand Store & Progressive Overload Engine (1RM / PR Calculations)
-- `[ ]` **Prompt 4**: Liquid Glass Design Tokens & Component Styles (Vanilla CSS)
+- `[x]` **Prompt 4**: Liquid Glass Design Tokens & Component Styles (Vanilla CSS)
 - `[ ]` **Prompt 5**: Responsive Layout & History Navigation Architecture
 - `[ ]` **Prompt 6**: Workout Log & Add Workout Form Views (Validation & Caching)
 - `[ ]` **Prompt 7**: Background-Safe Rest Timer Component

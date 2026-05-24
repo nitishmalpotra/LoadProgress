@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
 import App from '@/App';
 
@@ -18,10 +19,28 @@ describe('environment sanity', () => {
   });
 
   it('renders the LoadProgress placeholder with icons', () => {
-    render(<App />);
+    render(
+      <MemoryRouter>
+        <App />
+      </MemoryRouter>
+    );
 
     expect(screen.getByRole('heading', { name: 'LoadProgress' })).toBeInTheDocument();
     expect(screen.getByText('Workout logging')).toBeInTheDocument();
     expect(screen.getByText('Personal records')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Style guide' })).toHaveAttribute(
+      'href',
+      '/styleguide'
+    );
+  });
+
+  it('renders the style guide route', () => {
+    render(
+      <MemoryRouter initialEntries={['/styleguide']}>
+        <App />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByRole('heading', { name: 'iOS 26 Theme' })).toBeInTheDocument();
   });
 });

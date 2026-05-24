@@ -1,6 +1,8 @@
-import { Activity, Dumbbell, Trophy } from 'lucide-react';
+import { Activity, Dumbbell, Palette, Trophy } from 'lucide-react';
+import { Link, Route, Routes } from 'react-router-dom';
+import { StyleGuide } from '@/views/StyleGuide';
 
-function App() {
+function Home() {
   return (
     <main className="app-shell">
       <section className="hero-panel" aria-labelledby="page-title">
@@ -15,6 +17,10 @@ function App() {
             personal records, and training analytics.
           </p>
         </div>
+        <Link className="styleguide-link" to="/styleguide">
+          <Palette aria-hidden="true" size={18} />
+          Style guide
+        </Link>
         <div className="metric-grid" aria-label="Feature preview">
           <article>
             <Activity aria-hidden="true" />
@@ -27,6 +33,15 @@ function App() {
         </div>
       </section>
     </main>
+  );
+}
+
+function App() {
+  return (
+    <Routes>
+      <Route element={<Home />} path="/" />
+      <Route element={<StyleGuide />} path="/styleguide" />
+    </Routes>
   );
 }
 

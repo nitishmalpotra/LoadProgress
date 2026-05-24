@@ -22,7 +22,7 @@ This is a dynamic, live tracking document containing structured, production-grad
 - `[x]` **Prompt 4**: Liquid Glass Design Tokens & Component Styles (Vanilla CSS)
 - `[x]` **Prompt 5**: Responsive Layout & History Navigation Architecture
 - `[x]` **Prompt 6**: Workout Log & Add Workout Form Views (Validation & Caching)
-- `[ ]` **Prompt 7**: Background-Safe Rest Timer Component
+- `[x]` **Prompt 7**: Background-Safe Rest Timer Component
 - `[ ]` **Prompt 8**: Analytics & Progress Charts (Recharts)
 - `[ ]` **Prompt 9**: Exercises Library & History Detail Views
 - `[ ]` **Prompt 10**: PWA Caching & Vercel Configuration Setup

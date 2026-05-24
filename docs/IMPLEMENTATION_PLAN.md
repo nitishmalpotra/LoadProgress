@@ -34,7 +34,7 @@ Refactor the LoadProgress strength training application from a native iOS app in
 - `[x]` **Phase 4: CSS Theme Variables & Glassmorphic Styles** (Prompt 4)
 - `[x]` **Phase 5: Responsive Sidebar & HTML5 Routing Navigation** (Prompt 5)
 - `[x]` **Phase 6: Workout Logging Tab & Three-Tier Form Sheet** (Prompt 6)
-- `[ ]` **Phase 7: Background-Safe Rest Timer (Web Worker)** (Prompt 7)
+- `[x]` **Phase 7: Background-Safe Rest Timer (Web Worker)** (Prompt 7)
 - `[ ]` **Phase 8: Volume Analysis & Progress Trend Charts** (Prompt 8)
 - `[ ]` **Phase 9: Exercise Browser & History Details Sheet** (Prompt 9)
 - `[ ]` **Phase 10: PWA Offline Caching, Vercel Rewrites & Data Backup Tools** (Prompt 10)

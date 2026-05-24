@@ -18,6 +18,7 @@ type BestPersonalRecordsByExerciseAndType = Record<
   Partial<Record<PersonalRecordType, PersonalRecord>>
 >;
 type WeightAtRepsRecords = Record<string, PersonalRecord>;
+export type UnitSystem = 'metric' | 'imperial';
 
 export interface WorkoutStoreState {
   exercises: Exercise[];
@@ -31,8 +32,10 @@ export interface WorkoutStoreState {
   bestPersonalRecordsByExerciseAndType: BestPersonalRecordsByExerciseAndType;
   weightAtRepsRecords: WeightAtRepsRecords;
   activeExercises: Exercise[];
+  unitSystem: UnitSystem;
   isLoading: boolean;
   error: string | null;
+  setUnitSystem: (unitSystem: UnitSystem) => void;
   loadWorkoutData: () => Promise<void>;
   addExercise: (exercise: Omit<Exercise, 'id'> & { id?: string }) => Promise<string>;
   addWorkoutSet: (set: WorkoutSetInput) => Promise<string>;
@@ -73,6 +76,7 @@ const weightAtRepsKey = (exerciseId: string, reps: number): string =>
 const createInitialState = (): Omit<
   WorkoutStoreState,
   | 'loadWorkoutData'
+  | 'setUnitSystem'
   | 'addExercise'
   | 'addWorkoutSet'
   | 'updateWorkoutSet'
@@ -96,6 +100,7 @@ const createInitialState = (): Omit<
   bestPersonalRecordsByExerciseAndType: {},
   weightAtRepsRecords: {},
   activeExercises: [],
+  unitSystem: 'metric',
   isLoading: false,
   error: null
 });
@@ -105,8 +110,8 @@ const validateWorkoutSet = (set: WorkoutSetInput | WorkoutSet): void => {
     throw new Error('Workout set reps must be between 1 and 100.');
   }
 
-  if (set.weight !== undefined && (!Number.isFinite(set.weight) || set.weight < 0 || set.weight > 1000)) {
-    throw new Error('Workout set weight must be between 0 and 1000.');
+  if (set.weight !== undefined && (!Number.isFinite(set.weight) || set.weight <= 0 || set.weight > 1000)) {
+    throw new Error('Workout set weight must be greater than 0 and at most 1000.');
   }
 
   if (set.date.getTime() > Date.now()) {
@@ -204,6 +209,8 @@ const calculateDailyVolume = (sets: WorkoutSet[]): number =>
 export const createWorkoutStore = (database: LoadProgressDatabase = db) =>
   create<WorkoutStoreState>((set, get) => ({
     ...createInitialState(),
+
+    setUnitSystem: (unitSystem) => set({ unitSystem }),
 
     loadWorkoutData: async () => {
       set({ isLoading: true, error: null });

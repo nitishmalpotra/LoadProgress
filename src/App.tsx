@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { DashboardView, Layout } from '@/views/Layout';
 import { StyleGuide } from '@/views/StyleGuide';
+import { WorkoutTab } from '@/views/WorkoutTab';
 
 const views = {
   workout: {
@@ -59,7 +60,7 @@ function App() {
   return (
     <Routes>
       <Route element={<Layout />}>
-        <Route element={<DashboardView {...views.workout} />} path="/" />
+        <Route element={<WorkoutTab />} path="/" />
         <Route element={<DashboardView {...views.records} />} path="/records" />
         <Route element={<DashboardView {...views.analytics} />} path="/analytics" />
         <Route element={<DashboardView {...views.exercises} />} path="/exercises" />

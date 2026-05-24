@@ -1,0 +1,471 @@
+.workoutPage {
+  position: relative;
+  display: grid;
+  width: min(100%, 980px);
+  min-width: 0;
+  margin: 0 auto;
+  gap: 18px;
+}
+
+.pageHeader {
+  display: grid;
+  gap: 8px;
+}
+
+.pageHeader h1,
+.sheetHeader h2 {
+  margin: 0;
+  letter-spacing: 0;
+}
+
+.pageHeader h1 {
+  font-size: clamp(2rem, 8vw, 3.8rem);
+  line-height: 0.96;
+}
+
+.pageHeader p {
+  margin: 0;
+  color: var(--app-text-secondary);
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--app-teal-light);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.calendarRail,
+.chipScroller {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 4px 2px 10px;
+  scrollbar-width: none;
+  scroll-snap-type: x mandatory;
+}
+
+.calendarRail::-webkit-scrollbar,
+.chipScroller::-webkit-scrollbar {
+  display: none;
+}
+
+.dayCard,
+.dayCardSelected {
+  display: grid;
+  flex: 0 0 74px;
+  min-height: 92px;
+  place-items: center;
+  padding: 10px 8px;
+  border: 1px solid var(--app-glass-border);
+  border-radius: 18px;
+  color: var(--app-text-secondary);
+  cursor: pointer;
+  background: hsl(0 0% 100% / 0.08);
+  scroll-snap-align: center;
+  transition:
+    transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    background 160ms ease,
+    color 160ms ease;
+}
+
+.dayCard:active,
+.dayCardSelected:active,
+.chip:active,
+.chipSelected:active,
+.segment:active,
+.segmentSelected:active,
+.exerciseOption:active,
+.exerciseOptionSelected:active,
+.fab:active,
+.addButton:active,
+.iconButton:active {
+  transform: scale(0.97);
+}
+
+.dayCardSelected {
+  color: var(--app-text);
+  background: hsl(174 72% 44% / 0.25);
+  box-shadow: 0 12px 34px hsl(174 72% 24% / 0.22);
+}
+
+.dayCard span,
+.dayCardSelected span,
+.dayCard small,
+.dayCardSelected small {
+  font-size: 0.76rem;
+  font-weight: 750;
+}
+
+.dayCard strong,
+.dayCardSelected strong {
+  font-size: 1.55rem;
+}
+
+.dailyPanel,
+.sheet {
+  border: 1px solid var(--app-glass-border);
+  background: var(--app-glass-overlay);
+  box-shadow: 0 18px 54px hsl(220 45% 4% / 0.28);
+  backdrop-filter: blur(16px) saturate(178%);
+  -webkit-backdrop-filter: blur(16px) saturate(178%);
+}
+
+.dailyPanel {
+  display: grid;
+  gap: 16px;
+  min-height: 320px;
+  padding: 18px;
+  border-radius: 20px;
+}
+
+.panelHeader,
+.sheetHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.panelHeader h2 {
+  margin: 0 0 4px;
+  font-size: 1.05rem;
+}
+
+.panelHeader p {
+  margin: 0;
+  color: var(--app-text-secondary);
+  font-size: 0.9rem;
+}
+
+.emptyState {
+  display: grid;
+  min-height: 210px;
+  place-items: center;
+  color: var(--app-text-secondary);
+  text-align: center;
+}
+
+.exerciseGroups,
+.setList {
+  display: grid;
+  gap: 12px;
+}
+
+.exerciseGroup {
+  display: grid;
+  gap: 10px;
+}
+
+.exerciseGroup h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.setRow {
+  display: grid;
+  grid-template-columns: minmax(54px, 0.7fr) repeat(3, minmax(70px, 1fr)) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid hsl(0 0% 100% / 0.1);
+  border-radius: 14px;
+  background: hsl(222 47% 11% / 0.38);
+  color: var(--app-text-secondary);
+}
+
+.setRow p {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--app-text);
+  line-height: 1.45;
+}
+
+.setIndex {
+  color: var(--app-text);
+  font-weight: 800;
+}
+
+.failureBadge {
+  justify-self: end;
+  padding: 5px 8px;
+  border-radius: 999px;
+  color: hsl(4 100% 94%);
+  font-size: 0.76rem;
+  font-weight: 800;
+  background: hsl(4 84% 58% / 0.22);
+}
+
+.fab {
+  position: fixed;
+  right: 22px;
+  bottom: calc(88px + env(safe-area-inset-bottom));
+  z-index: 12;
+  display: grid;
+  width: 58px;
+  height: 58px;
+  place-items: center;
+  border: 1px solid var(--app-glass-border);
+  border-radius: 50%;
+  color: var(--app-text);
+  cursor: pointer;
+  background: linear-gradient(135deg, hsl(174 72% 34%), hsl(213 94% 42%));
+  box-shadow: 0 18px 44px hsl(220 45% 4% / 0.36);
+}
+
+.sheetOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  align-items: end;
+  padding: 18px;
+  background: hsl(220 45% 4% / 0.38);
+}
+
+.sheet {
+  display: grid;
+  width: min(100%, 680px);
+  max-height: min(88vh, 820px);
+  margin: 0 auto;
+  gap: 16px;
+  overflow: auto;
+  padding: 10px 18px 22px;
+  border-radius: 24px 24px 18px 18px;
+  animation: sheetIn 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sheetHandle {
+  width: 46px;
+  height: 5px;
+  margin: 0 auto 4px;
+  border-radius: 999px;
+  background: hsl(0 0% 100% / 0.34);
+}
+
+.iconButton {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border: 1px solid var(--app-glass-border);
+  border-radius: 14px;
+  color: var(--app-text);
+  cursor: pointer;
+  background: hsl(0 0% 100% / 0.1);
+}
+
+.wizardSection,
+.formGrid,
+.inputGroup {
+  display: grid;
+  gap: 10px;
+}
+
+.formGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.inputGroup:has(.textareaField),
+.inputGroup:has(.rangeField),
+.toggleRow,
+.addButton {
+  grid-column: 1 / -1;
+}
+
+.inputLabel {
+  color: var(--app-text-secondary);
+  font-size: 0.88rem;
+  font-weight: 750;
+}
+
+.segmentedRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.segment,
+.segmentSelected,
+.chip,
+.chipSelected,
+.exerciseOption,
+.exerciseOptionSelected,
+.addButton,
+.unitToggle {
+  border: 1px solid var(--app-glass-border);
+  color: var(--app-text);
+  cursor: pointer;
+  transition:
+    transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    background 160ms ease;
+}
+
+.segment,
+.segmentSelected {
+  display: inline-flex;
+  min-height: 46px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 14px;
+  background: hsl(0 0% 100% / 0.08);
+  font-weight: 800;
+}
+
+.segmentSelected,
+.chipSelected,
+.exerciseOptionSelected {
+  background: hsl(174 72% 44% / 0.24);
+}
+
+.chip,
+.chipSelected {
+  flex: 0 0 auto;
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: hsl(0 0% 100% / 0.08);
+  font-weight: 750;
+}
+
+.exerciseGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.exerciseOption,
+.exerciseOptionSelected {
+  display: grid;
+  min-height: 72px;
+  gap: 5px;
+  padding: 12px;
+  border-radius: 14px;
+  text-align: left;
+  background: hsl(0 0% 100% / 0.08);
+}
+
+.exerciseOption span,
+.exerciseOptionSelected span {
+  font-weight: 850;
+}
+
+.exerciseOption small,
+.exerciseOptionSelected small {
+  color: var(--app-text-secondary);
+  line-height: 1.35;
+}
+
+.inputField,
+.textareaField {
+  width: 100%;
+  min-height: 46px;
+  padding: 11px 12px;
+  border: 1px solid var(--app-glass-border);
+  border-radius: 14px;
+  color: var(--app-text);
+  background: hsl(0 0% 100% / 0.1);
+}
+
+.textareaField {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.rangeField {
+  width: 100%;
+  accent-color: var(--app-teal);
+}
+
+.inputWithToggle {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 58px;
+  gap: 8px;
+}
+
+.unitToggle {
+  border-radius: 14px;
+  background: hsl(0 0% 100% / 0.1);
+  font-weight: 850;
+}
+
+.toggleRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--app-text-secondary);
+  font-weight: 750;
+}
+
+.toggleRow input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--app-teal);
+}
+
+.addButton {
+  display: inline-flex;
+  min-height: 50px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, hsl(213 94% 40%), hsl(243 75% 46%));
+  box-shadow: 0 14px 30px hsl(213 94% 30% / 0.32);
+  font-weight: 850;
+}
+
+.addButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.errorText {
+  color: hsl(4 100% 82%);
+  font-size: 0.82rem;
+  font-weight: 750;
+}
+
+@keyframes sheetIn {
+  from {
+    opacity: 0;
+    transform: translateY(28px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (min-width: 768px) {
+  .fab {
+    right: 34px;
+    bottom: 34px;
+  }
+}
+
+@media (max-width: 620px) {
+  .formGrid,
+  .exerciseGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .setRow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .failureBadge {
+    justify-self: start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sheet {
+    animation: none;
+  }
+}

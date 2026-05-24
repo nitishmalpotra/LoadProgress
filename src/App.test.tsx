@@ -26,8 +26,8 @@ describe('environment sanity', () => {
     );
 
     expect(screen.getByRole('heading', { name: 'Today' })).toBeInTheDocument();
-    expect(screen.getByText('Set List')).toBeInTheDocument();
-    expect(screen.getByText('Quick Stats')).toBeInTheDocument();
+    expect(screen.getByText('No workouts for this date')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Add workout set' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Workout Log' })).toHaveAttribute('href', '/');
   });
 

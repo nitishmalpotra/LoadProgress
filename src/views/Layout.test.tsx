@@ -70,15 +70,15 @@ describe('Layout', () => {
 
     const drawer = screen.getByLabelText('Primary navigation drawer');
     const firstLink = screen.getByRole('link', { name: 'Workout Log' });
-    const lastLink = screen.getByRole('link', { name: 'Trends' });
+    const lastControl = screen.getByRole('button', { name: /import/i });
 
-    lastLink.focus();
+    lastControl.focus();
     fireEvent.keyDown(drawer, { key: 'Tab' });
 
     expect(firstLink).toHaveFocus();
 
     fireEvent.keyDown(drawer, { key: 'Tab', shiftKey: true });
 
-    expect(lastLink).toHaveFocus();
+    expect(lastControl).toHaveFocus();
   });
 });

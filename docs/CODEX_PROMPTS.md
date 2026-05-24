@@ -25,7 +25,7 @@ This is a dynamic, live tracking document containing structured, production-grad
 - `[x]` **Prompt 7**: Background-Safe Rest Timer Component
 - `[x]` **Prompt 8**: Analytics & Progress Charts (Recharts)
 - `[x]` **Prompt 9**: Exercises Library & History Detail Views
-- `[ ]` **Prompt 10**: PWA Caching & Vercel Configuration Setup
+- `[x]` **Prompt 10**: PWA Caching & Vercel Configuration Setup
 - `[ ]` **Prompt 11**: Open Source Portability, Documentation & Quality Polish
 
 ---

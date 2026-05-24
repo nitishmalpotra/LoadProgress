@@ -1,7 +1,20 @@
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
-import { Activity, BarChart3, BookOpen, Dumbbell, LineChart, Trophy } from 'lucide-react';
+import {
+  Activity,
+  BarChart3,
+  BookOpen,
+  Download,
+  Dumbbell,
+  LineChart,
+  Trophy,
+  Upload
+} from 'lucide-react';
 import { NavLink, Outlet } from 'react-router-dom';
+import { downloadBackupFile, importBackupFile } from '@/db/backup';
+import { ServiceWorkerUpdateToast } from '@/views/components/ServiceWorkerUpdateToast';
+import { useServiceWorkerUpdate } from '@/views/hooks/useServiceWorkerUpdate';
 import styles from '@/views/styles/Layout.module.css';
+import { useWorkoutStore } from '@/store/useWorkoutStore';
 
 const desktopBreakpoint = 768;
 
@@ -48,6 +61,52 @@ function NavigationLinks({ compact = false }: { compact?: boolean }) {
         </NavLink>
       ))}
     </>
+  );
+}
+
+function BackupControls() {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const loadWorkoutData = useWorkoutStore((state) => state.loadWorkoutData);
+
+  const handleImport = async (file: File | undefined) => {
+    if (!file) {
+      return;
+    }
+
+    try {
+      await importBackupFile(file);
+      await loadWorkoutData();
+    } catch (error) {
+      window.alert(error instanceof Error ? error.message : 'Backup file could not be imported.');
+    } finally {
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
+  return (
+    <div className={styles.backupControls} aria-label="Backup and restore controls">
+      <button className={styles.backupButton} onClick={() => void downloadBackupFile()} type="button">
+        <Download aria-hidden="true" size={17} strokeWidth={2.4} />
+        <span>Export</span>
+      </button>
+      <button
+        className={styles.backupButton}
+        onClick={() => fileInputRef.current?.click()}
+        type="button"
+      >
+        <Upload aria-hidden="true" size={17} strokeWidth={2.4} />
+        <span>Import</span>
+      </button>
+      <input
+        accept="application/json"
+        className={styles.fileInput}
+        onChange={(event) => void handleImport(event.currentTarget.files?.[0])}
+        ref={fileInputRef}
+        type="file"
+      />
+    </div>
   );
 }
 
@@ -99,6 +158,7 @@ function DesktopSidebar() {
       <nav aria-label="Primary navigation" className={styles.desktopNav}>
         <NavigationLinks />
       </nav>
+      <BackupControls />
     </aside>
   );
 }
@@ -113,15 +173,18 @@ function MobileTabBar() {
 
 export function Layout() {
   const isDesktop = useIsDesktop();
+  const { needsRefresh, update } = useServiceWorkerUpdate();
 
   return (
     <div className={styles.layoutRoot}>
       <div className={styles.layoutFrame}>
         {isDesktop ? <DesktopSidebar /> : <MobileTabBar />}
         <main className={styles.mainContent}>
+          {!isDesktop ? <BackupControls /> : null}
           <Outlet />
         </main>
       </div>
+      <ServiceWorkerUpdateToast open={needsRefresh} onUpdate={update} />
     </div>
   );
 }

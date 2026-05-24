@@ -37,7 +37,7 @@ Refactor the LoadProgress strength training application from a native iOS app in
 - `[x]` **Phase 7: Background-Safe Rest Timer (Web Worker)** (Prompt 7)
 - `[x]` **Phase 8: Volume Analysis & Progress Trend Charts** (Prompt 8)
 - `[x]` **Phase 9: Exercise Browser & History Details Sheet** (Prompt 9)
-- `[ ]` **Phase 10: PWA Offline Caching, Vercel Rewrites & Data Backup Tools** (Prompt 10)
+- `[x]` **Phase 10: PWA Offline Caching, Vercel Rewrites & Data Backup Tools** (Prompt 10)
 - `[ ]` **Phase 11: Open Source Portability, Documentation & Quality Polish** (Prompt 11)
 
 ---

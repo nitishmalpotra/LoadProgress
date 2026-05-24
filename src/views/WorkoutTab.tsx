@@ -91,7 +91,9 @@ export function WorkoutTab() {
         <div className={styles.panelHeader}>
           <div>
             <h2>Logged Sets</h2>
-            <p>{selectedSets.length} set{selectedSets.length === 1 ? '' : 's'}</p>
+            <p>
+              {selectedSets.length} set{selectedSets.length === 1 ? '' : 's'}
+            </p>
           </div>
           <CalendarDays aria-hidden="true" size={21} />
         </div>
@@ -113,7 +115,9 @@ export function WorkoutTab() {
                         <span>{set.weight ? `${set.weight} ${unitLabel}` : 'Bodyweight'}</span>
                         <span>{set.reps} reps</span>
                         <span>RPE {set.rpe ?? '-'}</span>
-                        {set.isFailureSet ? <span className={styles.failureBadge}>Failure</span> : null}
+                        {set.isFailureSet ? (
+                          <span className={styles.failureBadge}>Failure</span>
+                        ) : null}
                         {set.notes ? <p>{set.notes}</p> : null}
                       </div>
                     ))}

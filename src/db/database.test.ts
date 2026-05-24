@@ -1,11 +1,6 @@
 import Dexie from 'dexie';
 import { afterEach, describe, expect, it } from 'vitest';
-import {
-  DEFAULT_EXERCISES,
-  LoadProgressDatabase,
-  UUID_REGEX,
-  createUuid
-} from './database';
+import { DEFAULT_EXERCISES, LoadProgressDatabase, UUID_REGEX, createUuid } from './database';
 import type { Exercise, WorkoutSet } from '@/models';
 
 const createdDatabases = new Set<string>();

@@ -226,8 +226,7 @@ export function ExercisesTab() {
                 setCustomExercise((exercise) => ({
                   ...exercise,
                   type: event.target.value as ExerciseType,
-                  equipment:
-                    event.target.value === 'Bodyweight' ? 'Bodyweight' : exercise.equipment
+                  equipment: event.target.value === 'Bodyweight' ? 'Bodyweight' : exercise.equipment
                 }))
               }
             >

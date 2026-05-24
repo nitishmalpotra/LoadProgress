@@ -8,6 +8,7 @@ Refactor the LoadProgress strength training application from a native iOS app in
 
 > [!IMPORTANT]
 > **Key Architecture Decisions (Approved via Interview):**
+>
 > 1.  **Local-First Persistence**: Data remains completely client-side in browser storage via IndexedDB (using Dexie.js), avoiding any database hosting cost.
 > 2.  **Vite + React + TS**: Client-side single page app deployment structure directly at the root of the repository.
 > 3.  **Vanilla CSS & CSS Modules**: Fine-tuned control over custom glassmorphism filters, gradients, and shadows without framework limits.
@@ -23,11 +24,13 @@ Refactor the LoadProgress strength training application from a native iOS app in
 
 > [!IMPORTANT]
 > **Instructions for Codex (Read before every prompt execution):**
-> - **Sync Policy**: Before implementing any code, read [IMPLEMENTATION_PLAN.md](file:///Users/nitishmalpotra/Downloads/devDEVdev/portfolio/LoadProgress/docs/IMPLEMENTATION_PLAN.md) and [CODEX_PROMPTS.md](file:///Users/nitishmalpotra/Downloads/devDEVdev/portfolio/LoadProgress/docs/CODEX_PROMPTS.md) to align on what has already been built.
+>
+> - **Sync Policy**: Before implementing any code, read [IMPLEMENTATION_PLAN.md](docs/IMPLEMENTATION_PLAN.md) and [CODEX_PROMPTS.md](docs/CODEX_PROMPTS.md) to align on what has already been built.
 > - **Progress Reporting**: Once you complete a prompt's requirements, update the corresponding checkboxes in **both** files (`[ ]` ➔ `[x]`).
 > - **Dynamic Updates**: If any API definitions, state stores, or style patterns change during the coding session, update this file and the prompts file immediately to reflect those changes.
 
 ### Refactoring Progress Checklist
+
 - `[x]` **Phase 1: Repository Clean-up & Web Project Initialization** (Prompt 1)
 - `[x]` **Phase 2: IndexedDB Data Layer (Dexie.js Schema & Seeding)** (Prompt 2)
 - `[x]` **Phase 3: Zustand Store & Progressive Overload Engine (Brzycki 1RM / PR triggers)** (Prompt 3)
@@ -38,7 +41,7 @@ Refactor the LoadProgress strength training application from a native iOS app in
 - `[x]` **Phase 8: Volume Analysis & Progress Trend Charts** (Prompt 8)
 - `[x]` **Phase 9: Exercise Browser & History Details Sheet** (Prompt 9)
 - `[x]` **Phase 10: PWA Offline Caching, Vercel Rewrites & Data Backup Tools** (Prompt 10)
-- `[ ]` **Phase 11: Open Source Portability, Documentation & Quality Polish** (Prompt 11)
+- `[x]` **Phase 11: Open Source Portability, Documentation & Quality Polish** (Prompt 11)
 
 ---
 
@@ -48,42 +51,52 @@ The Vite configuration and codebase files will be generated directly at the root
 
 ### [NEW] Web Subproject Layout (Root Level)
 
-#### [NEW] [package.json](file:///Users/nitishmalpotra/Downloads/devDEVdev/portfolio/LoadProgress/package.json)
+#### [NEW] [package.json](package.json)
+
 Define package dependencies including `react`, `react-dom`, `react-router-dom`, `dexie`, `zustand`, `recharts`, `lucide-react`, and devDependencies like `typescript`, `vite`, `vite-plugin-pwa`, `vitest`, `@testing-library/react`.
 
-#### [NEW] [vercel.json](file:///Users/nitishmalpotra/Downloads/devDEVdev/portfolio/LoadProgress/vercel.json)
+#### [NEW] [vercel.json](vercel.json)
+
 Redirect configuration mapping source `/(.*)` to destination `/index.html` to avoid Vercel hosting 404 errors on browser page reloads.
 
-#### [NEW] [database.ts](file:///Users/nitishmalpotra/Downloads/devDEVdev/portfolio/LoadProgress/src/db/database.ts)
+#### [NEW] [database.ts](src/db/database.ts)
+
 IndexedDB schemas and tables:
-*   `exercises`: UUID (primary key), name, type, muscleGroup, secondaryMuscleGroups, icon, difficulty, equipment, description, formCues.
-*   `workoutSets`: UUID (primary key), exerciseId (indexed), weight, reps, date (indexed), rpe, restTime, notes, isFailureSet.
-*   `personalRecords`: UUID (primary key), exerciseId (indexed), type (indexed), value, date, reps.
 
-#### [NEW] [useWorkoutStore.ts](file:///Users/nitishmalpotra/Downloads/devDEVdev/portfolio/LoadProgress/src/store/useWorkoutStore.ts)
+- `exercises`: UUID (primary key), name, type, muscleGroup, secondaryMuscleGroups, icon, difficulty, equipment, description, formCues.
+- `workoutSets`: UUID (primary key), exerciseId (indexed), weight, reps, date (indexed), rpe, restTime, notes, isFailureSet.
+- `personalRecords`: UUID (primary key), exerciseId (indexed), type (indexed), value, date, reps.
+
+#### [NEW] [useWorkoutStore.ts](src/store/useWorkoutStore.ts)
+
 Zustand global store managing:
-*   Reactive states for loaded exercises and sets.
-*   Background PR checking trigger on adding new sets (using the Brzycki formula).
-*   Automatic cache indexing to mimic iOS caching logic ($O(1)$ lookups).
-*   Initial database population containing the 28 default exercises on first launch.
 
-#### [NEW] [Theme.module.css](file:///Users/nitishmalpotra/Downloads/devDEVdev/portfolio/LoadProgress/src/views/styles/Theme.module.css)
+- Reactive states for loaded exercises and sets.
+- Background PR checking trigger on adding new sets (using the Brzycki formula).
+- Automatic cache indexing to mimic iOS caching logic ($O(1)$ lookups).
+- Initial database population containing the 28 default exercises on first launch.
+
+#### [NEW] [Theme.module.css](src/views/styles/Theme.module.css)
+
 Declare design system tokens as CSS Variables (colors, corner-radii, spacing, shadows, glass overlays, animations). Define global utilities for class-based glass styling:
-*   `.glassCard`
-*   `.floatingCard`
-*   `.buttonPrimary`, `.buttonSecondary`, `.buttonGlass`, `.buttonPill`
+
+- `.glassCard`
+- `.floatingCard`
+- `.buttonPrimary`, `.buttonSecondary`, `.buttonGlass`, `.buttonPill`
 
 #### [NEW] Views and Components (`src/views/`)
-*   `Layout.tsx`: Handle responsive desktop sidebar vs. mobile tab bar views.
-*   `WorkoutTab.tsx`: Date picker, daily set list, and a floating button trigger for new sets.
-*   `RecordsTab.tsx`: Personal Records overview and progression charts.
-*   `AnalyticsTab.tsx`: Horizontal bar chart detailing volume by muscle group.
-*   `ExercisesTab.tsx`: Filterable list of available exercises.
-*   `ProgressTab.tsx`: Detailed weight and reps charts for custom exercises.
-*   `components/AddWorkoutModal.tsx`: Log new exercises with reps, weight, RPE, rest time, and notes.
-*   `components/RestTimer.tsx`: Circular visual countdown timer with preset values.
 
-#### [NEW] [README.md](file:///Users/nitishmalpotra/Downloads/devDEVdev/portfolio/LoadProgress/README.md)
+- `Layout.tsx`: Handle responsive desktop sidebar vs. mobile tab bar views.
+- `WorkoutTab.tsx`: Date picker, daily set list, and a floating button trigger for new sets.
+- `RecordsTab.tsx`: Personal Records overview and progression charts.
+- `AnalyticsTab.tsx`: Horizontal bar chart detailing volume by muscle group.
+- `ExercisesTab.tsx`: Filterable list of available exercises.
+- `ProgressTab.tsx`: Detailed weight and reps charts for custom exercises.
+- `components/AddWorkoutModal.tsx`: Log new exercises with reps, weight, RPE, rest time, and notes.
+- `components/RestTimer.tsx`: Circular visual countdown timer with preset values.
+
+#### [NEW] [README.md](README.md)
+
 A comprehensive open-source file including project description, feature summaries, local installation, build, and verification commands, layout design, and structural explanation.
 
 ---
@@ -91,19 +104,21 @@ A comprehensive open-source file including project description, feature summarie
 ## Verification Plan
 
 ### Automated Tests
-*   Run unit tests via Vitest:
-    ```bash
-    npm run test
-    ```
-*   Verify 1RM calculations (Brzycki formula correctness).
-*   Verify PR detection logic triggers on set inputs.
-*   Verify default exercise population succeeds.
+
+- Run unit tests via Vitest:
+  ```bash
+  npm run test
+  ```
+- Verify 1RM calculations (Brzycki formula correctness).
+- Verify PR detection logic triggers on set inputs.
+- Verify default exercise population succeeds.
 
 ### Manual Verification
-*   Compile static assets and run locally:
-    ```bash
-    npm run dev
-    ```
-*   Test responsive layouts using Chrome DevTools (switch from Mobile viewports to Desktop).
-*   Test offline capabilities by toggling network state to "Offline" in browser tools.
-*   Verify that rest timer, haptic vibrations (`navigator.vibrate`), and backup exports function correctly.
+
+- Compile static assets and run locally:
+  ```bash
+  npm run dev
+  ```
+- Test responsive layouts using Chrome DevTools (switch from Mobile viewports to Desktop).
+- Test offline capabilities by toggling network state to "Offline" in browser tools.
+- Verify that rest timer, haptic vibrations (`navigator.vibrate`), and backup exports function correctly.

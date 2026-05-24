@@ -12,9 +12,18 @@ const views = {
     title: 'Today',
     summary: 'Review the current training day and prepare the logging flow for the next prompt.',
     panels: [
-      { title: 'Set List', body: 'Daily workout sets will render here after the logging view lands.' },
-      { title: 'Quick Stats', body: 'Volume, effort, and session totals share the dashboard grid.' },
-      { title: 'Rest Timer', body: 'Timer controls will attach to this layout without changing routes.' }
+      {
+        title: 'Set List',
+        body: 'Daily workout sets will render here after the logging view lands.'
+      },
+      {
+        title: 'Quick Stats',
+        body: 'Volume, effort, and session totals share the dashboard grid.'
+      },
+      {
+        title: 'Rest Timer',
+        body: 'Timer controls will attach to this layout without changing routes.'
+      }
     ]
   },
   records: {
@@ -53,8 +62,14 @@ const views = {
     summary: 'Follow weight, reps, and estimated strength trends over time.',
     panels: [
       { title: 'Strength Trend', body: 'Line charts will render without changing navigation.' },
-      { title: 'Rep Progress', body: 'Progress panels share the same multi-column desktop behavior.' },
-      { title: 'Exercise Focus', body: 'Custom exercise trends stay reachable from history routes.' }
+      {
+        title: 'Rep Progress',
+        body: 'Progress panels share the same multi-column desktop behavior.'
+      },
+      {
+        title: 'Exercise Focus',
+        body: 'Custom exercise trends stay reachable from history routes.'
+      }
     ]
   }
 };

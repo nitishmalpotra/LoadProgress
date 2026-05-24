@@ -54,7 +54,8 @@ export const calculateVolumeByMuscleGroup = (
       return groups;
     }
 
-    groups[exercise.muscleGroup] = (groups[exercise.muscleGroup] ?? 0) + calculateSetVolume(workoutSet);
+    groups[exercise.muscleGroup] =
+      (groups[exercise.muscleGroup] ?? 0) + calculateSetVolume(workoutSet);
     return groups;
   }, {});
 
@@ -67,10 +68,7 @@ export const calculateVolumeByMuscleGroup = (
     .sort((left, right) => right.volume - left.volume);
 };
 
-export const getLoggedExercises = (
-  exercises: Exercise[],
-  workoutSets: WorkoutSet[]
-) => {
+export const getLoggedExercises = (exercises: Exercise[], workoutSets: WorkoutSet[]) => {
   const loggedExerciseIds = new Set(workoutSets.map((workoutSet) => workoutSet.exerciseId));
   return exercises.filter((exercise) => loggedExerciseIds.has(exercise.id));
 };
@@ -78,10 +76,7 @@ export const getLoggedExercises = (
 export const getExerciseTypes = (exercises: Exercise[]) =>
   Array.from(new Set(exercises.map((exercise) => exercise.type))).sort() as ExerciseType[];
 
-export const getMuscleGroupsForType = (
-  exercises: Exercise[],
-  exerciseType: ExerciseType | ''
-) =>
+export const getMuscleGroupsForType = (exercises: Exercise[], exerciseType: ExerciseType | '') =>
   Array.from(
     new Set(
       exercises
@@ -142,5 +137,7 @@ export const getFocusedWeightDomain = (trend: ProgressTrendPoint[]): [number, nu
   const lowerBound = Math.max(0, Math.floor(min - padding));
   const upperBound = Math.ceil(max + padding);
 
-  return lowerBound === upperBound ? [Math.max(0, lowerBound - 5), upperBound + 5] : [lowerBound, upperBound];
+  return lowerBound === upperBound
+    ? [Math.max(0, lowerBound - 5), upperBound + 5]
+    : [lowerBound, upperBound];
 };

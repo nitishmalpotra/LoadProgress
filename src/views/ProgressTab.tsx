@@ -171,7 +171,9 @@ export function ProgressTab() {
         <div className={styles.panelHeader}>
           <div>
             <h2>Weight and Reps</h2>
-            <p>{trend.length} training day{trend.length === 1 ? '' : 's'}</p>
+            <p>
+              {trend.length} training day{trend.length === 1 ? '' : 's'}
+            </p>
           </div>
         </div>
 
@@ -202,7 +204,10 @@ export function ProgressTab() {
                   tick={{ fill: 'rgba(255,255,255,0.72)', fontSize: 12 }}
                   yAxisId="reps"
                 />
-                <Tooltip content={<ProgressTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.18)' }} />
+                <Tooltip
+                  content={<ProgressTooltip />}
+                  cursor={{ stroke: 'rgba(255,255,255,0.18)' }}
+                />
                 <Legend wrapperStyle={{ color: 'rgba(255,255,255,0.78)', fontSize: 12 }} />
                 <Line
                   activeDot={{ r: 6, stroke: 'white', strokeWidth: 2 }}

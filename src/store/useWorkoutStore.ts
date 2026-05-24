@@ -110,7 +110,10 @@ const validateWorkoutSet = (set: WorkoutSetInput | WorkoutSet): void => {
     throw new Error('Workout set reps must be between 1 and 100.');
   }
 
-  if (set.weight !== undefined && (!Number.isFinite(set.weight) || set.weight <= 0 || set.weight > 1000)) {
+  if (
+    set.weight !== undefined &&
+    (!Number.isFinite(set.weight) || set.weight <= 0 || set.weight > 1000)
+  ) {
     throw new Error('Workout set weight must be greater than 0 and at most 1000.');
   }
 
@@ -368,7 +371,8 @@ export const createWorkoutStore = (database: LoadProgressDatabase = db) =>
 
       const records: Array<Omit<PersonalRecord, 'id'>> = [];
       const oneRepMax = calculateOneRepMax(workoutSet.weight, workoutSet.reps);
-      const existingOneRepMax = get().bestPersonalRecordsByExerciseAndType[workoutSet.exerciseId]?.['1RM'];
+      const existingOneRepMax =
+        get().bestPersonalRecordsByExerciseAndType[workoutSet.exerciseId]?.['1RM'];
 
       if (!existingOneRepMax || oneRepMax > existingOneRepMax.value) {
         records.push({
@@ -396,7 +400,8 @@ export const createWorkoutStore = (database: LoadProgressDatabase = db) =>
         (setForExercise) => sameDay(setForExercise.date, workoutSet.date)
       );
       const dailyVolume = calculateDailyVolume(dailyExerciseSets);
-      const existingVolume = get().bestPersonalRecordsByExerciseAndType[workoutSet.exerciseId]?.Volume;
+      const existingVolume =
+        get().bestPersonalRecordsByExerciseAndType[workoutSet.exerciseId]?.Volume;
 
       if (!existingVolume || dailyVolume > existingVolume.value) {
         records.push({
@@ -404,7 +409,10 @@ export const createWorkoutStore = (database: LoadProgressDatabase = db) =>
           type: 'Volume',
           value: dailyVolume,
           date: workoutSet.date,
-          reps: dailyExerciseSets.reduce((totalReps, setForExercise) => totalReps + setForExercise.reps, 0)
+          reps: dailyExerciseSets.reduce(
+            (totalReps, setForExercise) => totalReps + setForExercise.reps,
+            0
+          )
         });
       }
 

@@ -1,11 +1,13 @@
 {
   "name": "loadprogress",
-  "private": true,
+  "private": false,
   "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "lint": "eslint \"src/**/*.{ts,tsx}\" --max-warnings=0",
+    "format": "prettier --check \"src/**/*.{ts,tsx,css}\" \"*.{json,md,html,ts}\" \"docs/IMPLEMENTATION_PLAN.md\" \"docs/CODEX_PROMPTS.md\"",
     "preview": "vite preview",
     "test": "vitest run"
   },
@@ -27,8 +29,14 @@
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.6",
     "@types/react-dom": "^19.2.3",
+    "@typescript-eslint/eslint-plugin": "^8.59.4",
+    "@typescript-eslint/parser": "^8.59.4",
+    "eslint": "^8.57.1",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.26",
     "fake-indexeddb": "^6.2.5",
     "jsdom": "^27.2.0",
+    "prettier": "^3.8.3",
     "typescript": "^5.9.3",
     "vite": "^7.2.4",
     "vitest": "^4.0.13"

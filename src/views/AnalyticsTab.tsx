@@ -100,7 +100,9 @@ export function AnalyticsTab() {
         <div className={styles.panelHeader}>
           <div>
             <h2>Volume Breakdown</h2>
-            <p>{volumeMetrics.length} active muscle group{volumeMetrics.length === 1 ? '' : 's'}</p>
+            <p>
+              {volumeMetrics.length} active muscle group{volumeMetrics.length === 1 ? '' : 's'}
+            </p>
           </div>
         </div>
 

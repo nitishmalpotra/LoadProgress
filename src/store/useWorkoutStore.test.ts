@@ -121,13 +121,19 @@ describe('useWorkoutStore', () => {
     await store.getState().deleteWorkoutSet(firstSetId);
 
     expect(store.getState().workoutSets.map((set) => set.id)).toEqual([secondSetId]);
-    expect(store.getState().getWorkoutSetsForExercise(exerciseId).map((set) => set.id)).toEqual([
-      secondSetId
-    ]);
+    expect(
+      store
+        .getState()
+        .getWorkoutSetsForExercise(exerciseId)
+        .map((set) => set.id)
+    ).toEqual([secondSetId]);
     expect(store.getState().getWorkoutSetsForDate(daysAgo(2))).toEqual([]);
-    expect(store.getState().getWorkoutSetsForDate(daysAgo(1)).map((set) => set.id)).toEqual([
-      secondSetId
-    ]);
+    expect(
+      store
+        .getState()
+        .getWorkoutSetsForDate(daysAgo(1))
+        .map((set) => set.id)
+    ).toEqual([secondSetId]);
     expect(await database.workoutSets.count()).toBe(1);
 
     database.close();

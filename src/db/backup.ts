@@ -97,7 +97,8 @@ const isSerializedWorkoutSet = (value: unknown): value is SerializedWorkoutSet =
   return (
     typeof value.id === 'string' &&
     typeof value.exerciseId === 'string' &&
-    (value.weight === undefined || (typeof value.weight === 'number' && Number.isFinite(value.weight))) &&
+    (value.weight === undefined ||
+      (typeof value.weight === 'number' && Number.isFinite(value.weight))) &&
     typeof value.reps === 'number' &&
     Number.isInteger(value.reps) &&
     value.reps > 0 &&
@@ -228,11 +229,17 @@ export const importBackupData = async (
   const workoutSets = backup.workoutSets.map(reviveWorkoutSet);
   const personalRecords = backup.personalRecords.map(revivePersonalRecord);
 
-  await database.transaction('rw', database.exercises, database.workoutSets, database.personalRecords, async () => {
-    await database.exercises.bulkPut(backup.exercises);
-    await database.workoutSets.bulkPut(workoutSets);
-    await database.personalRecords.bulkPut(personalRecords);
-  });
+  await database.transaction(
+    'rw',
+    database.exercises,
+    database.workoutSets,
+    database.personalRecords,
+    async () => {
+      await database.exercises.bulkPut(backup.exercises);
+      await database.workoutSets.bulkPut(workoutSets);
+      await database.personalRecords.bulkPut(personalRecords);
+    }
+  );
 
   return {
     exercises: backup.exercises.length,

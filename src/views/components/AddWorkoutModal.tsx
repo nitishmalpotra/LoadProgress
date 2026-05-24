@@ -175,7 +175,9 @@ export function AddWorkoutModal({ date, isOpen, onClose }: AddWorkoutModalProps)
               {visibleExercises.map((exercise) => (
                 <button
                   className={
-                    exerciseId === exercise.id ? styles.exerciseOptionSelected : styles.exerciseOption
+                    exerciseId === exercise.id
+                      ? styles.exerciseOptionSelected
+                      : styles.exerciseOption
                   }
                   key={exercise.id}
                   type="button"

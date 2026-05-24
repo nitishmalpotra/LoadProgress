@@ -87,7 +87,11 @@ function BackupControls() {
 
   return (
     <div className={styles.backupControls} aria-label="Backup and restore controls">
-      <button className={styles.backupButton} onClick={() => void downloadBackupFile()} type="button">
+      <button
+        className={styles.backupButton}
+        onClick={() => void downloadBackupFile()}
+        type="button"
+      >
         <Download aria-hidden="true" size={17} strokeWidth={2.4} />
         <span>Export</span>
       </button>

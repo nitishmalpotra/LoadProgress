@@ -1,0 +1,16 @@
+node_modules
+dist
+coverage
+ios-archive
+package-lock.json
+docs/ANALYSIS_RESULTS.md
+docs/ASSUMPTIONS.md
+docs/CHANGELOG.md
+docs/DESIGN_SPEC.md
+docs/DOCUMENTATION_README.md
+docs/PRODUCT_REQUIREMENTS.md
+docs/ProgressiveOverloadFeatures.md
+docs/PRD_DERIVATION_SUMMARY.md
+docs/QA_SMOKE_CHECKS.md
+docs/UI_UPDATES.md
+DOCUMENTATION_CHANGES.md

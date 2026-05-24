@@ -129,7 +129,9 @@ export function ExerciseDetail({ exercise, onClose }: ExerciseDetailProps) {
           </div>
           <div className={styles.statCard}>
             <span>Frequency</span>
-            <strong>{formatNumber(stats.frequency)} day{stats.frequency === 1 ? '' : 's'}</strong>
+            <strong>
+              {formatNumber(stats.frequency)} day{stats.frequency === 1 ? '' : 's'}
+            </strong>
           </div>
           <div className={styles.statCard}>
             <span>Average Weight</span>
@@ -145,7 +147,9 @@ export function ExerciseDetail({ exercise, onClose }: ExerciseDetailProps) {
           <div className={styles.historyHeader}>
             <div>
               <h3 id="history-title">Log History</h3>
-              <p>{sets.length} logged set{sets.length === 1 ? '' : 's'}</p>
+              <p>
+                {sets.length} logged set{sets.length === 1 ? '' : 's'}
+              </p>
             </div>
             <Trophy size={18} />
           </div>
@@ -164,7 +168,9 @@ export function ExerciseDetail({ exercise, onClose }: ExerciseDetailProps) {
                     {group.sets.map((set, index) => (
                       <div className={styles.historyRow} key={set.id}>
                         <span>Set {index + 1}</span>
-                        <strong>{set.weight === undefined ? 'Bodyweight' : `${set.weight} kg`}</strong>
+                        <strong>
+                          {set.weight === undefined ? 'Bodyweight' : `${set.weight} kg`}
+                        </strong>
                         <span>{set.reps} reps</span>
                         {set.rpe ? <span>RPE {set.rpe}</span> : <span />}
                       </div>

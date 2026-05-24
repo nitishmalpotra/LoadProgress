@@ -1,12 +1,7 @@
 import Dexie from 'dexie';
 import { afterEach, describe, expect, it } from 'vitest';
 import { DEFAULT_EXERCISES, LoadProgressDatabase } from '@/db/database';
-import {
-  exportBackupData,
-  importBackupFile,
-  parseBackupJson,
-  readBackupFile
-} from '@/db/backup';
+import { exportBackupData, importBackupFile, parseBackupJson, readBackupFile } from '@/db/backup';
 import { createWorkoutStore } from '@/store/useWorkoutStore';
 
 const createdDatabases = new Set<string>();

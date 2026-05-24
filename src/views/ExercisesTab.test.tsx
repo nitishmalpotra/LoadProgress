@@ -45,7 +45,10 @@ const curl: Exercise = {
   formCues: ['Keep elbows still', 'Full range of motion']
 };
 
-function resetWorkoutStore(exercises: Exercise[] = [benchPress, squat, curl], sets: WorkoutSet[] = []) {
+function resetWorkoutStore(
+  exercises: Exercise[] = [benchPress, squat, curl],
+  sets: WorkoutSet[] = []
+) {
   const addExercise = vi.fn(async (exercise: Omit<Exercise, 'id'> & { id?: string }) => {
     const savedExercise = {
       ...exercise,
@@ -150,9 +153,7 @@ describe('ExercisesTab', () => {
       expect(screen.getByText('Safety Bar Squat')).toBeInTheDocument();
     });
 
-    rerender(
-      <AddWorkoutModal date={new Date('2026-05-20T09:00:00')} isOpen onClose={vi.fn()} />
-    );
+    rerender(<AddWorkoutModal date={new Date('2026-05-20T09:00:00')} isOpen onClose={vi.fn()} />);
 
     fireEvent.click(screen.getByRole('button', { name: 'Weight Training' }));
     fireEvent.click(screen.getByRole('button', { name: 'Legs' }));

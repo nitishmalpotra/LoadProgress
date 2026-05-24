@@ -23,20 +23,20 @@ LoadProgress is an exceptionally clean, well-engineered native iOS application. 
 ## 🔍 Screen-by-Screen & File Analysis
 
 ### 1. Data Layer (`Models/`)
-*   [Exercise.swift](file:///Users/nitishmalpotra/Downloads/devDEVdev/portfolio/LoadProgress/LoadProgress/Models/Exercise.swift): Models exercises with type (weight training vs. bodyweight), muscle group, secondary groups, icon, difficulty, equipment, and form cues. Includes validation using the `Validator` utility.
-*   [WorkoutSet.swift](file:///Users/nitishmalpotra/Downloads/devDEVdev/portfolio/LoadProgress/LoadProgress/Models/WorkoutSet.swift): Represents a single log entry. Contains strict initializer validation (e.g., reps > 0, weight > 0, future date prevention).
-*   [PersonalRecord.swift](file:///Users/nitishmalpotra/Downloads/devDEVdev/portfolio/LoadProgress/LoadProgress/Models/PersonalRecord.swift): Structures 1RM, volume, and reps-based personal records.
-*   [VolumeMetrics.swift](file:///Users/nitishmalpotra/Downloads/devDEVdev/portfolio/LoadProgress/LoadProgress/Models/VolumeMetrics.swift): Calculations helpers for muscle-group volume tracking.
-*   [ExerciseIcon.swift](file:///Users/nitishmalpotra/Downloads/devDEVdev/portfolio/LoadProgress/LoadProgress/Models/ExerciseIcon.swift): Defines icons for 50+ exercises.
+*   [Exercise.swift](LoadProgress/Models/Exercise.swift): Models exercises with type (weight training vs. bodyweight), muscle group, secondary groups, icon, difficulty, equipment, and form cues. Includes validation using the `Validator` utility.
+*   [WorkoutSet.swift](LoadProgress/Models/WorkoutSet.swift): Represents a single log entry. Contains strict initializer validation (e.g., reps > 0, weight > 0, future date prevention).
+*   [PersonalRecord.swift](LoadProgress/Models/PersonalRecord.swift): Structures 1RM, volume, and reps-based personal records.
+*   [VolumeMetrics.swift](LoadProgress/Models/VolumeMetrics.swift): Calculations helpers for muscle-group volume tracking.
+*   [ExerciseIcon.swift](LoadProgress/Models/ExerciseIcon.swift): Defines icons for 50+ exercises.
 
 ### 2. Business Logic Layer (`Managers/`)
-*   [DataManager.swift](file:///Users/nitishmalpotra/Downloads/devDEVdev/portfolio/LoadProgress/LoadProgress/Managers/DataManager.swift): Acts as the main data repository. Implements incremental caching to speed up data access from $O(n)$ to $O(1)$, handles bulk operations, handles backup restoration, and manages `UserDefaults` encoding/decoding.
-*   [PRManager.swift](file:///Users/nitishmalpotra/Downloads/devDEVdev/portfolio/LoadProgress/LoadProgress/Managers/PRManager.swift): Orchestrates PR calculations using the Brzycki formula. Offloads calculations to a background thread `DispatchQueue` and posts updates via `NotificationCenter`.
+*   [DataManager.swift](LoadProgress/Managers/DataManager.swift): Acts as the main data repository. Implements incremental caching to speed up data access from $O(n)$ to $O(1)$, handles bulk operations, handles backup restoration, and manages `UserDefaults` encoding/decoding.
+*   [PRManager.swift](LoadProgress/Managers/PRManager.swift): Orchestrates PR calculations using the Brzycki formula. Offloads calculations to a background thread `DispatchQueue` and posts updates via `NotificationCenter`.
 
 ### 3. Presentation Layer (`Views/`)
-*   [ContentView.swift](file:///Users/nitishmalpotra/Downloads/devDEVdev/portfolio/LoadProgress/LoadProgress/ContentView.swift): Tab container mapping the 5 core sections: **Workout**, **Records**, **Analytics**, **Exercises**, and **Progress**.
-*   [Theme.swift](file:///Users/nitishmalpotra/Downloads/devDEVdev/portfolio/LoadProgress/LoadProgress/Views/Styles/Theme.swift): The implementation engine of the "Liquid Glass" design system, using custom modifiers for glass backgrounds, custom spring-based buttons, typography scales, and shadows.
-*   [VolumeAnalyticsView.swift](file:///Users/nitishmalpotra/Downloads/devDEVdev/portfolio/LoadProgress/LoadProgress/Views/Analytics/VolumeAnalyticsView.swift) & [ProgressView.swift](file:///Users/nitishmalpotra/Downloads/devDEVdev/portfolio/LoadProgress/LoadProgress/Views/ProgressView.swift): Utilize Swift Charts to display volume and weight/reps progression over time.
+*   [ContentView.swift](LoadProgress/ContentView.swift): Tab container mapping the 5 core sections: **Workout**, **Records**, **Analytics**, **Exercises**, and **Progress**.
+*   [Theme.swift](LoadProgress/Views/Styles/Theme.swift): The implementation engine of the "Liquid Glass" design system, using custom modifiers for glass backgrounds, custom spring-based buttons, typography scales, and shadows.
+*   [VolumeAnalyticsView.swift](LoadProgress/Views/Analytics/VolumeAnalyticsView.swift) & [ProgressView.swift](LoadProgress/Views/ProgressView.swift): Utilize Swift Charts to display volume and weight/reps progression over time.
 
 ---
 

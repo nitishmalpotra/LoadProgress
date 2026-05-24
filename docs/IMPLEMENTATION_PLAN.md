@@ -28,7 +28,7 @@ Refactor the LoadProgress strength training application from a native iOS app in
 > - **Dynamic Updates**: If any API definitions, state stores, or style patterns change during the coding session, update this file and the prompts file immediately to reflect those changes.
 
 ### Refactoring Progress Checklist
-- `[ ]` **Phase 1: Repository Clean-up & Web Project Initialization** (Prompt 1)
+- `[x]` **Phase 1: Repository Clean-up & Web Project Initialization** (Prompt 1)
 - `[ ]` **Phase 2: IndexedDB Data Layer (Dexie.js Schema & Seeding)** (Prompt 2)
 - `[ ]` **Phase 3: Zustand Store & Progressive Overload Engine (Brzycki 1RM / PR triggers)** (Prompt 3)
 - `[ ]` **Phase 4: CSS Theme Variables & Glassmorphic Styles** (Prompt 4)

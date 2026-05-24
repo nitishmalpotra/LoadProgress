@@ -23,7 +23,7 @@ This is a dynamic, live tracking document containing structured, production-grad
 - `[x]` **Prompt 5**: Responsive Layout & History Navigation Architecture
 - `[x]` **Prompt 6**: Workout Log & Add Workout Form Views (Validation & Caching)
 - `[x]` **Prompt 7**: Background-Safe Rest Timer Component
-- `[ ]` **Prompt 8**: Analytics & Progress Charts (Recharts)
+- `[x]` **Prompt 8**: Analytics & Progress Charts (Recharts)
 - `[ ]` **Prompt 9**: Exercises Library & History Detail Views
 - `[ ]` **Prompt 10**: PWA Caching & Vercel Configuration Setup
 - `[ ]` **Prompt 11**: Open Source Portability, Documentation & Quality Polish

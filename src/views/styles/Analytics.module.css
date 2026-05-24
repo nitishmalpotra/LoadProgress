@@ -1,0 +1,199 @@
+.analyticsPage {
+  display: grid;
+  width: min(100%, 1040px);
+  min-width: 0;
+  margin: 0 auto;
+  gap: 18px;
+}
+
+.pageHeader {
+  display: grid;
+  gap: 8px;
+}
+
+.pageHeader h1 {
+  margin: 0;
+  font-size: clamp(2rem, 8vw, 3.8rem);
+  line-height: 0.96;
+  letter-spacing: 0;
+}
+
+.pageHeader p {
+  margin: 0;
+  max-width: 680px;
+  color: var(--app-text-secondary);
+  line-height: 1.55;
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--app-teal-light);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.chartPanel,
+.controlPanel {
+  border: 1px solid var(--app-glass-border);
+  background: var(--app-glass-overlay);
+  box-shadow: 0 18px 54px hsl(220 45% 4% / 0.28);
+  backdrop-filter: blur(16px) saturate(178%);
+  -webkit-backdrop-filter: blur(16px) saturate(178%);
+}
+
+.chartPanel {
+  display: grid;
+  gap: 16px;
+  min-height: 430px;
+  padding: 18px;
+  border-radius: 20px;
+  animation: chartIn 280ms ease-out both;
+}
+
+.controlPanel {
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+  border-radius: 18px;
+}
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.panelHeader h2 {
+  margin: 0 0 4px;
+  font-size: 1.05rem;
+}
+
+.panelHeader p {
+  margin: 0;
+  color: var(--app-text-secondary);
+  font-size: 0.9rem;
+}
+
+.segmentedRow,
+.selectorGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.segment,
+.segmentSelected,
+.selectField {
+  min-height: 42px;
+  border: 1px solid var(--app-glass-border);
+  border-radius: 14px;
+  color: var(--app-text);
+  background: hsl(0 0% 100% / 0.09);
+}
+
+.segment,
+.segmentSelected {
+  padding: 10px 14px;
+  cursor: pointer;
+  font-weight: 800;
+  transition:
+    transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    background 160ms ease;
+}
+
+.segment:active,
+.segmentSelected:active {
+  transform: scale(0.97);
+}
+
+.segmentSelected {
+  background: hsl(174 72% 44% / 0.26);
+  box-shadow: 0 12px 30px hsl(174 72% 24% / 0.18);
+}
+
+.selectGroup {
+  display: grid;
+  flex: 1 1 210px;
+  gap: 7px;
+}
+
+.selectGroup span {
+  color: var(--app-text-secondary);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.selectField {
+  width: 100%;
+  padding: 0 12px;
+  cursor: pointer;
+}
+
+.selectField:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+.chartShell {
+  width: 100%;
+  min-width: 0;
+  height: min(58vh, 480px);
+  min-height: 320px;
+}
+
+.emptyState {
+  display: grid;
+  min-height: 310px;
+  place-items: center;
+  color: var(--app-text-secondary);
+  text-align: center;
+}
+
+.tooltip {
+  display: grid;
+  gap: 5px;
+  min-width: 156px;
+  padding: 12px;
+  border: 1px solid var(--app-glass-border);
+  border-radius: 14px;
+  color: var(--app-text);
+  background: hsl(222 47% 11% / 0.78);
+  box-shadow: 0 16px 42px hsl(220 45% 4% / 0.35);
+  backdrop-filter: blur(16px) saturate(178%);
+  -webkit-backdrop-filter: blur(16px) saturate(178%);
+}
+
+.tooltip strong {
+  font-size: 0.9rem;
+}
+
+.tooltip span {
+  color: var(--app-text-secondary);
+  font-size: 0.82rem;
+}
+
+@keyframes chartIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 620px) {
+  .chartPanel,
+  .controlPanel {
+    padding: 14px;
+  }
+
+  .chartShell {
+    height: 390px;
+  }
+}

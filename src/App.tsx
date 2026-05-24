@@ -1,5 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { DashboardView, Layout } from '@/views/Layout';
+import { AnalyticsTab } from '@/views/AnalyticsTab';
+import { ProgressTab } from '@/views/ProgressTab';
 import { StyleGuide } from '@/views/StyleGuide';
 import { WorkoutTab } from '@/views/WorkoutTab';
 
@@ -62,9 +64,9 @@ function App() {
       <Route element={<Layout />}>
         <Route element={<WorkoutTab />} path="/" />
         <Route element={<DashboardView {...views.records} />} path="/records" />
-        <Route element={<DashboardView {...views.analytics} />} path="/analytics" />
+        <Route element={<AnalyticsTab />} path="/analytics" />
         <Route element={<DashboardView {...views.exercises} />} path="/exercises" />
-        <Route element={<DashboardView {...views.progress} />} path="/progress" />
+        <Route element={<ProgressTab />} path="/progress" />
       </Route>
       <Route element={<StyleGuide />} path="/styleguide" />
       <Route element={<Navigate replace to="/" />} path="*" />

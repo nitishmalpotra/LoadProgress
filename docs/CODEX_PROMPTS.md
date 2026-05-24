@@ -17,7 +17,7 @@ This is a dynamic, live tracking document containing structured, production-grad
 ## 🛠 Refactoring Roadmap & Prompts
 
 - `[x]` **Prompt 1**: Repository Clean-up & Web Project Initialization
-- `[ ]` **Prompt 2**: IndexedDB Data Layer (Dexie.js)
+- `[x]` **Prompt 2**: IndexedDB Data Layer (Dexie.js)
 - `[ ]` **Prompt 3**: Zustand Store & Progressive Overload Engine (1RM / PR Calculations)
 - `[ ]` **Prompt 4**: Liquid Glass Design Tokens & Component Styles (Vanilla CSS)
 - `[ ]` **Prompt 5**: Responsive Layout & History Navigation Architecture

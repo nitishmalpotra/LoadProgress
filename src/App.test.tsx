@@ -25,13 +25,10 @@ describe('environment sanity', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByRole('heading', { name: 'LoadProgress' })).toBeInTheDocument();
-    expect(screen.getByText('Workout logging')).toBeInTheDocument();
-    expect(screen.getByText('Personal records')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Style guide' })).toHaveAttribute(
-      'href',
-      '/styleguide'
-    );
+    expect(screen.getByRole('heading', { name: 'Today' })).toBeInTheDocument();
+    expect(screen.getByText('Set List')).toBeInTheDocument();
+    expect(screen.getByText('Quick Stats')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Workout Log' })).toHaveAttribute('href', '/');
   });
 
   it('renders the style guide route', () => {

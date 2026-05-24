@@ -30,7 +30,7 @@ Refactor the LoadProgress strength training application from a native iOS app in
 ### Refactoring Progress Checklist
 - `[x]` **Phase 1: Repository Clean-up & Web Project Initialization** (Prompt 1)
 - `[x]` **Phase 2: IndexedDB Data Layer (Dexie.js Schema & Seeding)** (Prompt 2)
-- `[ ]` **Phase 3: Zustand Store & Progressive Overload Engine (Brzycki 1RM / PR triggers)** (Prompt 3)
+- `[x]` **Phase 3: Zustand Store & Progressive Overload Engine (Brzycki 1RM / PR triggers)** (Prompt 3)
 - `[ ]` **Phase 4: CSS Theme Variables & Glassmorphic Styles** (Prompt 4)
 - `[ ]` **Phase 5: Responsive Sidebar & HTML5 Routing Navigation** (Prompt 5)
 - `[ ]` **Phase 6: Workout Logging Tab & Three-Tier Form Sheet** (Prompt 6)

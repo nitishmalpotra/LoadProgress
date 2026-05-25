@@ -30,7 +30,7 @@ This is a dynamic, live tracking document containing structured, production-grad
 - `[x]` **Prompt 11**: Open Source Portability, Documentation & Quality Polish
 - `[x]` **Prompt 12**: Modern & Minimalist UI Redesign
 - `[x]` **Prompt 13**: Exercise Library Icons & Seed Data Seeding
-- `[ ]` **Prompt 14**: Beginner-Friendly Vercel Deployment Documentation
+- `[x]` **Prompt 14**: Beginner-Friendly Vercel Deployment Documentation
 
 ---
 

@@ -44,7 +44,7 @@ Refactor the LoadProgress strength training application from a native iOS app in
 - `[x]` **Phase 11: Open Source Portability, Documentation & Quality Polish** (Prompt 11)
 - `[x]` **Phase 12: Modern & Minimalist UI Redesign** (Prompt 12)
 - `[x]` **Phase 13: Exercise Library Icons & Seed Data Seeding** (Prompt 13)
-- `[ ]` **Phase 14: Beginner-Friendly Vercel Deployment Documentation** (Prompt 14)
+- `[x]` **Phase 14: Beginner-Friendly Vercel Deployment Documentation** (Prompt 14)
 
 ---
 

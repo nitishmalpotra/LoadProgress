@@ -1,14 +1,11 @@
 # LoadProgress
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-0f766e?style=for-the-badge)](LICENSE)
-[![Vercel Deploy Status](https://img.shields.io/badge/Vercel-Deployed-111827?style=for-the-badge&logo=vercel&logoColor=white)](https://loadprogress.vercel.app)
-[![PWA Status](https://img.shields.io/badge/PWA-Offline_Ready-2563eb?style=for-the-badge)](https://loadprogress.vercel.app)
 
 LoadProgress is a local-first React PWA for strength training. It preserves the original iOS
 workout tracker's Liquid Glass aesthetic, automatic personal record detection, volume analytics, and
 offline-first gym workflow while running entirely in the browser.
 
-[![Open Live Demo](https://img.shields.io/badge/Open_Live_Demo-111827?style=for-the-badge&logo=vercel&logoColor=white)](https://loadprogress.vercel.app)
 
 ## Features
 

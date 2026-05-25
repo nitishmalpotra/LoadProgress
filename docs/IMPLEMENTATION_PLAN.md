@@ -1,6 +1,6 @@
-# Implementation Plan - Refactor iOS Workout Tracker to Web PWA
+# Implementation Plan - LoadProgress Web PWA
 
-Refactor the LoadProgress strength training application from a native iOS app into a modern, local-first React/TypeScript PWA, preserving its "iOS 26 Liquid Glass" premium aesthetic, offline capabilities, and personal record tracking.
+LoadProgress is a local-first React/TypeScript PWA for strength training. The original web port is complete, and the current product direction is a full mobile-first redesign: light-first visual system, phone-sized app shell on desktop, muscle-first Library, safer detail navigation, and preserved workout logging, analytics, backup, and offline functionality.
 
 ---
 
@@ -11,11 +11,11 @@ Refactor the LoadProgress strength training application from a native iOS app in
 >
 > 1.  **Local-First Persistence**: Data remains completely client-side in browser storage via IndexedDB (using Dexie.js), avoiding any database hosting cost.
 > 2.  **Vite + React + TS**: Client-side single page app deployment structure directly at the root of the repository.
-> 3.  **Vanilla CSS & CSS Modules**: Fine-tuned control over custom glassmorphism filters, gradients, and shadows without framework limits.
+> 3.  **Vanilla CSS & CSS Modules**: Fine-tuned control over a custom mobile-first design system without framework limits.
 > 4.  **Lucide React**: Vector icon replacement for SF Symbols.
 > 5.  **Recharts**: Interactive SVG charts matching Swift Charts.
 > 6.  **PWA Configuration**: Service workers handle offline caching, enabling gym usage without internet connection. Displays a bottom glass update toast notification when a new version is fetched.
-> 7.  **Responsive Layout**: Mobile portrait screens show a bottom tab bar, while tablets/desktop show a sidebar and multi-column dashboards.
+> 7.  **Mobile-First Layout**: The app should render as a phone-sized experience first. Desktop browsers should center the same mobile app shell instead of becoming a separate sidebar-first dashboard.
 > 8.  **Vercel Deployment**: Uses Vercel's hosting with `vercel.json` rewrites supporting HTML5 history routing.
 
 ---
@@ -45,6 +45,63 @@ Refactor the LoadProgress strength training application from a native iOS app in
 - `[x]` **Phase 12: Modern & Minimalist UI Redesign** (Prompt 12)
 - `[x]` **Phase 13: Exercise Library Icons & Seed Data Seeding** (Prompt 13)
 - `[x]` **Phase 14: Beginner-Friendly Vercel Deployment Documentation** (Prompt 14)
+- `[x]` **Phase 15: Mobile-First Redesign Audit & Product Model**
+- `[x]` **Phase 16: Light-First Design System**
+- `[x]` **Phase 17: Navigation & Library Information Architecture**
+- `[x]` **Phase 18: Redesign Implementation & Regression Verification**
+
+---
+
+## Current Redesign Direction
+
+The next redesign should replace the current dark glassmorphism UI with a mobile-first app model.
+
+### Step 1 Audit Findings
+
+- Current routes are `/`, `/records`, `/analytics`, `/exercises`, `/progress`, and `/styleguide`.
+- Library exercise detail is local component state, not a route.
+- Baseline fix: Library exercise detail now uses a stable empty-set fallback, so no-history exercises can open without React `Maximum update depth exceeded` loops.
+- Exercise detail remains local component state inside `ExercisesTab`, not route-backed. It is currently recoverable through the visible `Close` icon button, which clears `selectedExercise`.
+- Route assumption before navigation redesign: `/exercises` owns Library browsing and detail state today; future route-backed detail work should preserve direct return to the Library list/search/filter state.
+- Existing automated checks passed: `npm test`, `npm run lint`, and `npm run build`. `npm run format` failed on `README.md` formatting before this documentation update.
+- Existing Library icons are generic Lucide icons by exercise string, not muscle-specific anatomical symbols.
+
+### Step 2 Mobile-First Product Model
+
+- Target working width: 360-430px.
+- Desktop should center the phone-sized app shell and use the surrounding page as framing only.
+- Bottom tabs remain the primary navigation model.
+- Every secondary screen needs a visible back action.
+- Exercise detail should become route-backed or otherwise recoverable; it should never strand the user in a blank screen.
+- Phase 17 decision: Exercise detail is route-backed at `/exercises/:exerciseId`, with an explicit Back to Library action and an invalid-link recovery state.
+- Phase 17 navigation: Bottom tabs are the primary navigation at every viewport size, and desktop centers the same phone-sized shell instead of rendering a sidebar.
+- Phase 17 Library IA: Library browsing is muscle-first, with muscle-group chips, search, type filtering, and muscle-group icon mappings.
+- Screen jobs:
+  - `Workout`: today's log, date rail, add-set flow.
+  - `Library`: search, filter, and browse exercises by muscle group.
+  - `Exercise detail`: cues, equipment, target muscles, stats, and history.
+  - `Progress`: focused exercise trend.
+  - `Volume`: muscle-group load overview.
+  - `Records`: personal bests.
+
+### Step 3 Light-First Design System
+
+- Default palette:
+  - Background: `#F7F5F0`
+  - Surface: `#FFFFFF`
+  - Raised surface: `#F1EFE8`
+  - Text: `#171717`
+  - Secondary text: `#6B6963`
+  - Primary accent: `#176B4D`
+- Typography should use system fonts with app-scale headings, not hero-scale page type inside compact screens.
+- Use stable spacing tokens: `4`, `8`, `12`, `16`, `20`, and `24`.
+- Keep radii mostly between `8px` and `14px`.
+- Use compact, scan-friendly cards and rows. Avoid nested cards and decorative glass layers.
+- Inputs should be white fields with visible borders.
+- Buttons should be primary green filled, secondary outlined, or icon-only for back/close/filter actions.
+- Empty, loading, and error states must include explicit recovery paths.
+- Muscle groups need consistent colors and muscle-specific icons across Library, detail, Volume, and Progress.
+- Dark mode may be added later as a token swap, but it is not the default design baseline.
 
 ---
 

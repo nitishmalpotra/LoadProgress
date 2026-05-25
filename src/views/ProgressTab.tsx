@@ -9,6 +9,8 @@ import {
   XAxis,
   YAxis
 } from 'recharts';
+import { Link } from 'react-router-dom';
+import { RefreshCw } from 'lucide-react';
 import type { ExerciseType, MuscleGroup } from '@/models';
 import { useWorkoutStore } from '@/store/useWorkoutStore';
 import {
@@ -53,13 +55,15 @@ function ProgressTooltip({ active, payload, label }: ChartTooltipProps) {
 export function ProgressTab() {
   const exercises = useWorkoutStore((state) => state.exercises);
   const workoutSets = useWorkoutStore((state) => state.workoutSets);
+  const isLoading = useWorkoutStore((state) => state.isLoading);
+  const error = useWorkoutStore((state) => state.error);
   const loadWorkoutData = useWorkoutStore((state) => state.loadWorkoutData);
   const [exerciseType, setExerciseType] = useState<ExerciseType | ''>('');
   const [muscleGroup, setMuscleGroup] = useState<MuscleGroup | ''>('');
   const [exerciseId, setExerciseId] = useState('');
 
   useEffect(() => {
-    void loadWorkoutData();
+    void loadWorkoutData().catch(() => undefined);
   }, [loadWorkoutData]);
 
   const loggedExercises = useMemo(
@@ -177,56 +181,74 @@ export function ProgressTab() {
           </div>
         </div>
 
-        {trend.length === 0 ? (
-          <div className={styles.emptyState}>Add logs to view progress metrics</div>
+        {error ? (
+          <div className={styles.emptyState} role="alert">
+            <h3>Progress could not load</h3>
+            <p>{error}</p>
+            <button type="button" onClick={() => void loadWorkoutData().catch(() => undefined)}>
+              <RefreshCw size={17} />
+              Retry
+            </button>
+          </div>
+        ) : isLoading && trend.length === 0 ? (
+          <div className={styles.emptyState}>
+            <h3>Loading progress</h3>
+            <p>Reading exercise history saved on this device.</p>
+          </div>
+        ) : trend.length === 0 ? (
+          <div className={styles.emptyState}>
+            <h3>Add logs to view progress metrics</h3>
+            <p>Select a logged exercise or add sets from today’s workout.</p>
+            <Link to="/">Log a set</Link>
+          </div>
         ) : (
           <div className={styles.chartShell}>
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={trend} margin={{ top: 16, right: 8, bottom: 12, left: 0 }}>
-                <CartesianGrid stroke="rgba(255,255,255,0.12)" vertical={false} />
+                <CartesianGrid stroke="#ded9cf" vertical={false} />
                 <XAxis
                   axisLine={false}
                   dataKey="label"
                   tickLine={false}
-                  tick={{ fill: 'rgba(255,255,255,0.72)', fontSize: 12 }}
+                  tick={{ fill: '#6b6963', fontSize: 12 }}
                 />
                 <YAxis
                   axisLine={false}
                   domain={weightDomain}
                   tickLine={false}
-                  tick={{ fill: 'rgba(255,255,255,0.72)', fontSize: 12 }}
+                  tick={{ fill: '#6b6963', fontSize: 12 }}
                   yAxisId="weight"
                 />
                 <YAxis
                   axisLine={false}
                   orientation="right"
                   tickLine={false}
-                  tick={{ fill: 'rgba(255,255,255,0.72)', fontSize: 12 }}
+                  tick={{ fill: '#6b6963', fontSize: 12 }}
                   yAxisId="reps"
                 />
                 <Tooltip
                   content={<ProgressTooltip />}
-                  cursor={{ stroke: 'rgba(255,255,255,0.18)' }}
+                  cursor={{ stroke: 'rgb(23 107 77 / 0.18)' }}
                 />
-                <Legend wrapperStyle={{ color: 'rgba(255,255,255,0.78)', fontSize: 12 }} />
+                <Legend wrapperStyle={{ color: '#6b6963', fontSize: 12 }} />
                 <Line
-                  activeDot={{ r: 6, stroke: 'white', strokeWidth: 2 }}
+                  activeDot={{ r: 6, stroke: '#ffffff', strokeWidth: 2 }}
                   animationDuration={700}
                   dataKey="weight"
                   dot={{ r: 4 }}
                   name="Weight"
-                  stroke="hsl(174 72% 54%)"
+                  stroke="#176B4D"
                   strokeWidth={3}
                   type="monotone"
                   yAxisId="weight"
                 />
                 <Line
-                  activeDot={{ r: 6, stroke: 'white', strokeWidth: 2 }}
+                  activeDot={{ r: 6, stroke: '#ffffff', strokeWidth: 2 }}
                   animationDuration={700}
                   dataKey="reps"
                   dot={{ r: 4 }}
                   name="Reps"
-                  stroke="hsl(38 92% 58%)"
+                  stroke="#A15C00"
                   strokeWidth={3}
                   type="monotone"
                   yAxisId="reps"

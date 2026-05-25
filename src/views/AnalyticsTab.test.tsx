@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Exercise, WorkoutSet } from '@/models';
 import { useWorkoutStore } from '@/store/useWorkoutStore';
@@ -9,6 +10,7 @@ import {
   getFocusedWeightDomain
 } from '@/views/analyticsMetrics';
 import { ProgressTab } from '@/views/ProgressTab';
+import { RecordsTab } from '@/views/RecordsTab';
 
 const benchPress: Exercise = {
   id: '10000000-0000-4000-8000-000000000001',
@@ -132,14 +134,33 @@ describe('analytics metrics', () => {
 
 describe('analytics views', () => {
   it('renders a clean empty state when volume data is missing', () => {
-    render(<AnalyticsTab />);
+    render(
+      <MemoryRouter>
+        <AnalyticsTab />
+      </MemoryRouter>
+    );
 
     expect(screen.getByText('Add logs to view progress metrics')).toBeInTheDocument();
   });
 
   it('renders a clean empty state when progress data is missing', () => {
-    render(<ProgressTab />);
+    render(
+      <MemoryRouter>
+        <ProgressTab />
+      </MemoryRouter>
+    );
 
     expect(screen.getByText('Add logs to view progress metrics')).toBeInTheDocument();
+  });
+
+  it('renders a recoverable empty state when personal records are missing', () => {
+    render(
+      <MemoryRouter>
+        <RecordsTab />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByText('No personal records yet')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Log a set/ })).toHaveAttribute('href', '/');
   });
 });

@@ -9,6 +9,8 @@ import {
   XAxis,
   YAxis
 } from 'recharts';
+import { Link } from 'react-router-dom';
+import { RefreshCw } from 'lucide-react';
 import type { MuscleGroup } from '@/models';
 import { useWorkoutStore } from '@/store/useWorkoutStore';
 import {
@@ -25,17 +27,17 @@ const filterOptions: Array<{ label: string; value: VolumeWindow }> = [
 ];
 
 const muscleColors: Record<MuscleGroup, string> = {
-  Chest: 'hsl(174 72% 54%)',
-  Back: 'hsl(213 94% 64%)',
-  Legs: 'hsl(142 68% 54%)',
-  Shoulders: 'hsl(262 82% 72%)',
-  Arms: 'hsl(38 92% 58%)',
-  Core: 'hsl(348 86% 66%)',
-  'Full Body': 'hsl(188 84% 60%)',
-  Forearms: 'hsl(24 86% 62%)',
-  Glutes: 'hsl(316 78% 68%)',
-  'Upper Back': 'hsl(199 90% 62%)',
-  'Lower Back': 'hsl(158 64% 55%)'
+  Chest: '#176B4D',
+  Back: '#4B5F8F',
+  Legs: '#4F7B43',
+  Shoulders: '#7A5C9E',
+  Arms: '#A15C00',
+  Core: '#B42318',
+  'Full Body': '#2B7886',
+  Forearms: '#9A5A2E',
+  Glutes: '#9B4F7D',
+  'Upper Back': '#3D6F91',
+  'Lower Back': '#3F7A61'
 };
 
 type ChartTooltipProps = {
@@ -61,10 +63,12 @@ export function AnalyticsTab() {
   const [volumeWindow, setVolumeWindow] = useState<VolumeWindow>('week');
   const exercisesById = useWorkoutStore((state) => state.exercisesById);
   const workoutSets = useWorkoutStore((state) => state.workoutSets);
+  const isLoading = useWorkoutStore((state) => state.isLoading);
+  const error = useWorkoutStore((state) => state.error);
   const loadWorkoutData = useWorkoutStore((state) => state.loadWorkoutData);
 
   useEffect(() => {
-    void loadWorkoutData();
+    void loadWorkoutData().catch(() => undefined);
   }, [loadWorkoutData]);
 
   const volumeMetrics = useMemo(
@@ -106,8 +110,26 @@ export function AnalyticsTab() {
           </div>
         </div>
 
-        {volumeMetrics.length === 0 ? (
-          <div className={styles.emptyState}>Add logs to view progress metrics</div>
+        {error ? (
+          <div className={styles.emptyState} role="alert">
+            <h3>Volume could not load</h3>
+            <p>{error}</p>
+            <button type="button" onClick={() => void loadWorkoutData().catch(() => undefined)}>
+              <RefreshCw size={17} />
+              Retry
+            </button>
+          </div>
+        ) : isLoading && volumeMetrics.length === 0 ? (
+          <div className={styles.emptyState}>
+            <h3>Loading volume</h3>
+            <p>Reading recent sets saved on this device.</p>
+          </div>
+        ) : volumeMetrics.length === 0 ? (
+          <div className={styles.emptyState}>
+            <h3>Add logs to view progress metrics</h3>
+            <p>Volume appears after weighted sets are logged.</p>
+            <Link to="/">Log a set</Link>
+          </div>
         ) : (
           <div className={styles.chartShell}>
             <ResponsiveContainer width="100%" height="100%">
@@ -116,22 +138,22 @@ export function AnalyticsTab() {
                 layout="vertical"
                 margin={{ top: 12, right: 24, bottom: 12, left: 18 }}
               >
-                <CartesianGrid stroke="rgba(255,255,255,0.12)" horizontal={false} />
+                <CartesianGrid stroke="#ded9cf" horizontal={false} />
                 <XAxis
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fill: 'rgba(255,255,255,0.72)', fontSize: 12 }}
+                  tick={{ fill: '#6b6963', fontSize: 12 }}
                   type="number"
                 />
                 <YAxis
                   axisLine={false}
                   dataKey="muscleGroup"
                   tickLine={false}
-                  tick={{ fill: 'rgba(255,255,255,0.82)', fontSize: 12, fontWeight: 700 }}
+                  tick={{ fill: '#171717', fontSize: 12, fontWeight: 700 }}
                   type="category"
                   width={92}
                 />
-                <Tooltip content={<VolumeTooltip />} cursor={{ fill: 'rgba(255,255,255,0.06)' }} />
+                <Tooltip content={<VolumeTooltip />} cursor={{ fill: 'rgb(23 107 77 / 0.08)' }} />
                 <Bar dataKey="volume" radius={[0, 12, 12, 0]} animationDuration={650}>
                   {volumeMetrics.map((metric: MuscleVolumeMetric) => (
                     <Cell fill={muscleColors[metric.muscleGroup]} key={metric.muscleGroup} />

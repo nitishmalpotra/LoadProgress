@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { CalendarDays, Plus } from 'lucide-react';
+import { CalendarDays, Plus, RefreshCw } from 'lucide-react';
 import { AddWorkoutModal } from '@/views/components/AddWorkoutModal';
 import { useWorkoutStore } from '@/store/useWorkoutStore';
 import type { WorkoutSet } from '@/models';
@@ -46,6 +46,8 @@ export function WorkoutTab() {
   const exercisesById = useWorkoutStore((state) => state.exercisesById);
   const workoutSetsByDate = useWorkoutStore((state) => state.workoutSetsByDate);
   const unitSystem = useWorkoutStore((state) => state.unitSystem);
+  const isLoading = useWorkoutStore((state) => state.isLoading);
+  const error = useWorkoutStore((state) => state.error);
   const loadWorkoutData = useWorkoutStore((state) => state.loadWorkoutData);
   const dateWindow = useMemo(buildDateWindow, []);
   const selectedSets = workoutSetsByDate[dayKey(selectedDate)] ?? [];
@@ -54,7 +56,7 @@ export function WorkoutTab() {
   const todayKey = dayKey(new Date());
 
   useEffect(() => {
-    void loadWorkoutData();
+    void loadWorkoutData().catch(() => undefined);
   }, [loadWorkoutData]);
 
   return (
@@ -98,8 +100,29 @@ export function WorkoutTab() {
           <CalendarDays aria-hidden="true" size={21} />
         </div>
 
-        {selectedSets.length === 0 ? (
-          <div className={styles.emptyState}>No workouts for this date</div>
+        {error ? (
+          <div className={styles.emptyState} role="alert">
+            <strong>Workout log could not load</strong>
+            <span>{error}</span>
+            <button type="button" onClick={() => void loadWorkoutData().catch(() => undefined)}>
+              <RefreshCw size={17} />
+              Retry
+            </button>
+          </div>
+        ) : isLoading && selectedSets.length === 0 ? (
+          <div className={styles.emptyState}>
+            <strong>Loading workout log</strong>
+            <span>Reading sets saved on this device.</span>
+          </div>
+        ) : selectedSets.length === 0 ? (
+          <div className={styles.emptyState}>
+            <strong>No workouts for this date</strong>
+            <span>Tap the add button to log the first set.</span>
+            <button type="button" onClick={() => setIsModalOpen(true)}>
+              <Plus size={17} />
+              Add set
+            </button>
+          </div>
         ) : (
           <div className={styles.exerciseGroups}>
             {Object.entries(groupedSets).map(([exerciseId, sets]) => {

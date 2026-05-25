@@ -18,7 +18,7 @@ describe('environment sanity', () => {
     expect(screen.getByText('Vitest can render React')).toBeInTheDocument();
   });
 
-  it('renders the LoadProgress placeholder with icons', () => {
+  it('renders the LoadProgress placeholder with icons', async () => {
     render(
       <MemoryRouter>
         <App />
@@ -26,7 +26,7 @@ describe('environment sanity', () => {
     );
 
     expect(screen.getByRole('heading', { name: 'Today' })).toBeInTheDocument();
-    expect(screen.getByText('No workouts for this date')).toBeInTheDocument();
+    expect(await screen.findByText('No workouts for this date')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Add workout set' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Workout Log' })).toHaveAttribute('href', '/');
   });
@@ -38,6 +38,6 @@ describe('environment sanity', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByRole('heading', { name: 'iOS 26 Theme' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'LoadProgress Theme' })).toBeInTheDocument();
   });
 });

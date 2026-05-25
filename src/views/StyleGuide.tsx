@@ -4,7 +4,7 @@ import styles from '@/views/styles/Theme.module.css';
 const buttonClasses = [
   ['Primary', styles.buttonPrimary],
   ['Secondary', styles.buttonSecondary],
-  ['Glass', styles.buttonGlass],
+  ['Tonal', styles.buttonGlass],
   ['Pill', styles.buttonPill]
 ] as const;
 
@@ -21,12 +21,12 @@ export function StyleGuide() {
   return (
     <main className={`${styles.themeRoot} ${styles.styleGuide}`}>
       <section className={styles.intro} aria-labelledby="styleguide-title">
-        <p className={styles.eyebrow}>Liquid Glass System</p>
+        <p className={styles.eyebrow}>Light Mobile System</p>
         <h1 className={styles.title} id="styleguide-title">
-          iOS 26 Theme
+          LoadProgress Theme
         </h1>
         <p className={styles.description}>
-          Modular Vanilla CSS tokens for glass surfaces, floating depth, spring press states,
+          Modular Vanilla CSS tokens for light surfaces, compact controls, spring press states,
           semantic colors, and rounded system typography.
         </p>
       </section>
@@ -49,8 +49,8 @@ export function StyleGuide() {
           <h2 className={styles.sectionTitle}>Cards</h2>
           <article className={styles.glassCard}>
             <Sparkles aria-hidden="true" size={22} />
-            <h3>Thin material card</h3>
-            <p>Blurred surface with specular border highlight and medium depth shadow.</p>
+            <h3>Surface card</h3>
+            <p>White surface with a visible border and restrained depth shadow.</p>
           </article>
 
           <h2 className={styles.sectionTitle}>Inputs</h2>
@@ -72,17 +72,17 @@ export function StyleGuide() {
             ))}
           </div>
 
-          <h2 className={styles.sectionTitle}>Stacked Blur</h2>
-          <div className={styles.cardStack} aria-label="Three stacked glass layers">
+          <h2 className={styles.sectionTitle}>Layered Surfaces</h2>
+          <div className={styles.cardStack} aria-label="Three stacked light surfaces">
             <article className={`${styles.glassCard} ${styles.stackLayer}`}>
               <Activity aria-hidden="true" />
               <h3>Layer one</h3>
-              <p>Stable blur baseline.</p>
+              <p>Stable surface baseline.</p>
             </article>
             <article className={`${styles.glassCard} ${styles.stackLayer}`}>
               <Trophy aria-hidden="true" />
               <h3>Layer two</h3>
-              <p>Same filter, isolated surface.</p>
+              <p>Same token set, isolated surface.</p>
             </article>
             <article className={`${styles.glassCard} ${styles.stackLayer}`}>
               <Sparkles aria-hidden="true" />

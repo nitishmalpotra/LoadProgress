@@ -1,6 +1,8 @@
 # LoadProgress Web Refactoring - Codex Prompts
 
-This is a dynamic, live tracking document containing structured, production-grade prompts designed for the Codex Mac app. These prompts guide Codex to incrementally rewrite the LoadProgress iOS app into a premium, local-first React PWA directly at the root of the repository.
+This is a dynamic, live tracking document containing structured, production-grade prompts designed for the Codex Mac app. These prompts guide Codex work on the LoadProgress local-first React PWA.
+
+The iOS-to-web refactor is complete. The active direction is a mobile-first redesign: light-first visual system, phone-sized app shell on desktop, muscle-first Library, muscle-specific icons, recoverable exercise detail navigation, and preserved workout logging, analytics, backup, and offline functionality.
 
 ---
 
@@ -31,6 +33,48 @@ This is a dynamic, live tracking document containing structured, production-grad
 - `[x]` **Prompt 12**: Modern & Minimalist UI Redesign
 - `[x]` **Prompt 13**: Exercise Library Icons & Seed Data Seeding
 - `[x]` **Prompt 14**: Beginner-Friendly Vercel Deployment Documentation
+- `[x]` **Prompt 15**: Mobile-First Redesign Audit & Bug Fix Baseline
+- `[x]` **Prompt 16**: Light-First Design System Implementation
+- `[x]` **Prompt 17**: Navigation & Library Information Architecture
+- `[x]` **Prompt 18**: Screen-by-Screen Redesign Implementation
+
+---
+
+## Active Redesign Context
+
+### Audit Findings
+
+- Current routes: `/`, `/records`, `/analytics`, `/exercises`, `/progress`, and `/styleguide`.
+- Library detail opens from component state rather than a route.
+- Baseline fix: no-history Library detail now uses a stable empty-set fallback in its Zustand selector.
+- Browser console previously showed React `Maximum update depth exceeded` after clicking `Bench Press`; regression coverage now checks the no-history click flow and close action.
+- Route/state assumption before navigation redesign: `/exercises` owns Library browse state and detail state today, with recovery through the visible `Close` icon button.
+- Existing icons are generic Lucide mappings by exercise name, not muscle-specific visual language.
+- Current UI is dark glassmorphism with navy/slate backgrounds, teal/purple accents, translucent cards, and large display headings.
+
+### Product Model
+
+- Target a phone-sized working shell: 360-430px.
+- Desktop should center the same mobile app instead of switching to a sidebar-first dashboard.
+- Bottom tabs stay primary.
+- Every secondary screen needs a visible back action.
+- Exercise detail should be route-backed or otherwise recoverable.
+- Prompt 17 decision: Exercise detail is route-backed at `/exercises/:exerciseId`, with an explicit Back to Library action and an invalid-link recovery state.
+- Prompt 17 navigation: Bottom tabs are the primary navigation at every viewport size, and desktop centers the same phone-sized shell instead of rendering a sidebar.
+- Prompt 17 Library IA: Library browsing is muscle-first, with muscle-group chips, search, type filtering, and muscle-group icon mappings.
+- Default visual mode is light.
+
+### Design System Direction
+
+- Background: `#F7F5F0`
+- Surface: `#FFFFFF`
+- Raised surface: `#F1EFE8`
+- Text: `#171717`
+- Secondary text: `#6B6963`
+- Primary accent: `#176B4D`
+- Use compact app-scale typography, stable spacing tokens, and mostly `8px`-`14px` radii.
+- Use muscle-specific icons for Chest, Back, Legs, Shoulders, Arms, Core, Glutes, Forearms, Full Body, Upper Back, and Lower Back.
+- Dark mode is optional later, not the default baseline.
 
 ---
 
@@ -455,7 +499,7 @@ Complete the open-source packaging for the public GitHub repository. Set up stan
 
 ---
 
-### Prompt 12: Modern & Minimalist UI Redesign
+### Prompt 12: Previous Dark UI Redesign
 
 ```markdown
 Read the implementation plan [docs/IMPLEMENTATION_PLAN.md] and prompts list [docs/CODEX_PROMPTS.md] to check project context.
@@ -495,7 +539,7 @@ Refactor the styling system to make the UI look exceptionally modern, minimalist
 
 ---
 
-### Prompt 13: Exercise Library Icons & Seed Data Seeding
+### Prompt 13: Previous Exercise Library Icons & Seed Data Seeding
 
 ```markdown
 Read the implementation plan [docs/IMPLEMENTATION_PLAN.md] and prompts list [docs/CODEX_PROMPTS.md] to check project context.
@@ -582,4 +626,139 @@ Create a highly polished, beginner-friendly deployment guide in `docs/DEPLOYMENT
 - A new file `docs/DEPLOYMENT.md` is successfully created.
 - The instructions are clear, complete, and formatted in standard, readable markdown.
 - Update [docs/IMPLEMENTATION_PLAN.md] and [docs/CODEX_PROMPTS.md] marking Prompt 14 as complete [x].
+```
+
+---
+
+### Prompt 15: Mobile-First Redesign Audit & Bug Fix Baseline
+
+```markdown
+Read the active redesign context in [docs/IMPLEMENTATION_PLAN.md] and [docs/CODEX_PROMPTS.md].
+
+Establish the baseline for redesign implementation without changing visual styling yet.
+
+#### Tasks:
+
+1. Fix the Library blank-screen bug reproduced when clicking an exercise with no logged sets.
+2. Add or update tests that cover opening exercise detail for an exercise with no history.
+3. Confirm exercise detail has a recoverable close/back action in the current state.
+4. Record any route or state assumptions before moving to navigation redesign.
+
+#### Tests to Run:
+
+- `npm run test`
+- `npm run lint`
+- `npm run build`
+
+#### Acceptance Criteria:
+
+- Clicking a Library exercise with no workout history opens a usable detail view.
+- No React maximum update-depth errors appear in browser logs during the Library click flow.
+- Existing functionality remains intact.
+```
+
+---
+
+### Prompt 16: Light-First Design System Implementation
+
+```markdown
+Read the active redesign context in [docs/IMPLEMENTATION_PLAN.md] and [docs/CODEX_PROMPTS.md].
+
+Replace the current dark glassmorphism baseline with the light-first mobile design system.
+
+#### Design Tokens:
+
+- Background: `#F7F5F0`
+- Surface: `#FFFFFF`
+- Raised surface: `#F1EFE8`
+- Text: `#171717`
+- Secondary text: `#6B6963`
+- Primary accent: `#176B4D`
+- Spacing: `4`, `8`, `12`, `16`, `20`, `24`
+- Radii: mostly `8px`-`14px`
+
+#### Tasks:
+
+1. Update global and CSS module tokens to use the light-first palette.
+2. Remove the dark radial-gradient/glassmorphism look as the default.
+3. Standardize buttons, inputs, cards, bottom tabs, empty states, and sheet/dialog surfaces.
+4. Keep typography compact and app-scaled; avoid viewport-scaled hero headings.
+5. Preserve accessibility focus states and sufficient contrast.
+
+#### Tests to Run:
+
+- `npm run test`
+- `npm run lint`
+- `npm run build`
+- `npm run format`
+
+#### Acceptance Criteria:
+
+- The app reads as light-first by default.
+- Components share consistent tokens and spacing.
+- No horizontal overflow in mobile or desktop browser smoke tests.
+```
+
+---
+
+### Prompt 17: Navigation & Library Information Architecture
+
+```markdown
+Read the active redesign context in [docs/IMPLEMENTATION_PLAN.md] and [docs/CODEX_PROMPTS.md].
+
+Redesign navigation and Library architecture for the mobile-first model.
+
+#### Tasks:
+
+1. Keep bottom tabs as the primary navigation on all viewport sizes.
+2. Center a phone-sized app shell on desktop instead of rendering a desktop sidebar.
+3. Decide whether exercise detail should be route-backed, sheet-backed with URL state, or another recoverable model.
+4. Make every secondary screen include a visible back action.
+5. Rework Library to prioritize muscle-first browsing, search, and filter behavior.
+6. Replace generic Library exercise icon logic with muscle-specific icon groups.
+
+#### Tests to Run:
+
+- `npm run test`
+- `npm run lint`
+- `npm run build`
+
+#### Acceptance Criteria:
+
+- Desktop and mobile use the same app navigation model.
+- Library is browsable by muscle group.
+- Exercise detail cannot strand the user in a blank screen.
+```
+
+---
+
+### Prompt 18: Screen-by-Screen Redesign Implementation
+
+```markdown
+Read the active redesign context in [docs/IMPLEMENTATION_PLAN.md] and [docs/CODEX_PROMPTS.md].
+
+Apply the mobile-first redesign across the current screens while preserving functionality.
+
+#### Screen Scope:
+
+- `Workout`: today-first log, date rail, add-set flow.
+- `Library`: muscle-first browser, search, custom exercise creation, safe detail access.
+- `ExerciseDetail`: target muscles, equipment, cues, stats, and history.
+- `Progress`: focused exercise trend.
+- `Volume`: muscle-group load overview.
+- `Records`: personal bests.
+
+#### Tests to Run:
+
+- `npm run test`
+- `npm run lint`
+- `npm run build`
+- `npm run format`
+- Browser smoke test at mobile and desktop viewport sizes.
+
+#### Acceptance Criteria:
+
+- All existing user workflows still work.
+- The app visually reads as a cohesive mobile app on desktop and mobile.
+- Empty, loading, and error states are explicit and recoverable.
 ```

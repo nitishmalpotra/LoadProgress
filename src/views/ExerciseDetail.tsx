@@ -1,4 +1,4 @@
-import { CalendarDays, Trophy, X } from 'lucide-react';
+import { ArrowLeft, CalendarDays, Trophy } from 'lucide-react';
 import type { Exercise, WorkoutSet } from '@/models';
 import { calculateOneRepMax, useWorkoutStore } from '@/store/useWorkoutStore';
 import { ExerciseIcon } from '@/views/components/ExerciseIcon';
@@ -6,7 +6,7 @@ import styles from '@/views/styles/Exercises.module.css';
 
 type ExerciseDetailProps = {
   exercise: Exercise;
-  onClose: () => void;
+  onBack: () => void;
 };
 
 type ExerciseStats = {
@@ -17,6 +17,8 @@ type ExerciseStats = {
   lifetimeVolume: number;
   frequency: number;
 };
+
+const emptyWorkoutSets: WorkoutSet[] = [];
 
 const dayKey = (date: Date) => {
   const localDate = new Date(date);
@@ -73,35 +75,33 @@ function groupSetsByDate(sets: WorkoutSet[]) {
     }, []);
 }
 
-export function ExerciseDetail({ exercise, onClose }: ExerciseDetailProps) {
-  const sets = useWorkoutStore((state) => state.workoutSetsByExerciseId[exercise.id] ?? []);
+export function ExerciseDetail({ exercise, onBack }: ExerciseDetailProps) {
+  const sets = useWorkoutStore(
+    (state) => state.workoutSetsByExerciseId[exercise.id] ?? emptyWorkoutSets
+  );
   const stats = getExerciseStats(sets);
   const historyGroups = groupSetsByDate(sets);
 
   return (
-    <div className={styles.detailOverlay} role="presentation">
-      <section
-        aria-label={`${exercise.name} history`}
-        aria-modal="true"
-        className={styles.detailSheet}
-        role="dialog"
-      >
-        <div className={styles.sheetHandle} aria-hidden="true" />
+    <section className={styles.detailPage} aria-labelledby="exercise-detail-title">
+      <button className={styles.backButton} type="button" onClick={onBack}>
+        <ArrowLeft size={18} />
+        Back to Library
+      </button>
+      <section aria-label={`${exercise.name} history`} className={styles.detailSheet} role="region">
         <header className={styles.detailHeader}>
           <div className={styles.detailTitleRow}>
             <ExerciseIcon
               className={styles.detailExerciseIcon}
               iconName={exercise.icon}
+              muscleGroup={exercise.muscleGroup}
               size={24}
             />
             <div>
               <p className={styles.eyebrow}>{exercise.muscleGroup}</p>
-              <h2>{exercise.name}</h2>
+              <h1 id="exercise-detail-title">{exercise.name}</h1>
             </div>
           </div>
-          <button className={styles.iconButton} type="button" aria-label="Close" onClick={onClose}>
-            <X size={19} />
-          </button>
         </header>
 
         <div className={styles.detailIntro}>
@@ -109,17 +109,24 @@ export function ExerciseDetail({ exercise, onClose }: ExerciseDetailProps) {
           <div className={styles.requirements}>
             <span>Equipment: {exercise.equipment.join(', ')}</span>
             <span>Target: {exercise.muscleGroup}</span>
+            {exercise.secondaryMuscleGroups.map((muscleGroup) => (
+              <span key={muscleGroup}>Also: {muscleGroup}</span>
+            ))}
             <span>Difficulty: {exercise.difficulty}</span>
           </div>
         </div>
 
         <section className={styles.cuePanel} aria-labelledby="form-cues-title">
           <h3 id="form-cues-title">Form Cues</h3>
-          <ul>
-            {exercise.formCues.map((cue) => (
-              <li key={cue}>{cue}</li>
-            ))}
-          </ul>
+          {exercise.formCues.length === 0 ? (
+            <div className={styles.inlineEmpty}>No cues saved for this exercise.</div>
+          ) : (
+            <ul>
+              {exercise.formCues.map((cue) => (
+                <li key={cue}>{cue}</li>
+              ))}
+            </ul>
+          )}
         </section>
 
         <section className={styles.statsGrid} aria-label="Key stats">
@@ -163,7 +170,10 @@ export function ExerciseDetail({ exercise, onClose }: ExerciseDetailProps) {
           </div>
 
           {historyGroups.length === 0 ? (
-            <div className={styles.emptyState}>No sets logged for this exercise</div>
+            <div className={styles.emptyState}>
+              <h2>No sets logged for this exercise</h2>
+              <p>Use the Workout tab to log your first set.</p>
+            </div>
           ) : (
             <div className={styles.historyList}>
               {historyGroups.map((group) => (
@@ -190,6 +200,6 @@ export function ExerciseDetail({ exercise, onClose }: ExerciseDetailProps) {
           )}
         </section>
       </section>
-    </div>
+    </section>
   );
 }

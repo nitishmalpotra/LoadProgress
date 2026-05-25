@@ -1,4 +1,5 @@
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Exercise, WorkoutSet } from '@/models';
 import { useWorkoutStore } from '@/store/useWorkoutStore';
@@ -98,9 +99,20 @@ beforeEach(() => {
   resetWorkoutStore();
 });
 
+function renderLibrary(initialEntry = '/exercises') {
+  return render(
+    <MemoryRouter initialEntries={[initialEntry]}>
+      <Routes>
+        <Route element={<ExercisesTab />} path="/exercises" />
+        <Route element={<ExercisesTab />} path="/exercises/:exerciseId" />
+      </Routes>
+    </MemoryRouter>
+  );
+}
+
 describe('ExercisesTab', () => {
   it('filters search results by exercise name and equipment', () => {
-    render(<ExercisesTab />);
+    renderLibrary();
 
     fireEvent.change(screen.getByLabelText('Search exercises'), { target: { value: 'Bench' } });
 
@@ -110,11 +122,21 @@ describe('ExercisesTab', () => {
   });
 
   it('renders exercise icons next to library names', () => {
-    render(<ExercisesTab />);
+    renderLibrary();
 
-    const benchCard = screen.getByRole('button', { name: /Bench Press/ });
-    expect(within(benchCard).getByLabelText('benchPress icon')).toBeInTheDocument();
+    const benchCard = screen.getByRole('link', { name: /Bench Press/ });
+    expect(within(benchCard).getByLabelText('Chest icon')).toBeInTheDocument();
     expect(within(benchCard).getByText('Bench Press')).toBeInTheDocument();
+  });
+
+  it('browses exercises by muscle group before search filtering', () => {
+    renderLibrary();
+
+    fireEvent.click(screen.getByRole('button', { name: /Legs/ }));
+
+    expect(screen.getByText('Squats')).toBeInTheDocument();
+    expect(screen.queryByText('Bench Press')).not.toBeInTheDocument();
+    expect(screen.queryByText('Bicep Curls')).not.toBeInTheDocument();
   });
 
   it('aggregates average weight and total repetitions in the detail sheet', () => {
@@ -140,9 +162,9 @@ describe('ExercisesTab', () => {
     ];
     resetWorkoutStore([benchPress], sets);
 
-    render(<ExerciseDetail exercise={benchPress} onClose={vi.fn()} />);
+    render(<ExerciseDetail exercise={benchPress} onBack={vi.fn()} />);
 
-    expect(screen.getByLabelText('benchPress icon')).toBeInTheDocument();
+    expect(screen.getByLabelText('Chest icon')).toBeInTheDocument();
 
     const stats = screen.getByLabelText('Key stats');
     expect(within(stats).getByText('Average Weight')).toBeInTheDocument();
@@ -151,9 +173,47 @@ describe('ExercisesTab', () => {
     expect(within(stats).getByText('8')).toBeInTheDocument();
   });
 
+  it('opens and closes exercise detail for an exercise with no history', async () => {
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    resetWorkoutStore([benchPress], []);
+
+    renderLibrary();
+
+    fireEvent.click(screen.getByRole('link', { name: /Bench Press/ }));
+
+    const detail = await screen.findByRole('region', { name: 'Bench Press history' });
+    expect(within(detail).getByText('No sets logged for this exercise')).toBeInTheDocument();
+    expect(within(detail).getByText('0 logged sets')).toBeInTheDocument();
+    expect(
+      consoleError.mock.calls.some((call) =>
+        call.some(
+          (message) =>
+            typeof message === 'string' && message.includes('Maximum update depth exceeded')
+        )
+      )
+    ).toBe(false);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Back to Library' }));
+
+    await waitFor(() => {
+      expect(screen.queryByRole('region', { name: 'Bench Press history' })).not.toBeInTheDocument();
+    });
+  });
+
+  it('shows a recovery path for an invalid exercise detail route', async () => {
+    resetWorkoutStore([benchPress], []);
+
+    renderLibrary('/exercises/not-found');
+
+    expect(await screen.findByRole('heading', { name: 'Exercise not found' })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Back to Library' }));
+
+    expect(await screen.findByRole('heading', { name: 'Library' })).toBeInTheDocument();
+  });
+
   it('shows a custom-created exercise in the add workout selection flow', async () => {
     resetWorkoutStore([benchPress]);
-    const { rerender } = render(<ExercisesTab />);
+    const { rerender } = renderLibrary();
 
     fireEvent.click(screen.getByRole('button', { name: /Custom Exercise/ }));
     fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Safety Bar Squat' } });
@@ -164,7 +224,11 @@ describe('ExercisesTab', () => {
       expect(screen.getByText('Safety Bar Squat')).toBeInTheDocument();
     });
 
-    rerender(<AddWorkoutModal date={new Date('2026-05-20T09:00:00')} isOpen onClose={vi.fn()} />);
+    rerender(
+      <MemoryRouter>
+        <AddWorkoutModal date={new Date('2026-05-20T09:00:00')} isOpen onClose={vi.fn()} />
+      </MemoryRouter>
+    );
 
     fireEvent.click(screen.getByRole('button', { name: 'Weight Training' }));
     fireEvent.click(screen.getByRole('button', { name: 'Legs' }));
@@ -172,7 +236,8 @@ describe('ExercisesTab', () => {
     expect(screen.getByRole('button', { name: /Safety Bar Squat/ })).toBeInTheDocument();
   });
 
-  it('uses the generic custom exercise icon fallback', () => {
-    expect(getExerciseIcon('custom')).toBe(getExerciseIcon('benchPress'));
+  it('uses muscle-group icon mappings', () => {
+    expect(getExerciseIcon('Chest')).toBe(getExerciseIcon('Chest'));
+    expect(getExerciseIcon('Chest')).not.toBe(getExerciseIcon('Legs'));
   });
 });

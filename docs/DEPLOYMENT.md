@@ -7,6 +7,10 @@ into static files, loads quickly from Vercel's global network, and can be hosted
 plan for personal projects. LoadProgress is also local-first: workout data stays in the user's
 browser with IndexedDB, so there is no server database to configure.
 
+The active product direction is a mobile-first PWA. After deployment, verify the app as a phone-sized
+experience first, even from a desktop browser. Desktop should frame the same mobile app shell instead
+of becoming a separate desktop dashboard.
+
 ## Prerequisites
 
 Before deploying, make sure you have:
@@ -38,13 +42,13 @@ This is the easiest option if you are new to deployment.
 
 Use these settings:
 
-| Setting              | Value                                   |
-| -------------------- | --------------------------------------- |
-| Framework Preset     | `Vite` or `Other`                       |
-| Install Command      | `npm install`                           |
-| Build Command        | `npm run build`                         |
-| Output Directory     | `dist`                                  |
-| Environment Variables | None                                    |
+| Setting               | Value             |
+| --------------------- | ----------------- |
+| Framework Preset      | `Vite` or `Other` |
+| Install Command       | `npm install`     |
+| Build Command         | `npm run build`   |
+| Output Directory      | `dist`            |
+| Environment Variables | None              |
 
 Vercel usually detects Vite automatically. If it does, you can keep the detected `Vite` preset. If
 you choose `Other`, make sure the commands above are still filled in exactly.
@@ -128,6 +132,18 @@ After opening the deployed URL, check that the app behaves like a PWA:
 
 Workout data is saved in the browser where it was entered. Installing the PWA or opening it on a
 different device does not automatically sync data between browsers.
+
+## Verify the Mobile-First Experience
+
+After deployment, also check the redesign assumptions:
+
+1. Open the deployed site on a phone-sized viewport, such as `390px` wide.
+2. Confirm bottom navigation remains usable and does not overlap the browser safe area.
+3. Open the deployed site on desktop and confirm it still reads as a centered mobile app.
+4. Go to Library, click an exercise with no logged history, and confirm detail content opens with a
+   visible close or back action.
+5. Confirm Library icons and groupings match the muscle-first direction once the redesign is
+   implemented.
 
 ## Add a Vercel Deploy Badge to `README.md`
 

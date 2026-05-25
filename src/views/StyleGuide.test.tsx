@@ -4,10 +4,10 @@ import { StyleGuide, buttonClasses, swatches } from '@/views/StyleGuide';
 import styles from '@/views/styles/Theme.module.css';
 
 describe('StyleGuide', () => {
-  it('binds the Liquid Glass theme classes to display components', () => {
+  it('binds the light theme classes to display components', () => {
     const { container } = render(<StyleGuide />);
 
-    expect(screen.getByRole('heading', { name: 'iOS 26 Theme' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'LoadProgress Theme' })).toBeInTheDocument();
     expect(container.querySelector(`.${styles.themeRoot}`)).toBeInTheDocument();
     expect(container.querySelector(`.${styles.floatingCard}`)).toBeInTheDocument();
     expect(container.querySelector(`.${styles.inputField}`)).toBeInTheDocument();
@@ -21,10 +21,10 @@ describe('StyleGuide', () => {
     });
   });
 
-  it('renders a three-layer glass stack for backdrop validation', () => {
+  it('renders a three-layer surface stack for layer validation', () => {
     render(<StyleGuide />);
 
-    const stack = screen.getByLabelText('Three stacked glass layers');
+    const stack = screen.getByLabelText('Three stacked light surfaces');
     const layers = within(stack).getAllByRole('article');
 
     expect(layers).toHaveLength(3);

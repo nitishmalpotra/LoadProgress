@@ -1,9 +1,9 @@
 .analyticsPage {
   display: grid;
-  width: min(100%, 1040px);
+  width: 100%;
   min-width: 0;
   margin: 0 auto;
-  gap: 18px;
+  gap: 16px;
 }
 
 .pageHeader {
@@ -13,8 +13,8 @@
 
 .pageHeader h1 {
   margin: 0;
-  font-size: clamp(2rem, 8vw, 3.8rem);
-  line-height: 0.96;
+  font-size: 1.9rem;
+  line-height: 1.08;
   letter-spacing: 0;
 }
 
@@ -27,7 +27,7 @@
 
 .eyebrow {
   margin: 0;
-  color: var(--app-teal-light);
+  color: var(--app-teal);
   font-size: 0.78rem;
   font-weight: 800;
   letter-spacing: 0;
@@ -37,10 +37,8 @@
 .chartPanel,
 .controlPanel {
   border: 1px solid var(--app-glass-border);
-  background: var(--app-glass-overlay);
-  box-shadow: 0 18px 54px hsl(220 45% 4% / 0.28);
-  backdrop-filter: blur(16px) saturate(178%);
-  -webkit-backdrop-filter: blur(16px) saturate(178%);
+  background: var(--app-surface);
+  box-shadow: var(--app-shadow-soft);
 }
 
 .chartPanel {
@@ -48,7 +46,7 @@
   gap: 16px;
   min-height: 430px;
   padding: 18px;
-  border-radius: 20px;
+  border-radius: 14px;
   animation: chartIn 280ms ease-out both;
 }
 
@@ -56,7 +54,7 @@
   display: grid;
   gap: 14px;
   padding: 16px;
-  border-radius: 18px;
+  border-radius: 14px;
 }
 
 .panelHeader {
@@ -89,9 +87,9 @@
 .selectField {
   min-height: 42px;
   border: 1px solid var(--app-glass-border);
-  border-radius: 14px;
+  border-radius: 12px;
   color: var(--app-text);
-  background: hsl(0 0% 100% / 0.09);
+  background: var(--app-surface);
 }
 
 .segment,
@@ -110,8 +108,9 @@
 }
 
 .segmentSelected {
-  background: hsl(174 72% 44% / 0.26);
-  box-shadow: 0 12px 30px hsl(174 72% 24% / 0.18);
+  border-color: var(--app-teal);
+  background: rgb(23 107 77 / 0.1);
+  box-shadow: 0 10px 22px rgb(23 107 77 / 0.12);
 }
 
 .selectGroup {
@@ -137,6 +136,15 @@
   opacity: 0.58;
 }
 
+.segment:focus-visible,
+.segmentSelected:focus-visible,
+.selectField:focus-visible,
+.emptyState a:focus-visible,
+.emptyState button:focus-visible {
+  outline: 2px solid var(--app-focus);
+  outline-offset: 3px;
+}
+
 .chartShell {
   width: 100%;
   min-width: 0;
@@ -148,8 +156,40 @@
   display: grid;
   min-height: 310px;
   place-items: center;
+  gap: 10px;
+  padding: 18px;
   color: var(--app-text-secondary);
   text-align: center;
+}
+
+.emptyState h3 {
+  margin: 0;
+  color: var(--app-text);
+  font-size: 1.05rem;
+}
+
+.emptyState p {
+  max-width: 270px;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.emptyState a,
+.emptyState button {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 14px;
+  border: 1px solid var(--app-glass-border);
+  border-radius: 12px;
+  color: #ffffff;
+  background: var(--app-teal);
+  font: inherit;
+  font-weight: 850;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 .tooltip {
@@ -158,12 +198,10 @@
   min-width: 156px;
   padding: 12px;
   border: 1px solid var(--app-glass-border);
-  border-radius: 14px;
+  border-radius: 12px;
   color: var(--app-text);
-  background: hsl(222 47% 11% / 0.78);
-  box-shadow: 0 16px 42px hsl(220 45% 4% / 0.35);
-  backdrop-filter: blur(16px) saturate(178%);
-  -webkit-backdrop-filter: blur(16px) saturate(178%);
+  background: var(--app-surface);
+  box-shadow: var(--app-shadow-deep);
 }
 
 .tooltip strong {

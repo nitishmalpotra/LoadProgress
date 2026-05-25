@@ -1,10 +1,10 @@
 .workoutPage {
   position: relative;
   display: grid;
-  width: min(100%, 980px);
+  width: 100%;
   min-width: 0;
   margin: 0 auto;
-  gap: 24px;
+  gap: 16px;
 }
 
 .pageHeader {
@@ -19,8 +19,8 @@
 }
 
 .pageHeader h1 {
-  font-size: clamp(2rem, 8vw, 3.8rem);
-  line-height: 0.96;
+  font-size: 1.9rem;
+  line-height: 1.08;
 }
 
 .pageHeader p {
@@ -30,7 +30,7 @@
 
 .eyebrow {
   margin: 0;
-  color: var(--app-teal-light);
+  color: var(--app-teal);
   font-size: 0.78rem;
   font-weight: 800;
   letter-spacing: 0;
@@ -60,10 +60,10 @@
   place-items: center;
   padding: 10px 8px;
   border: 1px solid var(--app-glass-border);
-  border-radius: 16px;
+  border-radius: 12px;
   color: var(--app-text-secondary);
   cursor: pointer;
-  background: hsl(222 38% 13% / 0.74);
+  background: var(--app-surface);
   scroll-snap-align: center;
   transition:
     transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1),
@@ -86,9 +86,10 @@
 }
 
 .dayCardSelected {
+  border-color: var(--app-teal);
   color: var(--app-text);
-  background: linear-gradient(145deg, hsl(174 72% 44% / 0.28), hsl(243 75% 63% / 0.2));
-  box-shadow: 0 16px 38px hsl(174 72% 18% / 0.24);
+  background: rgb(23 107 77 / 0.1);
+  box-shadow: 0 10px 22px rgb(23 107 77 / 0.14);
 }
 
 .dayCard span,
@@ -107,18 +108,16 @@
 .dailyPanel,
 .sheet {
   border: 1px solid var(--app-glass-border);
-  background: linear-gradient(145deg, hsl(222 38% 15% / 0.78), hsl(222 38% 11% / 0.62));
+  background: var(--app-surface);
   box-shadow: var(--app-shadow-soft);
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
 }
 
 .dailyPanel {
   display: grid;
   gap: 20px;
   min-height: 320px;
-  padding: 24px;
-  border-radius: 18px;
+  padding: 16px;
+  border-radius: 14px;
 }
 
 .panelHeader,
@@ -144,8 +143,35 @@
   display: grid;
   min-height: 210px;
   place-items: center;
+  gap: 10px;
   color: var(--app-text-secondary);
   text-align: center;
+}
+
+.emptyState strong {
+  color: var(--app-text);
+  font-size: 1.02rem;
+}
+
+.emptyState span {
+  max-width: 250px;
+  line-height: 1.45;
+}
+
+.emptyState button {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 14px;
+  border: 1px solid var(--app-glass-border);
+  border-radius: 12px;
+  color: #ffffff;
+  background: var(--app-teal);
+  font: inherit;
+  font-weight: 850;
+  cursor: pointer;
 }
 
 .exerciseGroups,
@@ -170,9 +196,9 @@
   align-items: center;
   gap: 12px;
   padding: 14px;
-  border: 1px solid hsl(0 0% 100% / 0.1);
-  border-radius: 14px;
-  background: hsl(222 38% 10% / 0.58);
+  border: 1px solid var(--app-border);
+  border-radius: 12px;
+  background: var(--app-surface-elevated);
   color: var(--app-text-secondary);
 }
 
@@ -192,10 +218,10 @@
   justify-self: end;
   padding: 5px 8px;
   border-radius: 999px;
-  color: hsl(4 100% 94%);
+  color: #b42318;
   font-size: 0.76rem;
   font-weight: 800;
-  background: hsl(4 84% 58% / 0.22);
+  background: #fef3f2;
 }
 
 .fab {
@@ -209,9 +235,9 @@
   place-items: center;
   border: 1px solid var(--app-glass-border);
   border-radius: 50%;
-  color: var(--app-text);
+  color: #ffffff;
   cursor: pointer;
-  background: linear-gradient(135deg, hsl(174 72% 38%), hsl(243 75% 58%));
+  background: var(--app-teal);
   box-shadow: var(--app-shadow-deep);
 }
 
@@ -221,8 +247,8 @@
   z-index: 40;
   display: grid;
   align-items: end;
-  padding: 24px;
-  background: hsl(220 45% 4% / 0.44);
+  padding: 16px;
+  background: rgb(23 23 23 / 0.32);
 }
 
 .sheet {
@@ -233,7 +259,7 @@
   gap: 20px;
   overflow: auto;
   padding: 12px 24px 28px;
-  border-radius: 24px 24px 18px 18px;
+  border-radius: 14px 14px 12px 12px;
   animation: sheetIn 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -242,7 +268,7 @@
   height: 5px;
   margin: 0 auto 4px;
   border-radius: 999px;
-  background: hsl(0 0% 100% / 0.34);
+  background: var(--app-border-strong);
 }
 
 .iconButton {
@@ -251,10 +277,10 @@
   height: 40px;
   place-items: center;
   border: 1px solid var(--app-glass-border);
-  border-radius: 14px;
+  border-radius: 12px;
   color: var(--app-text);
   cursor: pointer;
-  background: hsl(0 0% 100% / 0.1);
+  background: var(--app-surface);
 }
 
 .wizardSection,
@@ -312,14 +338,15 @@
   justify-content: center;
   gap: 8px;
   border-radius: 14px;
-  background: hsl(222 38% 13% / 0.74);
+  background: var(--app-surface);
   font-weight: 800;
 }
 
 .segmentSelected,
 .chipSelected,
 .exerciseOptionSelected {
-  background: hsl(174 72% 44% / 0.24);
+  border-color: var(--app-teal);
+  background: rgb(23 107 77 / 0.1);
 }
 
 .chip,
@@ -328,7 +355,7 @@
   min-height: 38px;
   padding: 0 16px;
   border-radius: 999px;
-  background: hsl(222 38% 13% / 0.74);
+  background: var(--app-surface);
   font-weight: 750;
 }
 
@@ -346,7 +373,7 @@
   padding: 14px;
   border-radius: 14px;
   text-align: left;
-  background: hsl(222 38% 13% / 0.74);
+  background: var(--app-surface);
 }
 
 .exerciseOption span,
@@ -366,9 +393,9 @@
   min-height: 48px;
   padding: 13px 14px;
   border: 1px solid var(--app-glass-border);
-  border-radius: 14px;
+  border-radius: 12px;
   color: var(--app-text);
-  background: hsl(222 38% 10% / 0.94);
+  background: var(--app-surface);
   transition:
     border-color 160ms ease,
     box-shadow 160ms ease,
@@ -377,11 +404,11 @@
 
 .inputField:focus-visible,
 .textareaField:focus-visible {
-  border-color: hsl(174 82% 68% / 0.72);
-  outline: 2px solid hsl(174 82% 68% / 0.9);
+  border-color: var(--app-teal);
+  outline: 2px solid var(--app-focus);
   outline-offset: 3px;
-  background: hsl(222 38% 11% / 0.98);
-  box-shadow: 0 0 0 4px hsl(174 82% 68% / 0.12);
+  background: var(--app-surface);
+  box-shadow: 0 0 0 4px rgb(23 107 77 / 0.12);
 }
 
 .textareaField {
@@ -402,7 +429,7 @@
 
 .unitToggle {
   border-radius: 14px;
-  background: hsl(222 38% 13% / 0.74);
+  background: var(--app-surface);
   font-weight: 850;
 }
 
@@ -426,9 +453,10 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  border-radius: 16px;
-  background: linear-gradient(135deg, hsl(243 75% 63%), hsl(174 72% 40%));
-  box-shadow: 0 16px 38px hsl(243 75% 30% / 0.24);
+  border-radius: 12px;
+  color: #ffffff;
+  background: var(--app-teal);
+  box-shadow: 0 12px 24px rgb(23 107 77 / 0.18);
   font-weight: 850;
 }
 
@@ -437,8 +465,24 @@
   opacity: 0.65;
 }
 
+.dayCard:focus-visible,
+.dayCardSelected:focus-visible,
+.chip:focus-visible,
+.chipSelected:focus-visible,
+.segment:focus-visible,
+.segmentSelected:focus-visible,
+.exerciseOption:focus-visible,
+.exerciseOptionSelected:focus-visible,
+.fab:focus-visible,
+.addButton:focus-visible,
+.iconButton:focus-visible,
+.unitToggle:focus-visible {
+  outline: 2px solid var(--app-focus);
+  outline-offset: 3px;
+}
+
 .errorText {
-  color: hsl(4 100% 82%);
+  color: #b42318;
   font-size: 0.82rem;
   font-weight: 750;
 }
@@ -457,8 +501,8 @@
 
 @media (min-width: 768px) {
   .fab {
-    right: 34px;
-    bottom: 34px;
+    right: calc(50% - 197px);
+    bottom: calc(88px + env(safe-area-inset-bottom));
   }
 }
 

@@ -2,23 +2,30 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-0f766e?style=for-the-badge)](LICENSE)
 
-LoadProgress is a local-first React PWA for strength training. It preserves the original iOS
-workout tracker's Liquid Glass aesthetic, automatic personal record detection, volume analytics, and
-offline-first gym workflow while running entirely in the browser.
+LoadProgress is a local-first React PWA for strength training. It runs entirely in the browser,
+stores workout data locally with IndexedDB, detects personal records automatically, and provides
+volume and progress analytics for strength training.
 
+The product direction is now a mobile-first app experience: desktop browsers should present the
+same phone-sized app shell centered on the page, with a light-first interface, bottom-tab
+navigation, muscle-first exercise browsing, and recoverable detail screens.
 
 ## Features
 
-- Liquid Glass design tokens: translucent surfaces, glass borders, specular highlights, depth
-  shadows, rounded system typography, spring button transitions, and reusable CSS module utilities.
+- Mobile-first app shell: the primary interface is designed around a phone-sized viewport, even when
+  opened in a desktop browser.
+- Light-first design system: warm neutral backgrounds, white surfaces, charcoal text, restrained
+  borders, and a deep green primary action color replace the previous dark glassmorphism baseline.
 - Progressive overload engine: logs weight, reps, RPE, rest time, notes, and failure sets, then
   detects new 1RM, daily volume, and weight-at-reps records with Brzycki estimates.
 - Local-first storage: Dexie persists exercises, workout sets, personal records, and backup data in
   IndexedDB with no hosted database or account requirement.
 - Offline PWA: Vite PWA service worker caches app shell, scripts, styles, fonts, and images, then
   prompts users when a fresh version is available.
-- Responsive training cockpit: mobile bottom tabs, desktop sidebar navigation, workout logging,
-  exercise history, records, analytics, and progress trend views.
+- Muscle-first exercise library: exercises are grouped and browsed by target muscle, with
+  muscle-specific iconography planned for the Library and detail views.
+- Recoverable navigation: secondary screens such as exercise detail should have visible back actions
+  and avoid blank-screen failure states.
 - Recharts analytics: muscle-group volume breakdowns and exercise-level trend charts for weight,
   reps, and training history.
 
@@ -60,8 +67,22 @@ lookup maps for exercises, sets, and records, applies validation rules, and runs
 sets are added.
 
 `src/views/` contains the routed React interface. Recharts powers the analytics and progress views,
-while CSS modules consume the Liquid Glass tokens from `src/views/styles/Theme.module.css` and
-global app foundations from `src/index.css`.
+while CSS modules consume app tokens from `src/views/styles/Theme.module.css` and global foundations
+from `src/index.css`.
+
+Current routes are `/`, `/records`, `/analytics`, `/exercises`, `/progress`, and `/styleguide`.
+Exercise detail currently opens from Library state rather than a route; the redesign should make
+that flow recoverable with an explicit back path.
+
+## Redesign Direction
+
+- Treat desktop as a framed mobile app, not a separate sidebar-first product.
+- Keep bottom navigation as the primary app model.
+- Make `Workout`, `Library`, `Progress`, `Volume`, and `Records` focused single-purpose screens.
+- Make Library muscle-first with compact exercise rows/cards and clear detail access.
+- Replace generic exercise symbols with consistent muscle-specific icons.
+- Design loading, empty, and error states as first-class screens.
+- Keep dark mode optional and token-driven later; it is no longer the default design baseline.
 
 ## Progressive Overload Rules
 

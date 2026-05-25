@@ -1,6 +1,8 @@
-# LoadProgress - Codebase Analysis & Web Refactoring Strategy
+# LoadProgress - Codebase Analysis & Redesign Strategy
 
-This document provides a deep architectural analysis of the **LoadProgress** iOS codebase and defines a strategic plan for refactoring the product into a modern, premium web application.
+This document provides architectural context for **LoadProgress** and records the current redesign strategy for the web PWA.
+
+The original iOS-to-web refactor is complete. The next product direction is a mobile-first redesign that keeps the local-first training engine but replaces the current dark glassmorphism UI with a light-first, phone-sized app experience.
 
 ---
 
@@ -40,16 +42,78 @@ LoadProgress is an exceptionally clean, well-engineered native iOS application. 
 
 ---
 
-## 🌐 Web Refactoring Blueprint
+## Current Web App Audit
 
-To translate LoadProgress into a web app, we want to maintain the **privacy-first, local-first** core philosophy while resolving the storage scalability constraints.
+### Routes and Screens
+
+- `/`: Workout log
+- `/records`: Personal records placeholder/dashboard
+- `/analytics`: Volume analytics
+- `/exercises`: Exercise Library
+- `/progress`: Progress trends
+- `/styleguide`: Existing design-system preview
+
+The app currently uses a responsive layout that becomes sidebar-first on desktop. The redesign should instead keep a phone-sized shell centered on desktop so the product feels like a mobile app everywhere.
+
+### Library Failure
+
+The Library detail flow is local state inside `ExercisesTab`, not a route. Clicking an exercise reproduced a live browser failure:
+
+- Symptom: exercise click leaves `/exercises` without a usable detail view.
+- Browser error: React `Maximum update depth exceeded`.
+- Likely cause: `ExerciseDetail` uses `state.workoutSetsByExerciseId[exercise.id] ?? []`, returning a fresh empty array during store subscription for exercises with no logged sets.
+- Redesign implication: fix the selector and give exercise detail an explicit back/recovery model.
+
+### Visual Audit
+
+- Current palette is dark navy/slate with teal and purple accents.
+- Styling relies heavily on translucent glass panels, radial gradients, deep shadows, and large headings.
+- Exercise icons are generic Lucide mappings by exercise name.
+- Library should move toward muscle-first browsing and muscle-specific iconography.
+
+## Mobile-First Product Model
+
+- Working viewport: 360-430px.
+- Desktop presentation: centered app shell, not a separate desktop dashboard.
+- Navigation: bottom tabs remain primary.
+- Secondary screens: visible top back action, recoverable browser history where appropriate.
+- Primary jobs:
+  - Workout: log today's training.
+  - Library: browse/search/filter by muscle group.
+  - Exercise detail: cues, requirements, target muscles, stats, and history.
+  - Progress: drill into one exercise trend.
+  - Volume: compare load by muscle group.
+  - Records: review personal bests.
+
+## Light-First Design System
+
+- Background: `#F7F5F0`
+- Surface: `#FFFFFF`
+- Raised surface: `#F1EFE8`
+- Text: `#171717`
+- Secondary text: `#6B6963`
+- Primary action: `#176B4D`
+- Supporting chart/status colors may use amber, blue, red, and violet sparingly.
+
+Design rules:
+
+- Use compact app-scale typography instead of hero-scale headings.
+- Use stable spacing tokens: `4`, `8`, `12`, `16`, `20`, and `24`.
+- Keep most radii between `8px` and `14px`.
+- Use cards for repeated items and tools only; avoid nested cards.
+- Make loading, empty, and error states explicit and recoverable.
+- Keep dark mode optional for a later token swap.
+
+## Web Architecture Blueprint
+
+LoadProgress should continue to maintain the **privacy-first, local-first** core philosophy.
 
 ```mermaid
 graph TD
     UI[React / Vite / TS SPA] --> VM[Zustand State Store]
     VM --> Cache[In-Memory Caches]
     VM --> DB[IndexedDB via Dexie.js]
-    UI --> Theme[CSS Variables / Glassmorphism]
+    UI --> Theme[CSS Variables / Mobile-First Design System]
     UI --> Charts[Recharts / ApexCharts]
     UI --> WebAPI[Web APIs: Vibration, FileReader]
 ```
@@ -65,12 +129,11 @@ graph TD
     *   `UserDefaults` has a tight limit (~1-5MB). `localStorage` shares this 5MB limit.
     *   IndexedDB supports large datasets (hundreds of MBs), custom indexing, and asynchronous queries, making queries like `getWorkoutSets(for: date)` extremely fast and scalable.
 
-### 3. Premium Glassmorphism Styling (Liquid Glass)
-To reproduce the stunning "iOS 26 Liquid Glass" style in web browsers:
-*   **Backgrounds**: CSS `backdrop-filter: blur(12px) saturate(180%)` combined with semi-transparent background colors (`rgba(255, 255, 255, 0.08)` for light, `rgba(0, 0, 0, 0.2)` for dark).
-*   **Specular Highlights**: Soft border gradients (`border: 1px solid rgba(255, 255, 255, 0.18)`).
-*   **Shadows**: Three-tiered drop-shadow classes using HSL configurations.
-*   **Animations**: CSS transitions or **Framer Motion** to replicate the elastic spring physics of SwiftUI's `.spring` and `.springBouncy` animations.
+### 3. Mobile-First Styling
+*   **Backgrounds**: Warm neutral page background with white app surfaces.
+*   **Shell**: Phone-sized app frame on desktop, full-width mobile app on small screens.
+*   **Shadows**: Subtle elevation only where it clarifies hierarchy.
+*   **Animations**: Fast, restrained transitions that support repeated workout logging.
 
 ### 4. Interactive Charts (Replacing Swift Charts)
 *   **Recommendation**: **Recharts** or **ApexCharts**.
@@ -80,7 +143,7 @@ To reproduce the stunning "iOS 26 Liquid Glass" style in web browsers:
 *   **Haptics**: Use the Web Vibration API (`navigator.vibrate([10])` for standard taps, `[15, 10, 15]` for records).
 *   **Rest Timer**: Use standard JavaScript `setInterval` coupled with a **Web Worker** to guarantee that the timer runs accurately when the browser tab is backgrounded.
 *   **Backup & Restore**: Use HTML5 `FileReader` and dynamically generated JSON blobs for local file exports/imports.
-*   **Icons**: Rebuild using SVG symbols or **Lucide React** (dumbbell, trophy, chart-bar, line-chart, timer, etc.).
+*   **Icons**: Use consistent muscle-specific exercise icons and simple Lucide navigation/action icons.
 
 ---
 
@@ -96,8 +159,8 @@ gantt
     section Phase 2: State & Core Views
     Zustand Store & Logging CRUD : p3, after p2, 5d
     Workout Log & Exercise views : p4, after p3, 6d
-    section Phase 3: Premium UI & Charts
-    Liquid Glass Theme (CSS)     : p5, after p4, 5d
+    section Phase 3: Mobile UI & Charts
+    Mobile-first theme (CSS)     : p5, after p4, 5d
     Charts & Analytics Views    : p6, after p5, 6d
     section Phase 4: Utilities & Polish
     Rest Timer, Haptics, Backups : p7, after p6, 4d

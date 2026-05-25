@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Dumbbell, Plus, Search, Weight } from 'lucide-react';
+import { ArrowLeft, Dumbbell, Plus, RefreshCw, Search, Weight } from 'lucide-react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import type { Difficulty, Equipment, Exercise, ExerciseType, MuscleGroup } from '@/models';
 import { useWorkoutStore } from '@/store/useWorkoutStore';
 import { ExerciseDetail } from '@/views/ExerciseDetail';
@@ -35,6 +36,7 @@ const equipmentOptions: Equipment[] = [
   'Foam Roller'
 ];
 const difficulties: Difficulty[] = ['Beginner', 'Intermediate', 'Advanced', 'Expert'];
+const allMuscleGroups = 'All';
 
 const emptyExercise = {
   name: '',
@@ -65,50 +67,66 @@ function matchesSearch(exercise: Exercise, query: string) {
 }
 
 function groupExercises(exercises: Exercise[]) {
-  return exercises.reduce<Array<{ muscleGroup: MuscleGroup; exercises: Exercise[] }>>(
-    (groups, exercise) => {
-      const existingGroup = groups.find((group) => group.muscleGroup === exercise.muscleGroup);
-
-      if (existingGroup) {
-        existingGroup.exercises.push(exercise);
-      } else {
-        groups.push({ muscleGroup: exercise.muscleGroup, exercises: [exercise] });
-      }
-
-      return groups;
-    },
-    []
-  );
+  return muscleGroups
+    .map((muscleGroup) => ({
+      muscleGroup,
+      exercises: exercises.filter((exercise) => exercise.muscleGroup === muscleGroup)
+    }))
+    .filter((group) => group.exercises.length > 0);
 }
 
 export function ExercisesTab() {
   const exercises = useWorkoutStore((state) => state.exercises);
+  const exercisesById = useWorkoutStore((state) => state.exercisesById);
+  const isLoading = useWorkoutStore((state) => state.isLoading);
+  const error = useWorkoutStore((state) => state.error);
   const addExercise = useWorkoutStore((state) => state.addExercise);
   const loadWorkoutData = useWorkoutStore((state) => state.loadWorkoutData);
+  const navigate = useNavigate();
+  const { exerciseId } = useParams();
   const [exerciseType, setExerciseType] = useState<ExerciseType>('Weight Training');
+  const [selectedMuscleGroup, setSelectedMuscleGroup] = useState<
+    MuscleGroup | typeof allMuscleGroups
+  >(allMuscleGroups);
   const [query, setQuery] = useState('');
-  const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
   const [isAddingExercise, setIsAddingExercise] = useState(false);
   const [customExercise, setCustomExercise] = useState(emptyExercise);
   const [customError, setCustomError] = useState('');
 
   useEffect(() => {
-    void loadWorkoutData();
+    void loadWorkoutData().catch(() => undefined);
   }, [loadWorkoutData]);
+
+  const muscleCounts = useMemo(
+    () =>
+      muscleGroups.reduce<Record<MuscleGroup, number>>(
+        (counts, muscleGroup) => ({
+          ...counts,
+          [muscleGroup]: exercises.filter(
+            (exercise) => exercise.type === exerciseType && exercise.muscleGroup === muscleGroup
+          ).length
+        }),
+        {} as Record<MuscleGroup, number>
+      ),
+    [exerciseType, exercises]
+  );
 
   const visibleExercises = useMemo(
     () =>
       exercises
         .filter((exercise) => exercise.type === exerciseType)
+        .filter(
+          (exercise) =>
+            selectedMuscleGroup === allMuscleGroups ||
+            exercise.muscleGroup === selectedMuscleGroup ||
+            exercise.secondaryMuscleGroups.includes(selectedMuscleGroup)
+        )
         .filter((exercise) => matchesSearch(exercise, query))
-        .sort((left, right) =>
-          left.muscleGroup === right.muscleGroup
-            ? left.name.localeCompare(right.name)
-            : left.muscleGroup.localeCompare(right.muscleGroup)
-        ),
-    [exerciseType, exercises, query]
+        .sort((left, right) => left.name.localeCompare(right.name)),
+    [exerciseType, exercises, query, selectedMuscleGroup]
   );
   const groupedExercises = useMemo(() => groupExercises(visibleExercises), [visibleExercises]);
+  const routeExercise = exerciseId ? exercisesById[exerciseId] : null;
 
   const handleCreateExercise = async () => {
     if (!customExercise.name.trim()) {
@@ -131,28 +149,35 @@ export function ExercisesTab() {
         .filter(Boolean)
     });
 
-    const savedExercise: Exercise = {
-      id: savedId,
-      name: customExercise.name.trim(),
-      type: customExercise.type,
-      muscleGroup: customExercise.muscleGroup,
-      secondaryMuscleGroups: [],
-      icon: 'custom',
-      difficulty: customExercise.difficulty,
-      equipment: [customExercise.equipment],
-      description: customExercise.description.trim() || 'Custom exercise',
-      formCues: customExercise.formCues
-        .split('\n')
-        .map((cue) => cue.trim())
-        .filter(Boolean)
-    };
-
     setExerciseType(customExercise.type);
-    setSelectedExercise(savedExercise);
+    setSelectedMuscleGroup(customExercise.muscleGroup);
     setCustomExercise(emptyExercise);
     setCustomError('');
     setIsAddingExercise(false);
+    navigate(`/exercises/${savedId}`);
   };
+
+  const clearFilters = () => {
+    setSelectedMuscleGroup(allMuscleGroups);
+    setQuery('');
+  };
+
+  if (exerciseId) {
+    return routeExercise ? (
+      <ExerciseDetail exercise={routeExercise} onBack={() => navigate('/exercises')} />
+    ) : (
+      <section className={styles.detailFallback} aria-labelledby="missing-exercise-title">
+        <button className={styles.backButton} type="button" onClick={() => navigate('/exercises')}>
+          <ArrowLeft size={18} />
+          Back to Library
+        </button>
+        <div className={styles.emptyState}>
+          <h1 id="missing-exercise-title">Exercise not found</h1>
+          <p>This Library detail link no longer matches an exercise on this device.</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className={styles.exercisesPage} aria-labelledby="exercises-title">
@@ -173,6 +198,37 @@ export function ExercisesTab() {
       </header>
 
       <div className={styles.filterPanel}>
+        <div className={styles.muscleBrowser} aria-label="Browse by muscle group">
+          <button
+            aria-pressed={selectedMuscleGroup === allMuscleGroups}
+            className={
+              selectedMuscleGroup === allMuscleGroups
+                ? styles.muscleChipSelected
+                : styles.muscleChip
+            }
+            type="button"
+            onClick={() => setSelectedMuscleGroup(allMuscleGroups)}
+          >
+            <span>All</span>
+            <strong>{exercises.filter((exercise) => exercise.type === exerciseType).length}</strong>
+          </button>
+          {muscleGroups.map((group) => (
+            <button
+              aria-pressed={selectedMuscleGroup === group}
+              className={
+                selectedMuscleGroup === group ? styles.muscleChipSelected : styles.muscleChip
+              }
+              key={group}
+              type="button"
+              onClick={() => setSelectedMuscleGroup(group)}
+            >
+              <ExerciseIcon className={styles.muscleChipIcon} muscleGroup={group} size={17} />
+              <span>{group}</span>
+              <strong>{muscleCounts[group]}</strong>
+            </button>
+          ))}
+        </div>
+
         <div className={styles.segmentedRow} aria-label="Exercise type filter">
           {exerciseTypes.map((type) => (
             <button
@@ -318,6 +374,14 @@ export function ExercisesTab() {
             />
           </label>
           {customError ? <span className={styles.errorText}>{customError}</span> : null}
+          <button
+            className={styles.cancelButton}
+            type="button"
+            onClick={() => setIsAddingExercise(false)}
+          >
+            <ArrowLeft size={18} />
+            Back to Library
+          </button>
           <button className={styles.saveButton} type="submit">
             Save Exercise
           </button>
@@ -325,39 +389,62 @@ export function ExercisesTab() {
       ) : null}
 
       <div className={styles.exerciseList}>
-        {groupedExercises.length === 0 ? (
-          <div className={styles.emptyState}>No exercises match this search</div>
+        {error ? (
+          <div className={styles.emptyState} role="alert">
+            <h2>Library could not load</h2>
+            <p>{error}</p>
+            <button
+              className={styles.cancelButton}
+              type="button"
+              onClick={() => void loadWorkoutData().catch(() => undefined)}
+            >
+              <RefreshCw size={17} />
+              Retry
+            </button>
+          </div>
+        ) : isLoading && groupedExercises.length === 0 ? (
+          <div className={styles.emptyState}>
+            <h2>Loading Library</h2>
+            <p>Reading exercises saved on this device.</p>
+          </div>
+        ) : groupedExercises.length === 0 ? (
+          <div className={styles.emptyState}>
+            <h2>No exercises match this search</h2>
+            <p>Clear filters or create a custom exercise.</p>
+            <button className={styles.cancelButton} type="button" onClick={clearFilters}>
+              Clear filters
+            </button>
+          </div>
         ) : (
           groupedExercises.map((group) => (
             <section className={styles.exerciseGroup} key={group.muscleGroup}>
               <h2>{group.muscleGroup}</h2>
               <div className={styles.exerciseCards}>
                 {group.exercises.map((exercise) => (
-                  <button
+                  <Link
                     className={styles.exerciseCard}
                     key={exercise.id}
-                    type="button"
-                    onClick={() => setSelectedExercise(exercise)}
+                    to={`/exercises/${exercise.id}`}
                   >
                     <span className={styles.exerciseTitle}>
-                      <ExerciseIcon className={styles.exerciseCardIcon} iconName={exercise.icon} />
+                      <ExerciseIcon
+                        className={styles.exerciseCardIcon}
+                        iconName={exercise.icon}
+                        muscleGroup={exercise.muscleGroup}
+                      />
                       <span className={styles.exerciseName}>{exercise.name}</span>
                     </span>
                     <span className={styles.cardMeta}>
                       <span className={styles.badge}>{exercise.equipment[0]}</span>
                       <span>{exercise.difficulty}</span>
                     </span>
-                  </button>
+                  </Link>
                 ))}
               </div>
             </section>
           ))
         )}
       </div>
-
-      {selectedExercise ? (
-        <ExerciseDetail exercise={selectedExercise} onClose={() => setSelectedExercise(null)} />
-      ) : null}
     </section>
   );
 }

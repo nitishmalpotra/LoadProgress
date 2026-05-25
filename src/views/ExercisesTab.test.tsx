@@ -5,6 +5,7 @@ import { useWorkoutStore } from '@/store/useWorkoutStore';
 import { ExerciseDetail } from '@/views/ExerciseDetail';
 import { ExercisesTab } from '@/views/ExercisesTab';
 import { AddWorkoutModal } from '@/views/components/AddWorkoutModal';
+import { getExerciseIcon } from '@/views/components/ExerciseIcon';
 
 const benchPress: Exercise = {
   id: '10000000-0000-4000-8000-000000000001',
@@ -108,6 +109,14 @@ describe('ExercisesTab', () => {
     expect(screen.queryByText('Bicep Curls')).not.toBeInTheDocument();
   });
 
+  it('renders exercise icons next to library names', () => {
+    render(<ExercisesTab />);
+
+    const benchCard = screen.getByRole('button', { name: /Bench Press/ });
+    expect(within(benchCard).getByLabelText('benchPress icon')).toBeInTheDocument();
+    expect(within(benchCard).getByText('Bench Press')).toBeInTheDocument();
+  });
+
   it('aggregates average weight and total repetitions in the detail sheet', () => {
     const sets: WorkoutSet[] = [
       {
@@ -132,6 +141,8 @@ describe('ExercisesTab', () => {
     resetWorkoutStore([benchPress], sets);
 
     render(<ExerciseDetail exercise={benchPress} onClose={vi.fn()} />);
+
+    expect(screen.getByLabelText('benchPress icon')).toBeInTheDocument();
 
     const stats = screen.getByLabelText('Key stats');
     expect(within(stats).getByText('Average Weight')).toBeInTheDocument();
@@ -159,5 +170,9 @@ describe('ExercisesTab', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Legs' }));
 
     expect(screen.getByRole('button', { name: /Safety Bar Squat/ })).toBeInTheDocument();
+  });
+
+  it('uses the generic custom exercise icon fallback', () => {
+    expect(getExerciseIcon('custom')).toBe(getExerciseIcon('benchPress'));
   });
 });

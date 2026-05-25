@@ -4,7 +4,7 @@
   width: min(100%, 980px);
   min-width: 0;
   margin: 0 auto;
-  gap: 18px;
+  gap: 24px;
 }
 
 .pageHeader {
@@ -40,9 +40,9 @@
 .calendarRail,
 .chipScroller {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   overflow-x: auto;
-  padding: 4px 2px 10px;
+  padding: 4px 2px 12px;
   scrollbar-width: none;
   scroll-snap-type: x mandatory;
 }
@@ -60,10 +60,10 @@
   place-items: center;
   padding: 10px 8px;
   border: 1px solid var(--app-glass-border);
-  border-radius: 18px;
+  border-radius: 16px;
   color: var(--app-text-secondary);
   cursor: pointer;
-  background: hsl(0 0% 100% / 0.08);
+  background: hsl(222 38% 13% / 0.74);
   scroll-snap-align: center;
   transition:
     transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1),
@@ -87,8 +87,8 @@
 
 .dayCardSelected {
   color: var(--app-text);
-  background: hsl(174 72% 44% / 0.25);
-  box-shadow: 0 12px 34px hsl(174 72% 24% / 0.22);
+  background: linear-gradient(145deg, hsl(174 72% 44% / 0.28), hsl(243 75% 63% / 0.2));
+  box-shadow: 0 16px 38px hsl(174 72% 18% / 0.24);
 }
 
 .dayCard span,
@@ -107,18 +107,18 @@
 .dailyPanel,
 .sheet {
   border: 1px solid var(--app-glass-border);
-  background: var(--app-glass-overlay);
-  box-shadow: 0 18px 54px hsl(220 45% 4% / 0.28);
-  backdrop-filter: blur(16px) saturate(178%);
-  -webkit-backdrop-filter: blur(16px) saturate(178%);
+  background: linear-gradient(145deg, hsl(222 38% 15% / 0.78), hsl(222 38% 11% / 0.62));
+  box-shadow: var(--app-shadow-soft);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
 }
 
 .dailyPanel {
   display: grid;
-  gap: 16px;
+  gap: 20px;
   min-height: 320px;
-  padding: 18px;
-  border-radius: 20px;
+  padding: 24px;
+  border-radius: 18px;
 }
 
 .panelHeader,
@@ -151,12 +151,12 @@
 .exerciseGroups,
 .setList {
   display: grid;
-  gap: 12px;
+  gap: 14px;
 }
 
 .exerciseGroup {
   display: grid;
-  gap: 10px;
+  gap: 12px;
 }
 
 .exerciseGroup h3 {
@@ -168,11 +168,11 @@
   display: grid;
   grid-template-columns: minmax(54px, 0.7fr) repeat(3, minmax(70px, 1fr)) auto;
   align-items: center;
-  gap: 10px;
-  padding: 12px;
+  gap: 12px;
+  padding: 14px;
   border: 1px solid hsl(0 0% 100% / 0.1);
   border-radius: 14px;
-  background: hsl(222 47% 11% / 0.38);
+  background: hsl(222 38% 10% / 0.58);
   color: var(--app-text-secondary);
 }
 
@@ -211,8 +211,8 @@
   border-radius: 50%;
   color: var(--app-text);
   cursor: pointer;
-  background: linear-gradient(135deg, hsl(174 72% 34%), hsl(213 94% 42%));
-  box-shadow: 0 18px 44px hsl(220 45% 4% / 0.36);
+  background: linear-gradient(135deg, hsl(174 72% 38%), hsl(243 75% 58%));
+  box-shadow: var(--app-shadow-deep);
 }
 
 .sheetOverlay {
@@ -221,8 +221,8 @@
   z-index: 40;
   display: grid;
   align-items: end;
-  padding: 18px;
-  background: hsl(220 45% 4% / 0.38);
+  padding: 24px;
+  background: hsl(220 45% 4% / 0.44);
 }
 
 .sheet {
@@ -230,9 +230,9 @@
   width: min(100%, 680px);
   max-height: min(88vh, 820px);
   margin: 0 auto;
-  gap: 16px;
+  gap: 20px;
   overflow: auto;
-  padding: 10px 18px 22px;
+  padding: 12px 24px 28px;
   border-radius: 24px 24px 18px 18px;
   animation: sheetIn 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -261,12 +261,12 @@
 .formGrid,
 .inputGroup {
   display: grid;
-  gap: 10px;
+  gap: 12px;
 }
 
 .formGrid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
+  gap: 16px;
 }
 
 .inputGroup:has(.textareaField),
@@ -312,7 +312,7 @@
   justify-content: center;
   gap: 8px;
   border-radius: 14px;
-  background: hsl(0 0% 100% / 0.08);
+  background: hsl(222 38% 13% / 0.74);
   font-weight: 800;
 }
 
@@ -326,16 +326,16 @@
 .chipSelected {
   flex: 0 0 auto;
   min-height: 38px;
-  padding: 0 14px;
+  padding: 0 16px;
   border-radius: 999px;
-  background: hsl(0 0% 100% / 0.08);
+  background: hsl(222 38% 13% / 0.74);
   font-weight: 750;
 }
 
 .exerciseGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
+  gap: 12px;
 }
 
 .exerciseOption,
@@ -343,10 +343,10 @@
   display: grid;
   min-height: 72px;
   gap: 5px;
-  padding: 12px;
+  padding: 14px;
   border-radius: 14px;
   text-align: left;
-  background: hsl(0 0% 100% / 0.08);
+  background: hsl(222 38% 13% / 0.74);
 }
 
 .exerciseOption span,
@@ -363,12 +363,25 @@
 .inputField,
 .textareaField {
   width: 100%;
-  min-height: 46px;
-  padding: 11px 12px;
+  min-height: 48px;
+  padding: 13px 14px;
   border: 1px solid var(--app-glass-border);
   border-radius: 14px;
   color: var(--app-text);
-  background: hsl(0 0% 100% / 0.1);
+  background: hsl(222 38% 10% / 0.94);
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    background 160ms ease;
+}
+
+.inputField:focus-visible,
+.textareaField:focus-visible {
+  border-color: hsl(174 82% 68% / 0.72);
+  outline: 2px solid hsl(174 82% 68% / 0.9);
+  outline-offset: 3px;
+  background: hsl(222 38% 11% / 0.98);
+  box-shadow: 0 0 0 4px hsl(174 82% 68% / 0.12);
 }
 
 .textareaField {
@@ -389,7 +402,7 @@
 
 .unitToggle {
   border-radius: 14px;
-  background: hsl(0 0% 100% / 0.1);
+  background: hsl(222 38% 13% / 0.74);
   font-weight: 850;
 }
 
@@ -414,8 +427,8 @@
   justify-content: center;
   gap: 8px;
   border-radius: 16px;
-  background: linear-gradient(135deg, hsl(213 94% 40%), hsl(243 75% 46%));
-  box-shadow: 0 14px 30px hsl(213 94% 30% / 0.32);
+  background: linear-gradient(135deg, hsl(243 75% 63%), hsl(174 72% 40%));
+  box-shadow: 0 16px 38px hsl(243 75% 30% / 0.24);
   font-weight: 850;
 }
 

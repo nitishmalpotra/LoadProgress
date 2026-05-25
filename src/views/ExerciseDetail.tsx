@@ -1,6 +1,7 @@
 import { CalendarDays, Trophy, X } from 'lucide-react';
 import type { Exercise, WorkoutSet } from '@/models';
 import { calculateOneRepMax, useWorkoutStore } from '@/store/useWorkoutStore';
+import { ExerciseIcon } from '@/views/components/ExerciseIcon';
 import styles from '@/views/styles/Exercises.module.css';
 
 type ExerciseDetailProps = {
@@ -87,9 +88,16 @@ export function ExerciseDetail({ exercise, onClose }: ExerciseDetailProps) {
       >
         <div className={styles.sheetHandle} aria-hidden="true" />
         <header className={styles.detailHeader}>
-          <div>
-            <p className={styles.eyebrow}>{exercise.muscleGroup}</p>
-            <h2>{exercise.name}</h2>
+          <div className={styles.detailTitleRow}>
+            <ExerciseIcon
+              className={styles.detailExerciseIcon}
+              iconName={exercise.icon}
+              size={24}
+            />
+            <div>
+              <p className={styles.eyebrow}>{exercise.muscleGroup}</p>
+              <h2>{exercise.name}</h2>
+            </div>
           </div>
           <button className={styles.iconButton} type="button" aria-label="Close" onClick={onClose}>
             <X size={19} />

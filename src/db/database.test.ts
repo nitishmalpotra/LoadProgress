@@ -21,12 +21,12 @@ afterEach(async () => {
 });
 
 describe('LoadProgressDatabase', () => {
-  it('pre-populates exactly 28 default exercises', async () => {
+  it('pre-populates the default exercise library', async () => {
     const database = createTestDatabase();
 
     await database.open();
 
-    expect(await database.exercises.count()).toBe(28);
+    expect(await database.exercises.count()).toBe(DEFAULT_EXERCISES.length);
     expect(await database.exercises.toArray()).toEqual(DEFAULT_EXERCISES);
     expect(DEFAULT_EXERCISES.every((exercise) => UUID_REGEX.test(exercise.id))).toBe(true);
 
@@ -53,7 +53,7 @@ describe('LoadProgressDatabase', () => {
 
     expect(UUID_REGEX.test(id)).toBe(true);
     expect(savedExercise).toMatchObject(customExercise);
-    expect(await database.exercises.count()).toBe(29);
+    expect(await database.exercises.count()).toBe(DEFAULT_EXERCISES.length + 1);
 
     database.close();
   });
@@ -109,13 +109,13 @@ describe('LoadProgressDatabase', () => {
     const firstLoad = new LoadProgressDatabase(name);
 
     await firstLoad.open();
-    expect(await firstLoad.exercises.count()).toBe(28);
+    expect(await firstLoad.exercises.count()).toBe(DEFAULT_EXERCISES.length);
     firstLoad.close();
 
     const refreshedLoad = new LoadProgressDatabase(name);
     await refreshedLoad.open();
 
-    expect(await refreshedLoad.exercises.count()).toBe(28);
+    expect(await refreshedLoad.exercises.count()).toBe(DEFAULT_EXERCISES.length);
 
     refreshedLoad.close();
   });

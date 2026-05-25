@@ -1,23 +1,26 @@
 .themeRoot {
-  --accent-background: hsl(213 94% 58%);
-  --accent-background-strong: hsl(213 94% 48%);
+  --page-background: hsl(222 47% 8%);
+  --surface-base: hsl(222 38% 13%);
+  --surface-raised: hsl(221 34% 16%);
+  --accent-background: hsl(243 75% 63%);
+  --accent-background-strong: hsl(243 75% 54%);
   --teal-secondary: hsl(174 72% 44%);
   --indigo-tertiary: hsl(243 75% 63%);
   --system-success: hsl(142 71% 45%);
   --system-warning: hsl(32 95% 54%);
   --system-error: hsl(4 84% 58%);
   --on-bright-fill: hsl(220 45% 6%);
-  --glass-overlay: rgba(255, 255, 255, 0.08);
-  --glass-border: rgba(255, 255, 255, 0.18);
-  --glass-highlight: rgba(255, 255, 255, 0.25);
-  --subtle-border: rgba(255, 255, 255, 0.12);
+  --glass-overlay: rgba(255, 255, 255, 0.07);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-highlight: rgba(255, 255, 255, 0.16);
+  --subtle-border: rgba(255, 255, 255, 0.1);
   --text-primary: hsl(210 40% 98%);
-  --text-secondary: hsl(214 32% 86%);
+  --text-secondary: hsl(214 28% 82%);
   --text-tertiary: hsl(215 20% 72%);
   --text-inverse: hsl(0 0% 100%);
-  --surface-shadow-light: 0 2px 4px hsl(220 45% 4% / 0.08);
-  --surface-shadow-medium: 0 6px 10px hsl(220 45% 4% / 0.12), 0 16px 36px hsl(220 45% 4% / 0.18);
-  --surface-shadow-heavy: 0 12px 20px hsl(220 45% 4% / 0.18), 0 28px 80px hsl(220 45% 4% / 0.32);
+  --surface-shadow-light: 0 10px 24px hsl(222 48% 3% / 0.18);
+  --surface-shadow-medium: 0 18px 44px hsl(222 48% 3% / 0.28), 0 2px 0 hsl(0 0% 100% / 0.02) inset;
+  --surface-shadow-heavy: 0 30px 90px hsl(222 48% 2% / 0.48), 0 1px 0 hsl(0 0% 100% / 0.04) inset;
   --font-rounded:
     system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Rounded', 'SF Pro Display', 'Segoe UI',
     sans-serif;
@@ -29,8 +32,8 @@
   --space-sm: 8px;
   --space-md: 12px;
   --space-lg: 16px;
-  --space-xl: 20px;
-  --space-xxl: 24px;
+  --space-xl: 24px;
+  --space-xxl: 32px;
   --spring-transition: 180ms cubic-bezier(0.34, 1.56, 0.64, 1);
   --quick-transition: 160ms ease-in-out;
   min-height: 100vh;
@@ -42,14 +45,17 @@
   display: grid;
   min-height: 100vh;
   gap: clamp(20px, 4vw, 36px);
-  padding: clamp(20px, 5vw, 56px);
+  align-content: start;
+  justify-content: center;
+  padding: clamp(24px, 5vw, 56px);
   background:
-    radial-gradient(circle at 18% 10%, hsl(174 72% 44% / 0.32), transparent 28rem),
-    radial-gradient(circle at 82% 18%, hsl(243 75% 63% / 0.24), transparent 26rem),
-    linear-gradient(135deg, hsl(222 47% 11%) 0%, hsl(215 50% 16%) 52%, hsl(221 43% 9%) 100%);
+    radial-gradient(circle at 16% 4%, hsl(243 75% 63% / 0.2), transparent 28rem),
+    radial-gradient(circle at 88% 12%, hsl(174 72% 44% / 0.16), transparent 24rem),
+    linear-gradient(145deg, var(--page-background) 0%, hsl(221 40% 10%) 58%, hsl(222 47% 7%) 100%);
 }
 
 .intro {
+  width: min(100%, 1040px);
   max-width: 760px;
 }
 
@@ -68,6 +74,7 @@
   font-size: clamp(2.25rem, 6vw, 4.5rem);
   line-height: 0.98;
   letter-spacing: 0;
+  font-weight: 800;
 }
 
 .description {
@@ -76,12 +83,14 @@
   color: var(--text-secondary);
   font-size: 1.05rem;
   line-height: 1.65;
+  font-weight: 450;
 }
 
 .grid {
   display: grid;
+  width: min(100%, 1040px);
   grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
-  gap: var(--space-xl);
+  gap: clamp(24px, 3vw, 32px);
 }
 
 .section {
@@ -102,31 +111,27 @@
 .floatingCard {
   position: relative;
   overflow: hidden;
-  border: 1px solid transparent;
+  border: 1px solid var(--glass-border);
   color: var(--text-primary);
   isolation: isolate;
 }
 
 .glassCard {
-  padding: var(--space-lg);
+  padding: var(--space-xl);
   border-radius: var(--radius-md);
-  background:
-    linear-gradient(135deg, var(--glass-highlight), transparent 32%) border-box,
-    linear-gradient(135deg, hsl(0 0% 100% / 0.13), hsl(0 0% 100% / 0.04)) padding-box;
+  background: linear-gradient(145deg, hsl(222 38% 15% / 0.78), hsl(222 38% 11% / 0.62));
   box-shadow: var(--surface-shadow-medium);
-  backdrop-filter: blur(12px) saturate(180%);
-  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
 }
 
 .floatingCard {
   padding: var(--space-xxl);
   border-radius: var(--radius-lg);
-  background:
-    linear-gradient(135deg, var(--glass-highlight), transparent 36%) border-box,
-    linear-gradient(135deg, hsl(0 0% 100% / 0.16), hsl(0 0% 100% / 0.06)) padding-box;
+  background: linear-gradient(145deg, hsl(222 38% 17% / 0.84), hsl(222 38% 11% / 0.68));
   box-shadow: var(--surface-shadow-heavy);
-  backdrop-filter: blur(18px) saturate(185%);
-  -webkit-backdrop-filter: blur(18px) saturate(185%);
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
 }
 
 .glassCard::before,
@@ -135,7 +140,9 @@
   inset: 0;
   z-index: -1;
   border-radius: inherit;
-  background: linear-gradient(145deg, var(--glass-overlay), hsl(0 0% 100% / 0.02));
+  background:
+    linear-gradient(180deg, var(--glass-highlight), transparent 38%),
+    linear-gradient(145deg, var(--glass-overlay), transparent);
   content: '';
 }
 
@@ -184,9 +191,11 @@
   cursor: pointer;
   font-weight: 750;
   letter-spacing: 0;
+  will-change: transform;
   transition:
     transform var(--spring-transition),
     box-shadow var(--quick-transition),
+    border-color var(--quick-transition),
     opacity var(--quick-transition),
     background var(--quick-transition);
 }
@@ -203,7 +212,7 @@
 .buttonGlass:focus-visible,
 .buttonPill:focus-visible,
 .inputField:focus-visible {
-  outline: 3px solid hsl(174 82% 70% / 0.9);
+  outline: 2px solid hsl(174 82% 68% / 0.9);
   outline-offset: 3px;
 }
 
@@ -211,10 +220,10 @@
   padding: var(--space-md) var(--space-xl);
   border-radius: var(--radius-md);
   color: var(--text-inverse);
-  background: linear-gradient(135deg, hsl(213 94% 40%), hsl(243 75% 46%));
+  background: linear-gradient(135deg, var(--accent-background), hsl(174 72% 40%));
   box-shadow:
-    0 8px 12px hsl(220 45% 4% / 0.12),
-    0 18px 34px hsl(213 94% 36% / 0.35);
+    0 14px 30px hsl(243 75% 34% / 0.26),
+    0 18px 42px hsl(174 72% 24% / 0.18);
 }
 
 .buttonSecondary {
@@ -222,10 +231,10 @@
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-md);
   color: var(--text-primary);
-  background: hsl(0 0% 100% / 0.1);
+  background: hsl(222 38% 14% / 0.82);
   box-shadow: var(--surface-shadow-light);
-  backdrop-filter: blur(10px) saturate(170%);
-  -webkit-backdrop-filter: blur(10px) saturate(170%);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
 }
 
 .buttonGlass {
@@ -234,20 +243,32 @@
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-sm);
   color: hsl(174 82% 70%);
-  background: var(--glass-overlay);
+  background: hsl(222 38% 13% / 0.72);
   box-shadow: var(--surface-shadow-light);
-  backdrop-filter: blur(10px) saturate(175%);
-  -webkit-backdrop-filter: blur(10px) saturate(175%);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
 }
 
 .buttonPill {
   padding: var(--space-md) var(--space-xl);
   border-radius: 999px;
   color: var(--text-inverse);
-  background: linear-gradient(135deg, hsl(174 72% 30%), hsl(213 94% 40%));
+  background: linear-gradient(135deg, hsl(174 72% 38%), hsl(243 75% 58%));
   box-shadow:
-    0 6px 8px hsl(220 45% 4% / 0.15),
-    0 16px 30px hsl(174 72% 28% / 0.28);
+    0 12px 30px hsl(174 72% 22% / 0.26),
+    0 18px 42px hsl(243 75% 30% / 0.18);
+}
+
+.buttonPrimary:hover,
+.buttonSecondary:hover,
+.buttonGlass:hover,
+.buttonPill:hover {
+  transform: translateY(-1px);
+}
+
+.buttonSecondary:hover,
+.buttonGlass:hover {
+  border-color: hsl(174 82% 68% / 0.42);
 }
 
 .inputGroup {
@@ -258,24 +279,34 @@
 .inputLabel {
   color: var(--text-secondary);
   font-size: 0.9rem;
-  font-weight: 700;
+  font-weight: 650;
 }
 
 .inputField {
   width: 100%;
   min-height: 48px;
-  padding: var(--space-md);
+  padding: 13px 14px;
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-sm);
   color: var(--text-primary);
-  background: hsl(0 0% 100% / 0.1);
-  box-shadow: inset 0 1px 0 var(--glass-highlight);
-  backdrop-filter: blur(10px) saturate(170%);
-  -webkit-backdrop-filter: blur(10px) saturate(170%);
+  background: hsl(222 38% 10% / 0.94);
+  box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.04);
+  transition:
+    border-color var(--quick-transition),
+    box-shadow var(--quick-transition),
+    background var(--quick-transition);
 }
 
 .inputField::placeholder {
   color: var(--text-tertiary);
+}
+
+.inputField:focus-visible {
+  border-color: hsl(174 82% 68% / 0.72);
+  background: hsl(222 38% 11% / 0.98);
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.04),
+    0 0 0 4px hsl(174 82% 68% / 0.12);
 }
 
 .tokenGrid {
@@ -330,7 +361,7 @@
   }
 
   .styleGuide {
-    padding: 20px;
+    padding: 24px;
   }
 
   .tokenGrid {

@@ -139,7 +139,7 @@ export const DEFAULT_EXERCISES: Exercise[] = [
     type: 'Bodyweight',
     muscleGroup: 'Legs',
     secondaryMuscleGroups: [],
-    icon: 'bodyweight',
+    icon: 'walkingLunge',
     difficulty: 'Beginner',
     equipment: ['Bodyweight'],
     description: 'Unilateral leg exercise',
@@ -295,7 +295,7 @@ export const DEFAULT_EXERCISES: Exercise[] = [
     type: 'Weight Training',
     muscleGroup: 'Core',
     secondaryMuscleGroups: [],
-    icon: 'machine',
+    icon: 'cableCrunch',
     difficulty: 'Intermediate',
     equipment: ['Cable Machine'],
     description: 'Weighted core exercise',
@@ -348,6 +348,282 @@ export const DEFAULT_EXERCISES: Exercise[] = [
     equipment: ['Barbell'],
     description: 'Olympic lifting movement',
     formCues: ['Pull with legs', 'Catch in rack position']
+  },
+  {
+    id: '10000000-0000-4000-8000-00000000001d',
+    name: 'Dumbbell Fly',
+    type: 'Weight Training',
+    muscleGroup: 'Chest',
+    secondaryMuscleGroups: ['Shoulders'],
+    icon: 'dumbbellFly',
+    difficulty: 'Intermediate',
+    equipment: ['Dumbbell', 'Bench'],
+    description: 'Chest isolation movement',
+    formCues: ['Keep a soft elbow bend', 'Stretch under control']
+  },
+  {
+    id: '10000000-0000-4000-8000-00000000001e',
+    name: 'Machine Chest Press',
+    type: 'Weight Training',
+    muscleGroup: 'Chest',
+    secondaryMuscleGroups: ['Shoulders', 'Arms'],
+    icon: 'chestPress',
+    difficulty: 'Beginner',
+    equipment: ['Machine'],
+    description: 'Guided horizontal chest press',
+    formCues: ['Set handles at mid-chest', 'Press without shrugging']
+  },
+  {
+    id: '10000000-0000-4000-8000-00000000001f',
+    name: 'Cable Crossover',
+    type: 'Weight Training',
+    muscleGroup: 'Chest',
+    secondaryMuscleGroups: ['Shoulders'],
+    icon: 'cableCrossover',
+    difficulty: 'Intermediate',
+    equipment: ['Cable Machine'],
+    description: 'Cable chest isolation exercise',
+    formCues: ['Keep ribs down', 'Bring hands together with control']
+  },
+  {
+    id: '10000000-0000-4000-8000-000000000020',
+    name: 'Chin-Ups',
+    type: 'Bodyweight',
+    muscleGroup: 'Back',
+    secondaryMuscleGroups: ['Arms'],
+    icon: 'chinUp',
+    difficulty: 'Intermediate',
+    equipment: ['Pull-up Bar'],
+    description: 'Supinated vertical pulling movement',
+    formCues: ['Start from a dead hang', 'Drive elbows down']
+  },
+  {
+    id: '10000000-0000-4000-8000-000000000021',
+    name: 'Seated Cable Row',
+    type: 'Weight Training',
+    muscleGroup: 'Back',
+    secondaryMuscleGroups: ['Arms', 'Upper Back'],
+    icon: 'seatedCableRow',
+    difficulty: 'Beginner',
+    equipment: ['Cable Machine'],
+    description: 'Supported horizontal row',
+    formCues: ['Keep chest tall', 'Pull elbows past ribs']
+  },
+  {
+    id: '10000000-0000-4000-8000-000000000022',
+    name: 'Face Pulls',
+    type: 'Weight Training',
+    muscleGroup: 'Upper Back',
+    secondaryMuscleGroups: ['Shoulders'],
+    icon: 'facePull',
+    difficulty: 'Beginner',
+    equipment: ['Cable Machine'],
+    description: 'Rear delt and upper back pull',
+    formCues: ['Pull toward eye level', 'Rotate thumbs behind you']
+  },
+  {
+    id: '10000000-0000-4000-8000-000000000023',
+    name: 'Back Extensions',
+    type: 'Bodyweight',
+    muscleGroup: 'Lower Back',
+    secondaryMuscleGroups: ['Glutes'],
+    icon: 'backExtension',
+    difficulty: 'Beginner',
+    equipment: ['Machine'],
+    description: 'Posterior chain extension movement',
+    formCues: ['Hinge at hips', 'Finish in a straight line']
+  },
+  {
+    id: '10000000-0000-4000-8000-000000000024',
+    name: 'Front Squat',
+    type: 'Weight Training',
+    muscleGroup: 'Legs',
+    secondaryMuscleGroups: ['Core'],
+    icon: 'frontSquat',
+    difficulty: 'Advanced',
+    equipment: ['Barbell'],
+    description: 'Front-loaded squat variation',
+    formCues: ['Keep elbows high', 'Sit between hips']
+  },
+  {
+    id: '10000000-0000-4000-8000-000000000025',
+    name: 'Leg Extensions',
+    type: 'Weight Training',
+    muscleGroup: 'Legs',
+    secondaryMuscleGroups: [],
+    icon: 'legExtension',
+    difficulty: 'Beginner',
+    equipment: ['Machine'],
+    description: 'Quadriceps isolation exercise',
+    formCues: ['Pause at the top', 'Lower under control']
+  },
+  {
+    id: '10000000-0000-4000-8000-000000000026',
+    name: 'Leg Curls',
+    type: 'Weight Training',
+    muscleGroup: 'Legs',
+    secondaryMuscleGroups: [],
+    icon: 'legCurl',
+    difficulty: 'Beginner',
+    equipment: ['Machine'],
+    description: 'Hamstring isolation exercise',
+    formCues: ['Keep hips down', 'Control the eccentric']
+  },
+  {
+    id: '10000000-0000-4000-8000-000000000027',
+    name: 'Standing Calf Raises',
+    type: 'Weight Training',
+    muscleGroup: 'Legs',
+    secondaryMuscleGroups: [],
+    icon: 'calfRaise',
+    difficulty: 'Beginner',
+    equipment: ['Machine'],
+    description: 'Calf strength movement',
+    formCues: ['Use full ankle range', 'Pause at the top']
+  },
+  {
+    id: '10000000-0000-4000-8000-000000000028',
+    name: 'Hip Thrusts',
+    type: 'Weight Training',
+    muscleGroup: 'Glutes',
+    secondaryMuscleGroups: ['Legs'],
+    icon: 'hipThrust',
+    difficulty: 'Intermediate',
+    equipment: ['Barbell', 'Bench'],
+    description: 'Loaded glute extension movement',
+    formCues: ['Tuck pelvis at lockout', 'Drive through heels']
+  },
+  {
+    id: '10000000-0000-4000-8000-000000000029',
+    name: 'Glute Bridges',
+    type: 'Bodyweight',
+    muscleGroup: 'Glutes',
+    secondaryMuscleGroups: ['Legs'],
+    icon: 'gluteBridge',
+    difficulty: 'Beginner',
+    equipment: ['Bodyweight'],
+    description: 'Bodyweight glute activation movement',
+    formCues: ['Ribs down', 'Squeeze glutes at the top']
+  },
+  {
+    id: '10000000-0000-4000-8000-00000000002a',
+    name: 'Arnold Press',
+    type: 'Weight Training',
+    muscleGroup: 'Shoulders',
+    secondaryMuscleGroups: ['Arms'],
+    icon: 'arnoldPress',
+    difficulty: 'Intermediate',
+    equipment: ['Dumbbell'],
+    description: 'Rotational dumbbell shoulder press',
+    formCues: ['Rotate smoothly', 'Keep wrists stacked']
+  },
+  {
+    id: '10000000-0000-4000-8000-00000000002b',
+    name: 'Rear Delt Fly',
+    type: 'Weight Training',
+    muscleGroup: 'Shoulders',
+    secondaryMuscleGroups: ['Upper Back'],
+    icon: 'rearDeltFly',
+    difficulty: 'Beginner',
+    equipment: ['Dumbbell'],
+    description: 'Rear shoulder isolation movement',
+    formCues: ['Lead with elbows', 'Avoid swinging']
+  },
+  {
+    id: '10000000-0000-4000-8000-00000000002c',
+    name: 'Cable Tricep Pushdowns',
+    type: 'Weight Training',
+    muscleGroup: 'Arms',
+    secondaryMuscleGroups: [],
+    icon: 'tricepPushdown',
+    difficulty: 'Beginner',
+    equipment: ['Cable Machine'],
+    description: 'Cable tricep isolation exercise',
+    formCues: ['Pin elbows to sides', 'Finish with straight arms']
+  },
+  {
+    id: '10000000-0000-4000-8000-00000000002d',
+    name: 'Skull Crushers',
+    type: 'Weight Training',
+    muscleGroup: 'Arms',
+    secondaryMuscleGroups: [],
+    icon: 'skullCrusher',
+    difficulty: 'Intermediate',
+    equipment: ['Barbell', 'Bench'],
+    description: 'Lying tricep extension',
+    formCues: ['Keep upper arms angled back', 'Lower with control']
+  },
+  {
+    id: '10000000-0000-4000-8000-00000000002e',
+    name: 'Wrist Curls',
+    type: 'Weight Training',
+    muscleGroup: 'Forearms',
+    secondaryMuscleGroups: [],
+    icon: 'forearmCurl',
+    difficulty: 'Beginner',
+    equipment: ['Dumbbell'],
+    description: 'Forearm flexor isolation',
+    formCues: ['Move at the wrist only', 'Use a controlled tempo']
+  },
+  {
+    id: '10000000-0000-4000-8000-00000000002f',
+    name: 'Side Plank',
+    type: 'Bodyweight',
+    muscleGroup: 'Core',
+    secondaryMuscleGroups: [],
+    icon: 'sidePlank',
+    difficulty: 'Beginner',
+    equipment: ['Bodyweight'],
+    description: 'Lateral core stabilization exercise',
+    formCues: ['Stack shoulders and hips', 'Keep hips lifted']
+  },
+  {
+    id: '10000000-0000-4000-8000-000000000030',
+    name: 'Crunches',
+    type: 'Bodyweight',
+    muscleGroup: 'Core',
+    secondaryMuscleGroups: [],
+    icon: 'crunch',
+    difficulty: 'Beginner',
+    equipment: ['Bodyweight'],
+    description: 'Basic trunk flexion exercise',
+    formCues: ['Curl ribs toward hips', 'Keep neck relaxed']
+  },
+  {
+    id: '10000000-0000-4000-8000-000000000031',
+    name: 'Ab Wheel Rollouts',
+    type: 'Bodyweight',
+    muscleGroup: 'Core',
+    secondaryMuscleGroups: ['Shoulders'],
+    icon: 'abWheel',
+    difficulty: 'Advanced',
+    equipment: ['Weight Plate'],
+    description: 'Anti-extension core exercise',
+    formCues: ['Brace before rolling', 'Do not let hips sag']
+  },
+  {
+    id: '10000000-0000-4000-8000-000000000032',
+    name: 'Kettlebell Swings',
+    type: 'Weight Training',
+    muscleGroup: 'Full Body',
+    secondaryMuscleGroups: ['Glutes', 'Back'],
+    icon: 'kettlebellSwing',
+    difficulty: 'Intermediate',
+    equipment: ['Kettlebell'],
+    description: 'Explosive hip hinge conditioning movement',
+    formCues: ['Snap hips forward', 'Let the bell float']
+  },
+  {
+    id: '10000000-0000-4000-8000-000000000033',
+    name: 'Thrusters',
+    type: 'Weight Training',
+    muscleGroup: 'Full Body',
+    secondaryMuscleGroups: ['Legs', 'Shoulders'],
+    icon: 'thruster',
+    difficulty: 'Advanced',
+    equipment: ['Barbell'],
+    description: 'Front squat into overhead press',
+    formCues: ['Drive out of the squat', 'Finish locked out overhead']
   }
 ];
 
@@ -366,6 +642,16 @@ export class LoadProgressDatabase extends Dexie {
     });
 
     this.on('populate', () => this.exercises.bulkAdd(DEFAULT_EXERCISES));
+    this.on('ready', () => this.seedMissingDefaultExercises());
+  }
+
+  private async seedMissingDefaultExercises(): Promise<void> {
+    const existingIds = new Set(await this.exercises.toCollection().primaryKeys());
+    const missingExercises = DEFAULT_EXERCISES.filter((exercise) => !existingIds.has(exercise.id));
+
+    if (missingExercises.length > 0) {
+      await this.exercises.bulkAdd(missingExercises);
+    }
   }
 
   async addExercise(exercise: Omit<Exercise, 'id'> & { id?: string }): Promise<string> {

@@ -235,7 +235,38 @@
   text-align: left;
 }
 
+.exerciseTitle,
+.detailTitleRow {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: 10px;
+}
+
+.exerciseCardIcon,
+.detailExerciseIcon {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid hsl(0 0% 100% / 0.1);
+  color: var(--app-teal-light);
+  background: hsl(174 72% 44% / 0.14);
+}
+
+.exerciseCardIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+}
+
+.detailExerciseIcon {
+  width: 46px;
+  height: 46px;
+  border-radius: 15px;
+}
+
 .exerciseName {
+  min-width: 0;
   font-size: 1rem;
   font-weight: 850;
 }

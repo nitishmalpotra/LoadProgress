@@ -49,7 +49,7 @@ describe('backup tooling', () => {
 
     expect(parsedBackup.app).toBe('LoadProgress');
     expect(parsedBackup.version).toBe(1);
-    expect(parsedBackup.exercises).toHaveLength(28);
+    expect(parsedBackup.exercises).toHaveLength(DEFAULT_EXERCISES.length);
     expect(parsedBackup.workoutSets).toContainEqual(
       expect.objectContaining({ id: setId, date: '2026-05-20T10:00:00.000Z' })
     );
@@ -97,7 +97,11 @@ describe('backup tooling', () => {
     await store.getState().loadWorkoutData();
 
     expect(decodedBackup.workoutSets).toHaveLength(1);
-    expect(result).toEqual({ exercises: 28, workoutSets: 1, personalRecords: 1 });
+    expect(result).toEqual({
+      exercises: DEFAULT_EXERCISES.length,
+      workoutSets: 1,
+      personalRecords: 1
+    });
     expect(await targetDatabase.workoutSets.count()).toBe(1);
     expect(await targetDatabase.personalRecords.count()).toBe(1);
     expect(store.getState().workoutSets).toHaveLength(1);

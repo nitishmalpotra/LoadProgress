@@ -3,6 +3,7 @@ import { Dumbbell, Plus, Search, Weight } from 'lucide-react';
 import type { Difficulty, Equipment, Exercise, ExerciseType, MuscleGroup } from '@/models';
 import { useWorkoutStore } from '@/store/useWorkoutStore';
 import { ExerciseDetail } from '@/views/ExerciseDetail';
+import { ExerciseIcon } from '@/views/components/ExerciseIcon';
 import styles from '@/views/styles/Exercises.module.css';
 
 const exerciseTypes: ExerciseType[] = ['Weight Training', 'Bodyweight'];
@@ -338,7 +339,10 @@ export function ExercisesTab() {
                     type="button"
                     onClick={() => setSelectedExercise(exercise)}
                   >
-                    <span className={styles.exerciseName}>{exercise.name}</span>
+                    <span className={styles.exerciseTitle}>
+                      <ExerciseIcon className={styles.exerciseCardIcon} iconName={exercise.icon} />
+                      <span className={styles.exerciseName}>{exercise.name}</span>
+                    </span>
                     <span className={styles.cardMeta}>
                       <span className={styles.badge}>{exercise.equipment[0]}</span>
                       <span>{exercise.difficulty}</span>

@@ -44,7 +44,6 @@
 .chartPanel {
   display: grid;
   gap: 16px;
-  min-height: 430px;
   padding: 18px;
   border-radius: 14px;
   animation: chartIn 280ms ease-out both;
@@ -148,8 +147,7 @@
 .chartShell {
   width: 100%;
   min-width: 0;
-  height: min(58vh, 480px);
-  min-height: 320px;
+  height: 260px;
 }
 
 .emptyState {

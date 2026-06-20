@@ -163,6 +163,7 @@ export function WorkoutTab() {
                     />
                     <button
                       className={styles.quickLogBtn}
+                      disabled={!(parseFloat(quickWeights[ex.exerciseId] ?? '') > 0)}
                       type="button"
                       onClick={() => void quickLog(ex)}
                     >

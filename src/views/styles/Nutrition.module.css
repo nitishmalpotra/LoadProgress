@@ -1,0 +1,225 @@
+.page {
+  display: grid;
+  gap: 20px;
+}
+
+.header {
+  display: grid;
+  gap: 6px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 1.9rem;
+  line-height: 1.08;
+}
+
+.header p {
+  margin: 0;
+  color: var(--app-text-secondary);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--app-teal);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+/* ── log form ── */
+
+.logPanel {
+  padding: 16px;
+  border: 1px solid var(--app-glass-border);
+  border-radius: 14px;
+  background: var(--app-surface);
+  box-shadow: var(--app-shadow-soft);
+}
+
+.logForm {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.logLabel {
+  display: grid;
+  flex: 1;
+  min-width: 80px;
+  gap: 6px;
+  color: var(--app-text-secondary);
+  font-size: 0.86rem;
+  font-weight: 750;
+}
+
+.logInput {
+  width: 100%;
+  min-height: 42px;
+  padding: 0 12px;
+  border: 1px solid var(--app-glass-border);
+  border-radius: 10px;
+  background: var(--app-background);
+  color: var(--app-text);
+  font: inherit;
+  font-size: 1rem;
+}
+
+.logInput:focus {
+  outline: 2px solid var(--app-focus);
+  outline-offset: 2px;
+}
+
+.logButton {
+  min-width: 72px;
+  min-height: 42px;
+  padding: 0 16px;
+  border: 1px solid var(--app-glass-border);
+  border-radius: 10px;
+  background: var(--app-teal);
+  color: #fff;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: opacity 160ms ease;
+  white-space: nowrap;
+}
+
+.logButton:hover {
+  opacity: 0.88;
+}
+
+.logButton:focus-visible {
+  outline: 2px solid var(--app-focus);
+  outline-offset: 2px;
+}
+
+/* ── macro progress ── */
+
+.macroSection {
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid var(--app-glass-border);
+  border-radius: 12px;
+  background: var(--app-surface);
+}
+
+.macroSection h2 {
+  margin: 0 0 2px;
+  font-size: 1rem;
+}
+
+.macroRow {
+  display: grid;
+  gap: 6px;
+}
+
+.macroMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.macroName {
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.macroNums {
+  color: var(--app-text-secondary);
+  font-size: 0.82rem;
+}
+
+.barTrack {
+  height: 8px;
+  border-radius: 99px;
+  background: var(--app-glass-border);
+  overflow: hidden;
+}
+
+.barFill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 300ms ease;
+}
+
+.barProtein { background: var(--app-teal); }
+.barCarbs   { background: #f59e0b; }
+.barFat     { background: #8b5cf6; }
+.barOver    { background: #ef4444; }
+
+.kcalRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-top: 6px;
+  border-top: 1px solid var(--app-glass-border);
+  font-size: 0.86rem;
+}
+
+.kcalLabel {
+  color: var(--app-text-secondary);
+  font-weight: 750;
+}
+
+.kcalValue {
+  font-weight: 800;
+}
+
+/* ── info / reference cards ── */
+
+.infoCard {
+  padding: 14px 16px;
+  border: 1px solid var(--app-glass-border);
+  border-radius: 12px;
+  background: var(--app-surface);
+}
+
+.infoCard h2 {
+  margin: 0 0 8px;
+  font-size: 0.93rem;
+}
+
+.infoCard p {
+  margin: 0;
+  color: var(--app-text-secondary);
+  font-size: 0.86rem;
+  line-height: 1.6;
+}
+
+.foodTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.84rem;
+}
+
+.foodTable th,
+.foodTable td {
+  padding: 6px 8px;
+  text-align: right;
+  border-bottom: 1px solid var(--app-glass-border);
+}
+
+.foodTable th:first-child,
+.foodTable td:first-child {
+  text-align: left;
+}
+
+.foodTable th {
+  color: var(--app-text-secondary);
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.veganNote {
+  margin: 8px 0 0;
+  color: var(--app-text-secondary);
+  font-size: 0.8rem;
+  font-style: italic;
+}

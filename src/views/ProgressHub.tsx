@@ -4,7 +4,8 @@ import styles from '@/views/styles/Layout.module.css';
 const subTabs = [
   { label: 'Trends', path: '/progress/trends' },
   { label: 'Volume', path: '/progress/volume' },
-  { label: 'PRs', path: '/progress/records' }
+  { label: 'PRs', path: '/progress/records' },
+  { label: 'Body', path: '/progress/body' }
 ];
 
 export function ProgressHub() {

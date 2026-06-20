@@ -4,6 +4,7 @@ import styles from '@/views/styles/Layout.module.css';
 const subTabs = [
   { label: 'Calories', path: '/plan/calories' },
   { label: 'Training', path: '/plan/training' },
+  { label: 'Nutrition', path: '/plan/nutrition' },
 ];
 
 export function PlanHub() {

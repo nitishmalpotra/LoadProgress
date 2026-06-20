@@ -1,12 +1,22 @@
 import { db, type LoadProgressDatabase } from '@/db/database';
 import type {
+  ActivityLevel,
+  BodyWeight,
+  CycleState,
+  DietStyle,
   Difficulty,
   Equipment,
   Exercise,
   ExerciseType,
+  Goal,
+  Measurement,
   MuscleGroup,
+  NutritionLog,
   PersonalRecord,
   PersonalRecordType,
+  Profile,
+  Sex,
+  TrainingRoutine,
   WorkoutSet
 } from '@/models';
 
@@ -20,6 +30,13 @@ export interface LoadProgressBackup {
   exercises: Exercise[];
   workoutSets: SerializedWorkoutSet[];
   personalRecords: SerializedPersonalRecord[];
+  // added in schema v2; optional so pre-v2 backups still import cleanly
+  profile?: Profile[];
+  trainingRoutine?: TrainingRoutine[];
+  bodyWeights?: BodyWeight[];
+  measurements?: Measurement[];
+  nutritionLog?: NutritionLog[];
+  cycleState?: CycleState[];
 }
 
 export interface BackupImportResult {
@@ -128,6 +145,54 @@ const isSerializedPersonalRecord = (value: unknown): value is SerializedPersonal
   );
 };
 
+const sexes: Sex[] = ['male', 'female'];
+const goals: Goal[] = ['lose', 'recomposition', 'gain'];
+const activityLevels: ActivityLevel[] = ['sedentary', 'light', 'moderate', 'very_active'];
+const dietStyles: DietStyle[] = ['standard', 'vegan', 'vegetarian', 'keto', 'paleo'];
+
+const isProfile = (v: unknown): v is Profile =>
+  isRecord(v) &&
+  typeof v.id === 'string' &&
+  typeof v.weight === 'number' &&
+  typeof v.height === 'number' &&
+  typeof v.age === 'number' &&
+  sexes.includes(v.sex as Sex) &&
+  goals.includes(v.goal as Goal) &&
+  activityLevels.includes(v.activityLevel as ActivityLevel) &&
+  dietStyles.includes(v.dietStyle as DietStyle) &&
+  (v.location === undefined || typeof v.location === 'string') &&
+  typeof v.trainingDaysPerWeek === 'number' &&
+  typeof v.trainingMinutesPerSession === 'number' &&
+  typeof v.cycleTrackingOptIn === 'boolean' &&
+  (v.unitSystem === 'metric' || v.unitSystem === 'imperial');
+
+const isTrainingRoutine = (v: unknown): v is TrainingRoutine =>
+  isRecord(v) && typeof v.id === 'string' && typeof v.type === 'string' && Array.isArray(v.exercises);
+
+const isBodyWeight = (v: unknown): v is BodyWeight =>
+  isRecord(v) &&
+  typeof v.id === 'string' &&
+  typeof v.date === 'string' &&
+  typeof v.weight === 'number';
+
+const isMeasurement = (v: unknown): v is Measurement =>
+  isRecord(v) &&
+  typeof v.id === 'string' &&
+  typeof v.date === 'string' &&
+  typeof v.waist === 'number' &&
+  typeof v.hips === 'number';
+
+const isNutritionLog = (v: unknown): v is NutritionLog =>
+  isRecord(v) &&
+  typeof v.id === 'string' &&
+  typeof v.date === 'string' &&
+  typeof v.protein === 'number' &&
+  typeof v.carbs === 'number' &&
+  typeof v.fat === 'number';
+
+const isCycleState = (v: unknown): v is CycleState =>
+  isRecord(v) && typeof v.id === 'string' && typeof v.phase === 'string';
+
 const reviveWorkoutSet = (set: SerializedWorkoutSet): WorkoutSet => ({
   ...set,
   date: new Date(set.date)
@@ -141,10 +206,26 @@ const revivePersonalRecord = (record: SerializedPersonalRecord): PersonalRecord 
 export const exportBackupData = async (
   database: LoadProgressDatabase = db
 ): Promise<LoadProgressBackup> => {
-  const [exercises, workoutSets, personalRecords] = await Promise.all([
+  const [
+    exercises,
+    workoutSets,
+    personalRecords,
+    profile,
+    trainingRoutine,
+    bodyWeights,
+    measurements,
+    nutritionLog,
+    cycleState
+  ] = await Promise.all([
     database.exercises.toArray(),
     database.workoutSets.toArray(),
-    database.personalRecords.toArray()
+    database.personalRecords.toArray(),
+    database.profile.toArray(),
+    database.trainingRoutine.toArray(),
+    database.bodyWeights.toArray(),
+    database.measurements.toArray(),
+    database.nutritionLog.toArray(),
+    database.cycleState.toArray()
   ]);
 
   return {
@@ -156,7 +237,13 @@ export const exportBackupData = async (
     personalRecords: personalRecords.map((record) => ({
       ...record,
       date: record.date.toISOString()
-    }))
+    })),
+    profile,
+    trainingRoutine,
+    bodyWeights,
+    measurements,
+    nutritionLog,
+    cycleState
   };
 };
 
@@ -204,6 +291,17 @@ export const parseBackupJson = (json: string): LoadProgressBackup => {
     throw new Error('Backup file contains unsupported records.');
   }
 
+  if (
+    (parsed.profile !== undefined && (!Array.isArray(parsed.profile) || !parsed.profile.every(isProfile))) ||
+    (parsed.trainingRoutine !== undefined && (!Array.isArray(parsed.trainingRoutine) || !parsed.trainingRoutine.every(isTrainingRoutine))) ||
+    (parsed.bodyWeights !== undefined && (!Array.isArray(parsed.bodyWeights) || !parsed.bodyWeights.every(isBodyWeight))) ||
+    (parsed.measurements !== undefined && (!Array.isArray(parsed.measurements) || !parsed.measurements.every(isMeasurement))) ||
+    (parsed.nutritionLog !== undefined && (!Array.isArray(parsed.nutritionLog) || !parsed.nutritionLog.every(isNutritionLog))) ||
+    (parsed.cycleState !== undefined && (!Array.isArray(parsed.cycleState) || !parsed.cycleState.every(isCycleState)))
+  ) {
+    throw new Error('Backup file contains unsupported records.');
+  }
+
   return parsed as unknown as LoadProgressBackup;
 };
 
@@ -234,10 +332,22 @@ export const importBackupData = async (
     database.exercises,
     database.workoutSets,
     database.personalRecords,
+    database.profile,
+    database.trainingRoutine,
+    database.bodyWeights,
+    database.measurements,
+    database.nutritionLog,
+    database.cycleState,
     async () => {
       await database.exercises.bulkPut(backup.exercises);
       await database.workoutSets.bulkPut(workoutSets);
       await database.personalRecords.bulkPut(personalRecords);
+      if (backup.profile?.length) await database.profile.bulkPut(backup.profile);
+      if (backup.trainingRoutine?.length) await database.trainingRoutine.bulkPut(backup.trainingRoutine);
+      if (backup.bodyWeights?.length) await database.bodyWeights.bulkPut(backup.bodyWeights);
+      if (backup.measurements?.length) await database.measurements.bulkPut(backup.measurements);
+      if (backup.nutritionLog?.length) await database.nutritionLog.bulkPut(backup.nutritionLog);
+      if (backup.cycleState?.length) await database.cycleState.bulkPut(backup.cycleState);
     }
   );
 

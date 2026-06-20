@@ -1,5 +1,15 @@
 import Dexie, { type Table } from 'dexie';
-import type { Exercise, PersonalRecord, WorkoutSet } from '@/models';
+import type {
+  BodyWeight,
+  CycleState,
+  Exercise,
+  Measurement,
+  NutritionLog,
+  PersonalRecord,
+  Profile,
+  TrainingRoutine,
+  WorkoutSet
+} from '@/models';
 
 export const UUID_REGEX =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -631,6 +641,12 @@ export class LoadProgressDatabase extends Dexie {
   exercises!: Table<Exercise, string>;
   workoutSets!: Table<WorkoutSet, string>;
   personalRecords!: Table<PersonalRecord, string>;
+  profile!: Table<Profile, string>;
+  trainingRoutine!: Table<TrainingRoutine, string>;
+  bodyWeights!: Table<BodyWeight, string>;
+  measurements!: Table<Measurement, string>;
+  nutritionLog!: Table<NutritionLog, string>;
+  cycleState!: Table<CycleState, string>;
 
   constructor(name = 'LoadProgressDatabase') {
     super(name);
@@ -639,6 +655,18 @@ export class LoadProgressDatabase extends Dexie {
       exercises: '&id',
       workoutSets: '&id, exerciseId, date',
       personalRecords: '&id, exerciseId, type'
+    });
+
+    this.version(2).stores({
+      exercises: '&id',
+      workoutSets: '&id, exerciseId, date',
+      personalRecords: '&id, exerciseId, type',
+      profile: '&id',
+      trainingRoutine: '&id',
+      bodyWeights: '&id, date',
+      measurements: '&id, date',
+      nutritionLog: '&id, date',
+      cycleState: '&id'
     });
 
     this.on('populate', () => this.exercises.bulkAdd(DEFAULT_EXERCISES));

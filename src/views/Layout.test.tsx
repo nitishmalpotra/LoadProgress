@@ -54,14 +54,37 @@ describe('Layout', () => {
     expect(screen.queryByLabelText('Primary navigation drawer')).not.toBeInTheDocument();
   });
 
+  it('shows five destinations: Today, Plan, Progress, Library, Profile', () => {
+    setViewportWidth(375);
+    renderRoutedApp();
+
+    const nav = screen.getByLabelText('Bottom tab navigation');
+    expect(nav.querySelectorAll('a')).toHaveLength(5);
+    expect(screen.getByRole('link', { name: 'Today' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Plan' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Progress' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Library' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Profile' })).toBeInTheDocument();
+  });
+
   it('updates browser history when navigation elements are clicked', () => {
     setViewportWidth(375);
     renderRoutedApp();
 
-    fireEvent.click(screen.getByRole('link', { name: 'PRs' }));
+    fireEvent.click(screen.getByRole('link', { name: 'Profile' }));
 
-    expect(window.location.pathname).toBe('/records');
-    expect(screen.getByRole('heading', { name: 'PRs' })).toBeInTheDocument();
+    expect(window.location.pathname).toBe('/profile');
+    expect(screen.getByRole('heading', { name: 'Profile' })).toBeInTheDocument();
+  });
+
+  it('shows Progress sub-tabs (Trends, Volume, PRs) when navigating to /progress', () => {
+    renderRoutedApp('/progress/trends');
+
+    const subNav = screen.getByLabelText('Progress sub-tabs');
+    expect(subNav).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Trends' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Volume' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'PRs' })).toBeInTheDocument();
   });
 
   it('keeps backup controls in the phone shell on desktop', () => {

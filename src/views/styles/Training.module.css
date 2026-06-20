@@ -1,0 +1,273 @@
+.page {
+  display: grid;
+  gap: 16px;
+}
+
+.header {
+  display: grid;
+  gap: 6px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 1.9rem;
+  line-height: 1.08;
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--app-teal);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.editHint {
+  margin: 0;
+  padding: 10px 14px;
+  border: 1px dashed var(--app-glass-border);
+  border-radius: 10px;
+  color: var(--app-text-secondary);
+  font-size: 0.82rem;
+  text-align: center;
+}
+
+.dayCard {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid var(--app-glass-border);
+  border-radius: 12px;
+  background: var(--app-surface);
+}
+
+.dayHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dayLabel {
+  min-width: 36px;
+  font-size: 0.86rem;
+  font-weight: 800;
+  color: var(--app-text-secondary);
+}
+
+.typeSelect {
+  flex: 1;
+  padding: 7px 10px;
+  border: 1px solid var(--app-glass-border);
+  border-radius: 9px;
+  background: var(--app-surface-elevated);
+  color: var(--app-text);
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.typeSelect:focus {
+  outline: 2px solid var(--app-focus);
+  outline-offset: 2px;
+}
+
+.exerciseList {
+  display: grid;
+  gap: 8px;
+}
+
+.emptyDay {
+  margin: 0;
+  color: var(--app-text-secondary);
+  font-size: 0.82rem;
+  font-style: italic;
+}
+
+.exerciseRow {
+  display: grid;
+  gap: 5px;
+  padding: 8px 10px;
+  border: 1px solid var(--app-glass-border);
+  border-radius: 9px;
+  background: var(--app-background);
+}
+
+.exerciseTop {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.exerciseName {
+  flex: 1;
+  font-size: 0.86rem;
+  font-weight: 750;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.exerciseActions {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.iconBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--app-glass-border);
+  border-radius: 7px;
+  background: var(--app-surface);
+  color: var(--app-text-secondary);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: background 160ms ease, color 160ms ease;
+}
+
+.iconBtn:hover:not(:disabled) {
+  background: var(--app-surface-elevated);
+  color: var(--app-text);
+}
+
+.iconBtn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.iconBtn:focus-visible {
+  outline: 2px solid var(--app-focus);
+  outline-offset: 2px;
+}
+
+.iconBtnDanger:hover:not(:disabled) {
+  color: #ef4444;
+  border-color: #ef4444;
+  background: var(--app-surface);
+}
+
+.exerciseMeta {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.setsRepsLabel {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--app-text-secondary);
+  font-size: 0.78rem;
+}
+
+.smallInput {
+  width: 42px;
+  padding: 4px 6px;
+  border: 1px solid var(--app-glass-border);
+  border-radius: 6px;
+  background: var(--app-surface);
+  color: var(--app-text);
+  font: inherit;
+  font-size: 0.82rem;
+  text-align: center;
+}
+
+.smallInput:focus {
+  outline: 2px solid var(--app-focus);
+  outline-offset: 1px;
+}
+
+.noteInput {
+  flex: 1;
+  padding: 4px 8px;
+  border: 1px solid var(--app-glass-border);
+  border-radius: 6px;
+  background: var(--app-surface);
+  color: var(--app-text);
+  font: inherit;
+  font-size: 0.78rem;
+  min-width: 0;
+}
+
+.noteInput:focus {
+  outline: 2px solid var(--app-focus);
+  outline-offset: 1px;
+}
+
+.addForm {
+  display: grid;
+  gap: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--app-glass-border);
+}
+
+.addRow {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.addSelect {
+  flex: 1;
+  padding: 7px 8px;
+  border: 1px solid var(--app-glass-border);
+  border-radius: 9px;
+  background: var(--app-surface);
+  color: var(--app-text);
+  font: inherit;
+  font-size: 0.82rem;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.addSelect:focus {
+  outline: 2px solid var(--app-focus);
+  outline-offset: 2px;
+}
+
+.addMeta {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.addLabel {
+  color: var(--app-text-secondary);
+  font-size: 0.78rem;
+}
+
+.addBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 7px 12px;
+  border: none;
+  border-radius: 9px;
+  background: var(--app-teal);
+  color: #fff;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 160ms ease;
+}
+
+.addBtn:hover {
+  opacity: 0.88;
+}
+
+.addBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.addBtn:focus-visible {
+  outline: 2px solid var(--app-focus);
+  outline-offset: 2px;
+}

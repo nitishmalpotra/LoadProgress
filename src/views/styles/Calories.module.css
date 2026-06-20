@@ -1,0 +1,140 @@
+.page {
+  display: grid;
+  gap: 20px;
+}
+
+.header {
+  display: grid;
+  gap: 6px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 1.9rem;
+  line-height: 1.08;
+}
+
+.header p {
+  margin: 0;
+  color: var(--app-text-secondary);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--app-teal);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.statCard {
+  display: grid;
+  gap: 4px;
+  padding: 12px 10px;
+  border: 1px solid var(--app-glass-border);
+  border-radius: 12px;
+  background: var(--app-surface);
+  text-align: center;
+}
+
+.statValue {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.statLabel {
+  margin: 0;
+  color: var(--app-text-secondary);
+  font-size: 0.72rem;
+  font-weight: 750;
+  text-transform: uppercase;
+}
+
+.macroSection {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--app-glass-border);
+  border-radius: 12px;
+  background: var(--app-surface);
+}
+
+.macroSection h2 {
+  margin: 0 0 4px;
+  font-size: 1rem;
+}
+
+.macroRow {
+  display: grid;
+  gap: 6px;
+}
+
+.macroMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.macroName {
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.macroNums {
+  color: var(--app-text-secondary);
+  font-size: 0.82rem;
+}
+
+.barTrack {
+  height: 8px;
+  border-radius: 99px;
+  background: var(--app-glass-border);
+  overflow: hidden;
+}
+
+.barFill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 300ms ease;
+}
+
+.barProtein {
+  background: var(--app-teal);
+}
+
+.barCarbs {
+  background: #f59e0b;
+}
+
+.barFat {
+  background: #8b5cf6;
+}
+
+.infoCard {
+  padding: 14px 16px;
+  border: 1px solid var(--app-glass-border);
+  border-radius: 12px;
+  background: var(--app-surface);
+}
+
+.infoCard h2 {
+  margin: 0 0 6px;
+  font-size: 0.93rem;
+}
+
+.infoCard p {
+  margin: 0;
+  color: var(--app-text-secondary);
+  font-size: 0.86rem;
+  line-height: 1.6;
+}

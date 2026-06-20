@@ -1,24 +1,25 @@
-import { useRef } from 'react';
-import { BarChart3, BookOpen, Download, Dumbbell, LineChart, Trophy, Upload } from 'lucide-react';
-import { NavLink, Outlet } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
+import { BookOpen, CalendarDays, Download, Dumbbell, TrendingUp, Upload, User } from 'lucide-react';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { downloadBackupFile, importBackupFile } from '@/db/backup';
 import { ServiceWorkerUpdateToast } from '@/views/components/ServiceWorkerUpdateToast';
 import { useServiceWorkerUpdate } from '@/views/hooks/useServiceWorkerUpdate';
 import styles from '@/views/styles/Layout.module.css';
 import { useWorkoutStore } from '@/store/useWorkoutStore';
+import { useProfileStore } from '@/store/useProfileStore';
 
 const navigationItems = [
-  { label: 'Workout Log', shortLabel: 'Workout', path: '/', icon: Dumbbell, end: true },
-  { label: 'PRs', shortLabel: 'PRs', path: '/records', icon: Trophy },
-  { label: 'Volume', shortLabel: 'Volume', path: '/analytics', icon: BarChart3 },
-  { label: 'Library', shortLabel: 'Library', path: '/exercises', icon: BookOpen },
-  { label: 'Trends', shortLabel: 'Trends', path: '/progress', icon: LineChart }
+  { label: 'Today', path: '/', icon: Dumbbell, end: true },
+  { label: 'Plan', path: '/plan', icon: CalendarDays },
+  { label: 'Progress', path: '/progress', icon: TrendingUp },
+  { label: 'Library', path: '/exercises', icon: BookOpen },
+  { label: 'Profile', path: '/profile', icon: User }
 ];
 
 function NavigationLinks() {
   return (
     <>
-      {navigationItems.map(({ label, shortLabel, path, icon: Icon, end }) => (
+      {navigationItems.map(({ label, path, icon: Icon, end }) => (
         <NavLink
           aria-label={label}
           className={({ isActive }) =>
@@ -29,7 +30,7 @@ function NavigationLinks() {
           to={path}
         >
           <Icon aria-hidden="true" size={20} strokeWidth={2.4} />
-          <span>{shortLabel}</span>
+          <span>{label}</span>
         </NavLink>
       ))}
     </>
@@ -96,6 +97,24 @@ function TabBar() {
 
 export function Layout() {
   const { needsRefresh, update } = useServiceWorkerUpdate();
+  const profile = useProfileStore((s) => s.profile);
+  const profileIsLoading = useProfileStore((s) => s.isLoading);
+  const loadProfile = useProfileStore((s) => s.loadProfile);
+  const navigate = useNavigate();
+  const hasChecked = useRef(false);
+
+  useEffect(() => {
+    void loadProfile();
+  }, [loadProfile]);
+
+  useEffect(() => {
+    if (!profileIsLoading && !hasChecked.current) {
+      hasChecked.current = true;
+      if (profile === null) {
+        navigate('/profile');
+      }
+    }
+  }, [profileIsLoading, profile, navigate]);
 
   return (
     <div className={styles.layoutRoot}>

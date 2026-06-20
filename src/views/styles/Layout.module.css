@@ -235,6 +235,42 @@
   background: var(--app-surface-elevated);
 }
 
+.subTabStrip {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+  padding: 4px;
+  border: 1px solid var(--app-glass-border);
+  border-radius: 12px;
+  background: var(--app-surface);
+}
+
+.subTabLink {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 12px;
+  border-radius: 9px;
+  color: var(--app-text-secondary);
+  font-size: 0.86rem;
+  font-weight: 750;
+  text-decoration: none;
+  transition:
+    color 160ms ease,
+    background 160ms ease;
+}
+
+.subTabLink:focus-visible {
+  outline: 2px solid var(--app-focus);
+  outline-offset: 3px;
+}
+
+.subTabLinkActive {
+  color: var(--app-text);
+  background: var(--app-surface-elevated);
+}
+
 @media (min-width: 768px) {
   .layoutRoot {
     display: grid;

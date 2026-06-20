@@ -28,7 +28,7 @@ describe('environment sanity', () => {
     expect(screen.getByRole('heading', { name: 'Today' })).toBeInTheDocument();
     expect(await screen.findByText('No workouts for this date')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Add workout set' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Workout Log' })).toHaveAttribute('href', '/');
+    expect(screen.getByRole('link', { name: 'Today' })).toHaveAttribute('href', '/');
   });
 
   it('renders the style guide route', () => {

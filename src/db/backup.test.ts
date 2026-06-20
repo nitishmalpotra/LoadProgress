@@ -112,6 +112,67 @@ describe('backup tooling', () => {
     targetDatabase.close();
   });
 
+  it('round-trips a profile record through export and import', async () => {
+    const source = await createTestDatabase();
+    const target = await createTestDatabase();
+
+    await source.profile.put({
+      id: 'profile',
+      weight: 70,
+      height: 170,
+      age: 28,
+      sex: 'male',
+      goal: 'lose',
+      activityLevel: 'light',
+      dietStyle: 'standard',
+      trainingDaysPerWeek: 3,
+      trainingMinutesPerSession: 45,
+      cycleTrackingOptIn: false,
+      unitSystem: 'metric'
+    });
+
+    const backup = await exportBackupData(source);
+    expect(backup.profile).toHaveLength(1);
+
+    const file = new File([JSON.stringify(backup)], 'backup.json', { type: 'application/json' });
+    await importBackupFile(file, target);
+
+    const restoredProfile = await target.profile.get('profile');
+    expect(restoredProfile?.weight).toBe(70);
+    expect(restoredProfile?.sex).toBe('male');
+    expect(restoredProfile?.unitSystem).toBe('metric');
+
+    source.close();
+    target.close();
+  });
+
+  it('round-trips new schema v2 tables as empty without loss', async () => {
+    const source = await createTestDatabase();
+    const target = await createTestDatabase();
+
+    const backup = await exportBackupData(source);
+
+    expect(backup.profile).toEqual([]);
+    expect(backup.trainingRoutine).toEqual([]);
+    expect(backup.bodyWeights).toEqual([]);
+    expect(backup.measurements).toEqual([]);
+    expect(backup.nutritionLog).toEqual([]);
+    expect(backup.cycleState).toEqual([]);
+
+    const file = new File([JSON.stringify(backup)], 'backup.json', { type: 'application/json' });
+    await importBackupFile(file, target);
+
+    expect(await target.profile.count()).toBe(0);
+    expect(await target.trainingRoutine.count()).toBe(0);
+    expect(await target.bodyWeights.count()).toBe(0);
+    expect(await target.measurements.count()).toBe(0);
+    expect(await target.nutritionLog.count()).toBe(0);
+    expect(await target.cycleState.count()).toBe(0);
+
+    source.close();
+    target.close();
+  });
+
   it('rejects malformed imports without writing to IndexedDB', async () => {
     const database = await createTestDatabase();
     const malformedBackup = {

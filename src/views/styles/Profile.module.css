@@ -1,0 +1,251 @@
+.profilePage {
+  display: grid;
+  gap: 20px;
+}
+
+.pageHeader {
+  display: grid;
+  gap: 6px;
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--app-teal);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.pageHeader h1 {
+  margin: 0;
+  font-size: 1.9rem;
+  line-height: 1.08;
+}
+
+.pageHeader p {
+  margin: 0;
+  color: var(--app-text-secondary);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.form {
+  display: grid;
+  gap: 16px;
+}
+
+.fieldGroup {
+  display: grid;
+  gap: 8px;
+}
+
+.label {
+  font-size: 0.86rem;
+  font-weight: 800;
+  color: var(--app-text);
+}
+
+.sublabel {
+  font-size: 0.78rem;
+  color: var(--app-text-secondary);
+}
+
+.input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--app-glass-border);
+  border-radius: 10px;
+  background: var(--app-surface);
+  color: var(--app-text);
+  font: inherit;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.input:focus {
+  outline: 2px solid var(--app-focus);
+  outline-offset: 2px;
+}
+
+.segmentedRow {
+  display: flex;
+  gap: 6px;
+}
+
+.segment {
+  flex: 1;
+  padding: 9px 8px;
+  border: 1px solid var(--app-glass-border);
+  border-radius: 10px;
+  background: var(--app-surface);
+  color: var(--app-text-secondary);
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 750;
+  cursor: pointer;
+  transition: background 160ms ease, color 160ms ease;
+}
+
+.segment:focus-visible {
+  outline: 2px solid var(--app-focus);
+  outline-offset: 2px;
+}
+
+.segmentSelected {
+  composes: segment;
+  background: var(--app-surface-elevated);
+  color: var(--app-text);
+  border-color: var(--app-teal);
+}
+
+.select {
+  composes: input;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b6963' stroke-width='2.4'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+  cursor: pointer;
+}
+
+.checkboxRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--app-glass-border);
+  border-radius: 10px;
+  background: var(--app-surface);
+  cursor: pointer;
+  font-size: 0.93rem;
+}
+
+.checkboxRow input[type='checkbox'] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--app-teal);
+  cursor: pointer;
+}
+
+.divider {
+  border: 0;
+  border-top: 1px solid var(--app-glass-border);
+}
+
+.saveButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 13px;
+  border: none;
+  border-radius: 12px;
+  background: var(--app-teal);
+  color: #fff;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: opacity 160ms ease, transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.saveButton:hover {
+  opacity: 0.9;
+}
+
+.saveButton:active {
+  transform: scale(0.97);
+}
+
+.saveButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.saveButton:focus-visible {
+  outline: 2px solid var(--app-focus);
+  outline-offset: 3px;
+}
+
+.savedNotice {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px;
+  border-radius: 10px;
+  background: var(--app-surface);
+  border: 1px solid var(--app-glass-border);
+  color: var(--app-teal);
+  font-size: 0.9rem;
+  font-weight: 750;
+}
+
+.noProfileState {
+  display: grid;
+  gap: 12px;
+  padding: 24px 16px;
+  border: 1px solid var(--app-glass-border);
+  border-radius: 12px;
+  background: var(--app-surface);
+  text-align: center;
+}
+
+.noProfileState p {
+  margin: 0;
+  color: var(--app-text-secondary);
+}
+
+.noProfileLink {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 10px;
+  background: var(--app-surface-elevated);
+  color: var(--app-teal);
+  font-weight: 800;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: opacity 160ms ease;
+}
+
+.noProfileLink:hover {
+  opacity: 0.8;
+}
+
+.noProfileLink:focus-visible {
+  outline: 2px solid var(--app-focus);
+  outline-offset: 3px;
+}
+
+.inputWithToggle {
+  display: flex;
+  gap: 6px;
+}
+
+.inputWithToggle .input {
+  flex: 1;
+}
+
+.unitToggle {
+  padding: 0 14px;
+  border: 1px solid var(--app-glass-border);
+  border-radius: 10px;
+  background: var(--app-surface);
+  color: var(--app-text-secondary);
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 160ms ease;
+}
+
+.unitToggle:hover {
+  background: var(--app-surface-elevated);
+}
+
+.unitToggle:focus-visible {
+  outline: 2px solid var(--app-focus);
+  outline-offset: 2px;
+}

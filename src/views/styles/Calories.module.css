@@ -62,30 +62,70 @@
 
 .macroSection {
   display: grid;
-  gap: 12px;
+  gap: 14px;
   padding: 16px;
   border: 1px solid var(--app-glass-border);
   border-radius: 12px;
   background: var(--app-surface);
 }
 
-.macroSection h2 {
-  margin: 0 0 4px;
+.macroHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.macroHeader h2 {
+  margin: 0;
   font-size: 1rem;
 }
 
-.macroRow {
-  display: grid;
-  gap: 6px;
+.macroSubtitle {
+  color: var(--app-text-secondary);
+  font-size: 0.82rem;
 }
 
-.macroMeta {
+.stackBar {
   display: flex;
-  justify-content: space-between;
-  align-items: baseline;
+  height: 16px;
+  border-radius: 99px;
+  overflow: hidden;
+  gap: 2px;
 }
+
+.stackSegment {
+  height: 100%;
+  transition: width 400ms ease;
+}
+
+.stackProtein { background: var(--app-teal); }
+.stackCarbs   { background: #f59e0b; }
+.stackFat     { background: #8b5cf6; }
+
+.macroLegend {
+  display: grid;
+  gap: 10px;
+}
+
+.macroRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dot {
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.dotProtein { background: var(--app-teal); }
+.dotCarbs   { background: #f59e0b; }
+.dotFat     { background: #8b5cf6; }
 
 .macroName {
+  flex: 1;
   font-size: 0.86rem;
   font-weight: 800;
 }
@@ -95,29 +135,12 @@
   font-size: 0.82rem;
 }
 
-.barTrack {
-  height: 8px;
-  border-radius: 99px;
-  background: var(--app-glass-border);
-  overflow: hidden;
-}
-
-.barFill {
-  height: 100%;
-  border-radius: 99px;
-  transition: width 300ms ease;
-}
-
-.barProtein {
-  background: var(--app-teal);
-}
-
-.barCarbs {
-  background: #f59e0b;
-}
-
-.barFat {
-  background: #8b5cf6;
+.macroPct {
+  min-width: 36px;
+  text-align: right;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--app-text);
 }
 
 .infoCard {

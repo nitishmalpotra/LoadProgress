@@ -3,6 +3,8 @@ import { Layout } from '@/views/Layout';
 import { AnalyticsTab } from '@/views/AnalyticsTab';
 import { BodyTab } from '@/views/BodyTab';
 import { CaloriesTab } from '@/views/CaloriesTab';
+import { CycleTab } from '@/views/CycleTab';
+import { GuideTab } from '@/views/GuideTab';
 import { TrainingTab } from '@/views/TrainingTab';
 import { ExercisesTab } from '@/views/ExercisesTab';
 import { PlanHub } from '@/views/PlanHub';
@@ -24,6 +26,8 @@ function App() {
           <Route element={<CaloriesTab />} path="calories" />
           <Route element={<TrainingTab />} path="training" />
           <Route element={<NutritionTab />} path="nutrition" />
+          <Route element={<CycleTab />} path="cycle" />
+          <Route element={<GuideTab />} path="guide" />
         </Route>
         <Route element={<ProgressHub />} path="/progress">
           <Route index element={<Navigate replace to="trends" />} />

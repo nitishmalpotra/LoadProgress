@@ -86,7 +86,7 @@ export function BodyTab() {
   return (
     <section aria-labelledby="body-title" className={styles.bodyPage}>
       <header className={styles.pageHeader}>
-        <p className={styles.eyebrow}>Body Metrics</p>
+        <p className={styles.eyebrow}>Progress</p>
         <h1 id="body-title">Body Metrics</h1>
         <p>Log weight each morning for consistent tracking. Measure waist &amp; hips monthly. Gaps are fine.</p>
       </header>

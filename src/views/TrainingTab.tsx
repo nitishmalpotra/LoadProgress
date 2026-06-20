@@ -3,9 +3,21 @@ import { ChevronDown, ChevronUp, Plus, Trash2 } from 'lucide-react';
 import type { Exercise, RoutineExercise, TrainingRoutine } from '@/models';
 import { DAY_LABELS, useRoutineStore } from '@/store/useRoutineStore';
 import { useWorkoutStore } from '@/store/useWorkoutStore';
+import { todayRoutineId } from '@/utils/planCompletion';
 import styles from '@/views/styles/Training.module.css';
 
-const DAY_TYPES: TrainingRoutine['type'][] = ['Push', 'Pull', 'Lower', 'Run', 'Rest'];
+type SessionBase = 'Rest' | 'Push' | 'Pull' | 'Lower' | 'Run';
+
+const sessionBase = (type: TrainingRoutine['type']): SessionBase =>
+  (type.includes('+') ? (type.split('+')[0] as SessionBase) : type as SessionBase);
+
+const sessionHasRun = (type: TrainingRoutine['type']): boolean =>
+  type === 'Run' || type.endsWith('+Run');
+
+const makeSessionType = (base: SessionBase, addRun: boolean): TrainingRoutine['type'] => {
+  if (base === 'Rest' || base === 'Run') return base;
+  return (addRun ? `${base}+Run` : base) as TrainingRoutine['type'];
+};
 
 // ---- ExerciseRow ----
 
@@ -204,6 +216,16 @@ type DayCardProps = {
 
 function DayCard({ day, dayLabel, exerciseMap, exercises }: DayCardProps) {
   const updateDayType = useRoutineStore((s) => s.updateDayType);
+  const base = sessionBase(day.type);
+  const hasRun = sessionHasRun(day.type);
+  const isStrength = base === 'Push' || base === 'Pull' || base === 'Lower';
+
+  const handleBaseChange = (newBase: SessionBase) => {
+    const keepRun = hasRun && newBase !== 'Rest' && newBase !== 'Run';
+    void updateDayType(day.id, makeSessionType(newBase, keepRun));
+  };
+
+  const toggleRun = () => void updateDayType(day.id, makeSessionType(base, !hasRun));
 
   return (
     <div className={styles.dayCard}>
@@ -212,40 +234,56 @@ function DayCard({ day, dayLabel, exerciseMap, exercises }: DayCardProps) {
         <select
           aria-label={`${dayLabel} session type`}
           className={styles.typeSelect}
-          value={day.type}
-          onChange={(e) =>
-            void updateDayType(day.id, e.target.value as TrainingRoutine['type'])
-          }
+          value={base}
+          onChange={(e) => handleBaseChange(e.target.value as SessionBase)}
         >
-          {DAY_TYPES.map((t) => (
-            <option key={t} value={t}>
-              {t}
-            </option>
-          ))}
+          <option value="Rest">Rest</option>
+          <option value="Push">Push</option>
+          <option value="Pull">Pull</option>
+          <option value="Lower">Lower</option>
+          <option value="Run">Run</option>
         </select>
+        {isStrength && (
+          <button
+            aria-pressed={hasRun}
+            className={hasRun ? `${styles.runToggle} ${styles.runToggleOn}` : styles.runToggle}
+            type="button"
+            onClick={toggleRun}
+          >
+            + Run
+          </button>
+        )}
       </div>
 
-      {day.exercises.length > 0 ? (
-        <div className={styles.exerciseList}>
-          {day.exercises.map((ex, i) => (
-            <ExerciseRow
-              key={`${day.id}-${i}`}
-              dayId={day.id}
-              exercise={ex}
-              index={i}
-              isFirst={i === 0}
-              isLast={i === day.exercises.length - 1}
-              name={exerciseMap.get(ex.exerciseId) ?? 'Unknown exercise'}
-            />
-          ))}
-        </div>
-      ) : (
-        <p className={styles.emptyDay}>
-          {day.type === 'Run' ? 'Running session — no exercises to log.' : 'No exercises yet.'}
-        </p>
+      {day.type !== 'Rest' && (
+        <>
+          {day.type === 'Run' ? (
+            <p className={styles.emptyDay}>Running session — no exercises to log.</p>
+          ) : (
+            <>
+              {hasRun && <p className={styles.runNote}>+ Running session.</p>}
+              {day.exercises.length > 0 ? (
+                <div className={styles.exerciseList}>
+                  {day.exercises.map((ex, i) => (
+                    <ExerciseRow
+                      key={`${day.id}-${i}`}
+                      dayId={day.id}
+                      exercise={ex}
+                      index={i}
+                      isFirst={i === 0}
+                      isLast={i === day.exercises.length - 1}
+                      name={exerciseMap.get(ex.exerciseId) ?? 'Unknown exercise'}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <p className={styles.emptyDay}>No exercises yet.</p>
+              )}
+              <AddExerciseForm dayId={day.id} exercises={exercises} />
+            </>
+          )}
+        </>
       )}
-
-      <AddExerciseForm dayId={day.id} exercises={exercises} />
     </div>
   );
 }
@@ -257,14 +295,25 @@ export function TrainingTab() {
   const isLoading = useRoutineStore((s) => s.isLoading);
   const loadRoutine = useRoutineStore((s) => s.loadRoutine);
   const exercises = useWorkoutStore((s) => s.exercises);
+  const loadWorkoutData = useWorkoutStore((s) => s.loadWorkoutData);
 
   useEffect(() => {
     void loadRoutine();
-  }, [loadRoutine]);
+    if (exercises.length === 0) void loadWorkoutData().catch(() => undefined);
+  }, [loadRoutine, loadWorkoutData, exercises.length]);
 
   const exerciseMap = new Map(exercises.map((e) => [e.id, e.name]));
 
   if (isLoading) return <p>Loading…</p>;
+
+  const todayIdx = parseInt(todayRoutineId());
+  const orderedRoutine = [...routine.slice(todayIdx), ...routine.slice(0, todayIdx)];
+
+  const dayLabel = (day: TrainingRoutine, rotatedIndex: number): string => {
+    if (rotatedIndex === 0) return 'Today';
+    if (rotatedIndex === 1) return 'Tomorrow';
+    return DAY_LABELS[parseInt(day.id)] ?? day.id;
+  };
 
   return (
     <section aria-labelledby="training-title" className={styles.page}>
@@ -275,11 +324,11 @@ export function TrainingTab() {
 
       <p className={styles.editHint}>Your weekly plan — edit any day below.</p>
 
-      {routine.map((day, i) => (
+      {orderedRoutine.map((day, i) => (
         <DayCard
           key={day.id}
           day={day}
-          dayLabel={DAY_LABELS[i]}
+          dayLabel={dayLabel(day, i)}
           exerciseMap={exerciseMap}
           exercises={exercises}
         />

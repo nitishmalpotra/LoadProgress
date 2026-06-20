@@ -79,7 +79,7 @@ export function AnalyticsTab() {
   return (
     <section className={styles.analyticsPage} aria-labelledby="analytics-title">
       <header className={styles.pageHeader}>
-        <p className={styles.eyebrow}>Training Volume</p>
+        <p className={styles.eyebrow}>Progress</p>
         <h1 id="analytics-title">Volume</h1>
         <p>Total load by primary muscle group across your selected training window.</p>
       </header>

@@ -173,6 +173,7 @@ export function ProfileTab() {
 
       <form className={styles.form} onSubmit={(e) => void handleSubmit(e)}>
         {/* Units */}
+        <div className={styles.card}>
         <div className={styles.fieldGroup}>
           <span className={styles.label}>Units</span>
           <div className={styles.segmentedRow}>
@@ -192,10 +193,10 @@ export function ProfileTab() {
             </button>
           </div>
         </div>
-
-        <hr className={styles.divider} />
+        </div>
 
         {/* Body */}
+        <div className={styles.card}>
         <div className={styles.fieldGroup}>
           <label className={styles.label} htmlFor="weight">
             Weight ({weightUnit})
@@ -265,9 +266,10 @@ export function ProfileTab() {
             onChange={(e) => set('age', e.target.value)}
           />
         </div>
+        </div>
 
-        <hr className={styles.divider} />
-
+        {/* Sex / Goal / Activity */}
+        <div className={styles.card}>
         {/* Sex */}
         <div className={styles.fieldGroup}>
           <span className={styles.label}>Sex</span>
@@ -297,8 +299,10 @@ export function ProfileTab() {
           </label>
         )}
 
-        <hr className={styles.divider} />
+        </div>
 
+        {/* Goal / Activity */}
+        <div className={styles.card}>
         {/* Goal */}
         <div className={styles.fieldGroup}>
           <span className={styles.label}>Goal</span>
@@ -332,10 +336,10 @@ export function ProfileTab() {
             ))}
           </div>
         </div>
-
-        <hr className={styles.divider} />
+        </div>
 
         {/* Training */}
+        <div className={styles.card}>
         <div className={styles.fieldGroup}>
           <label className={styles.label} htmlFor="trainingDays">
             Training days per week
@@ -370,10 +374,10 @@ export function ProfileTab() {
             onChange={(e) => set('trainingMinutesPerSession', e.target.value)}
           />
         </div>
-
-        <hr className={styles.divider} />
+        </div>
 
         {/* Diet & location */}
+        <div className={styles.card}>
         <div className={styles.fieldGroup}>
           <label className={styles.label} htmlFor="diet">
             Diet style
@@ -405,6 +409,7 @@ export function ProfileTab() {
             value={form.location}
             onChange={(e) => set('location', e.target.value)}
           />
+        </div>
         </div>
 
         <button className={styles.saveButton} disabled={isSaving} type="submit">

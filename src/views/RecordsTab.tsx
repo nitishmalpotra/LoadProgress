@@ -82,7 +82,7 @@ export function RecordsTab() {
   return (
     <section className={styles.recordsPage} aria-labelledby="records-title">
       <header className={styles.pageHeader}>
-        <p className={styles.eyebrow}>Personal Records</p>
+        <p className={styles.eyebrow}>Progress</p>
         <h1 id="records-title">PRs</h1>
         <p>Best lifts and recent milestones from your logged training.</p>
       </header>

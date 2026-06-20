@@ -1,31 +1,29 @@
+import type { IconType } from 'react-icons';
 import {
-  Activity,
-  ArrowUpCircle,
-  Award,
-  CircleDot,
-  Dumbbell,
-  Flame,
-  Heart,
-  Shield,
-  Sparkles,
-  Target,
-  Zap,
-  type LucideIcon
-} from 'lucide-react';
+  GiBiceps,
+  GiBodyBalance,
+  GiGymBag,
+  GiLeg,
+  GiMuscleFat,
+  GiPull,
+  GiPush,
+  GiStomach,
+  GiWeightLiftingUp,
+} from 'react-icons/gi';
 import type { MuscleGroup } from '@/models';
 
-const muscleIconMap: Record<MuscleGroup, LucideIcon> = {
-  Chest: Heart,
-  Back: ArrowUpCircle,
-  Legs: Zap,
-  Shoulders: Target,
-  Arms: Flame,
-  Core: Shield,
-  'Full Body': Sparkles,
-  Forearms: Dumbbell,
-  Glutes: Activity,
-  'Upper Back': ArrowUpCircle,
-  'Lower Back': CircleDot
+const muscleIconMap: Record<MuscleGroup, IconType> = {
+  Chest: GiPush,
+  Back: GiPull,
+  'Upper Back': GiPull,
+  'Lower Back': GiPull,
+  Legs: GiLeg,
+  Shoulders: GiWeightLiftingUp,
+  Arms: GiBiceps,
+  Forearms: GiBiceps,
+  Core: GiStomach,
+  'Full Body': GiMuscleFat,
+  Glutes: GiLeg,
 };
 
 type ExerciseIconProps = {
@@ -35,22 +33,16 @@ type ExerciseIconProps = {
   size?: number;
 };
 
-export function getExerciseIcon(muscleGroup: MuscleGroup): LucideIcon {
-  return muscleIconMap[muscleGroup] ?? Award;
+export function getExerciseIcon(muscleGroup: MuscleGroup): IconType {
+  return muscleIconMap[muscleGroup] ?? GiGymBag;
 }
 
-export function ExerciseIcon({ muscleGroup, iconName, className, size = 20 }: ExerciseIconProps) {
+export function ExerciseIcon({ muscleGroup, className, size = 20 }: ExerciseIconProps) {
   const Icon = getExerciseIcon(muscleGroup);
 
   return (
-    <span
-      aria-label={`${muscleGroup} icon`}
-      className={className}
-      data-exercise-icon={iconName}
-      data-muscle-group={muscleGroup}
-      role="img"
-    >
-      <Icon aria-hidden="true" size={size} strokeWidth={2.3} />
+    <span aria-label={`${muscleGroup} icon`} className={className} role="img">
+      <Icon aria-hidden size={size} />
     </span>
   );
 }

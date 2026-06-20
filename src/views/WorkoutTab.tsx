@@ -121,7 +121,7 @@ export function WorkoutTab() {
             <p className={styles.restLabel}>Rest day — free logger is still available below.</p>
           ) : todayDay.exercises.length === 0 ? (
             <p className={styles.restLabel}>
-              {todayDay.type} session — no exercises planned. Log freely below.
+              {todayDay.type.replace('+Run', ' + Run')} session — no exercises planned. Log freely below.
             </p>
           ) : (
             todayDay.exercises.map((ex, i) => (

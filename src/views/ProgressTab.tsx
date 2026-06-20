@@ -107,7 +107,7 @@ export function ProgressTab() {
   return (
     <section className={styles.analyticsPage} aria-labelledby="progress-title">
       <header className={styles.pageHeader}>
-        <p className={styles.eyebrow}>Progress Trends</p>
+        <p className={styles.eyebrow}>Progress</p>
         <h1 id="progress-title">Trends</h1>
         <p>Drill into an exercise to compare load and rep progression over time.</p>
       </header>

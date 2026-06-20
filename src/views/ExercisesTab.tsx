@@ -8,19 +8,20 @@ import { ExerciseIcon } from '@/views/components/ExerciseIcon';
 import styles from '@/views/styles/Exercises.module.css';
 
 const exerciseTypes: ExerciseType[] = ['Weight Training', 'Bodyweight'];
-const muscleGroups: MuscleGroup[] = [
-  'Chest',
-  'Back',
-  'Legs',
-  'Shoulders',
-  'Arms',
-  'Core',
-  'Full Body',
-  'Forearms',
-  'Glutes',
-  'Upper Back',
-  'Lower Back'
-];
+
+const DISPLAY_GROUPS = ['Chest', 'Back', 'Legs', 'Shoulders', 'Arms', 'Core', 'Full Body', 'Glutes'] as const;
+type DisplayGroup = (typeof DISPLAY_GROUPS)[number];
+
+const GROUP_MEMBERS: Record<DisplayGroup, readonly MuscleGroup[]> = {
+  Chest: ['Chest'],
+  Back: ['Back', 'Upper Back', 'Lower Back'],
+  Legs: ['Legs'],
+  Shoulders: ['Shoulders'],
+  Arms: ['Arms', 'Forearms'],
+  Core: ['Core'],
+  'Full Body': ['Full Body'],
+  Glutes: ['Glutes'],
+};
 const equipmentOptions: Equipment[] = [
   'Barbell',
   'Dumbbell',
@@ -36,7 +37,6 @@ const equipmentOptions: Equipment[] = [
   'Foam Roller'
 ];
 const difficulties: Difficulty[] = ['Beginner', 'Intermediate', 'Advanced', 'Expert'];
-const allMuscleGroups = 'All';
 
 const emptyExercise = {
   name: '',
@@ -67,10 +67,10 @@ function matchesSearch(exercise: Exercise, query: string) {
 }
 
 function groupExercises(exercises: Exercise[]) {
-  return muscleGroups
-    .map((muscleGroup) => ({
-      muscleGroup,
-      exercises: exercises.filter((exercise) => exercise.muscleGroup === muscleGroup)
+  return DISPLAY_GROUPS
+    .map((group) => ({
+      muscleGroup: group as MuscleGroup,
+      exercises: exercises.filter((ex) => GROUP_MEMBERS[group].includes(ex.muscleGroup))
     }))
     .filter((group) => group.exercises.length > 0);
 }
@@ -85,9 +85,7 @@ export function ExercisesTab() {
   const navigate = useNavigate();
   const { exerciseId } = useParams();
   const [exerciseType, setExerciseType] = useState<ExerciseType>('Weight Training');
-  const [selectedMuscleGroup, setSelectedMuscleGroup] = useState<
-    MuscleGroup | typeof allMuscleGroups
-  >(allMuscleGroups);
+  const [selectedMuscleGroup, setSelectedMuscleGroup] = useState<DisplayGroup | 'All'>('All');
   const [query, setQuery] = useState('');
   const [isAddingExercise, setIsAddingExercise] = useState(false);
   const [customExercise, setCustomExercise] = useState(emptyExercise);
@@ -99,14 +97,14 @@ export function ExercisesTab() {
 
   const muscleCounts = useMemo(
     () =>
-      muscleGroups.reduce<Record<MuscleGroup, number>>(
-        (counts, muscleGroup) => ({
+      DISPLAY_GROUPS.reduce<Record<DisplayGroup, number>>(
+        (counts, group) => ({
           ...counts,
-          [muscleGroup]: exercises.filter(
-            (exercise) => exercise.type === exerciseType && exercise.muscleGroup === muscleGroup
+          [group]: exercises.filter(
+            (ex) => ex.type === exerciseType && GROUP_MEMBERS[group].includes(ex.muscleGroup)
           ).length
         }),
-        {} as Record<MuscleGroup, number>
+        {} as Record<DisplayGroup, number>
       ),
     [exerciseType, exercises]
   );
@@ -117,9 +115,8 @@ export function ExercisesTab() {
         .filter((exercise) => exercise.type === exerciseType)
         .filter(
           (exercise) =>
-            selectedMuscleGroup === allMuscleGroups ||
-            exercise.muscleGroup === selectedMuscleGroup ||
-            exercise.secondaryMuscleGroups.includes(selectedMuscleGroup)
+            selectedMuscleGroup === 'All' ||
+            GROUP_MEMBERS[selectedMuscleGroup].includes(exercise.muscleGroup)
         )
         .filter((exercise) => matchesSearch(exercise, query))
         .sort((left, right) => left.name.localeCompare(right.name)),
@@ -158,7 +155,7 @@ export function ExercisesTab() {
   };
 
   const clearFilters = () => {
-    setSelectedMuscleGroup(allMuscleGroups);
+    setSelectedMuscleGroup('All');
     setQuery('');
   };
 
@@ -200,24 +197,18 @@ export function ExercisesTab() {
       <div className={styles.filterPanel}>
         <div className={styles.muscleBrowser} aria-label="Browse by muscle group">
           <button
-            aria-pressed={selectedMuscleGroup === allMuscleGroups}
-            className={
-              selectedMuscleGroup === allMuscleGroups
-                ? styles.muscleChipSelected
-                : styles.muscleChip
-            }
+            aria-pressed={selectedMuscleGroup === 'All'}
+            className={selectedMuscleGroup === 'All' ? styles.muscleChipSelected : styles.muscleChip}
             type="button"
-            onClick={() => setSelectedMuscleGroup(allMuscleGroups)}
+            onClick={() => setSelectedMuscleGroup('All')}
           >
             <span>All</span>
             <strong>{exercises.filter((exercise) => exercise.type === exerciseType).length}</strong>
           </button>
-          {muscleGroups.map((group) => (
+          {DISPLAY_GROUPS.map((group) => (
             <button
               aria-pressed={selectedMuscleGroup === group}
-              className={
-                selectedMuscleGroup === group ? styles.muscleChipSelected : styles.muscleChip
-              }
+              className={selectedMuscleGroup === group ? styles.muscleChipSelected : styles.muscleChip}
               key={group}
               type="button"
               onClick={() => setSelectedMuscleGroup(group)}

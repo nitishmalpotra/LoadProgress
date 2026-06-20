@@ -28,7 +28,7 @@ export interface RoutineExercise {
 
 export interface TrainingRoutine {
   id: string; // '0'–'6' representing Mon–Sun
-  type: 'Push' | 'Pull' | 'Lower' | 'Run' | 'Rest';
+  type: 'Push' | 'Pull' | 'Lower' | 'Run' | 'Rest' | 'Push+Run' | 'Pull+Run' | 'Lower+Run';
   exercises: RoutineExercise[];
 }
 

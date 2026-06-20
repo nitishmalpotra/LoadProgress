@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Check, Dumbbell, Weight, X } from 'lucide-react';
 import type { Exercise, ExerciseType, MuscleGroup } from '@/models';
 import { useWorkoutStore } from '@/store/useWorkoutStore';
@@ -8,6 +8,7 @@ type AddWorkoutModalProps = {
   date: Date;
   isOpen: boolean;
   onClose: () => void;
+  prefilledExerciseId?: string;
 };
 
 type FormErrors = {
@@ -28,7 +29,7 @@ function uniqueMuscleGroups(exercises: Exercise[], exerciseType: ExerciseType | 
   ).sort();
 }
 
-export function AddWorkoutModal({ date, isOpen, onClose }: AddWorkoutModalProps) {
+export function AddWorkoutModal({ date, isOpen, onClose, prefilledExerciseId }: AddWorkoutModalProps) {
   const exercises = useWorkoutStore((state) => state.exercises);
   const addWorkoutSet = useWorkoutStore((state) => state.addWorkoutSet);
   const unitSystem = useWorkoutStore((state) => state.unitSystem);
@@ -43,6 +44,25 @@ export function AddWorkoutModal({ date, isOpen, onClose }: AddWorkoutModalProps)
   const [isFailureSet, setIsFailureSet] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSaving, setIsSaving] = useState(false);
+
+  // Reset form (and apply prefill) each time the modal opens
+  useEffect(() => {
+    if (!isOpen) return;
+    const prefilled = prefilledExerciseId
+      ? exercises.find((e) => e.id === prefilledExerciseId)
+      : undefined;
+    setExerciseType(prefilled?.type ?? null);
+    setMuscleGroup(prefilled?.muscleGroup ?? null);
+    setExerciseId(prefilledExerciseId ?? '');
+    setWeight('');
+    setReps('');
+    setRpe(7);
+    setNotes('');
+    setIsFailureSet(false);
+    setErrors({});
+  // ponytail: intentionally omit exercises — stable after load; re-running on exercises change mid-open is wrong
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, prefilledExerciseId]);
 
   const muscleGroups = useMemo(
     () => uniqueMuscleGroups(exercises, exerciseType),

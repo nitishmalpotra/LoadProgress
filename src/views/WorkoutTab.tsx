@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
-import { CalendarDays, Plus, RefreshCw } from 'lucide-react';
+import { CalendarDays, CheckCircle2, Plus, RefreshCw } from 'lucide-react';
 import { AddWorkoutModal } from '@/views/components/AddWorkoutModal';
 import { useWorkoutStore } from '@/store/useWorkoutStore';
+import { useRoutineStore } from '@/store/useRoutineStore';
+import { derivePlanCompletion, todayRoutineId } from '@/utils/planCompletion';
 import type { WorkoutSet } from '@/models';
 import styles from '@/views/styles/Workout.module.css';
 
@@ -43,21 +45,38 @@ function groupSetsByExercise(sets: WorkoutSet[]) {
 export function WorkoutTab() {
   const [selectedDate, setSelectedDate] = useState(() => startOfDay(new Date()));
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [prefilledExerciseId, setPrefilledExerciseId] = useState<string | undefined>(undefined);
   const exercisesById = useWorkoutStore((state) => state.exercisesById);
   const workoutSetsByDate = useWorkoutStore((state) => state.workoutSetsByDate);
   const unitSystem = useWorkoutStore((state) => state.unitSystem);
   const isLoading = useWorkoutStore((state) => state.isLoading);
   const error = useWorkoutStore((state) => state.error);
   const loadWorkoutData = useWorkoutStore((state) => state.loadWorkoutData);
+  const routine = useRoutineStore((s) => s.routine);
+  const loadRoutine = useRoutineStore((s) => s.loadRoutine);
   const dateWindow = useMemo(buildDateWindow, []);
   const selectedSets = workoutSetsByDate[dayKey(selectedDate)] ?? [];
   const groupedSets = groupSetsByExercise(selectedSets);
   const unitLabel = unitSystem === 'metric' ? 'kg' : 'lb';
   const todayKey = dayKey(new Date());
 
+  // Today's planned session (by weekday)
+  const todayDay = routine.find((d) => d.id === todayRoutineId());
+  const todaySets = workoutSetsByDate[todayKey] ?? [];
+  const { done, sessionDone } = derivePlanCompletion(todayDay?.exercises ?? [], todaySets);
+
   useEffect(() => {
     void loadWorkoutData().catch(() => undefined);
   }, [loadWorkoutData]);
+
+  useEffect(() => {
+    void loadRoutine();
+  }, [loadRoutine]);
+
+  const openModal = (exerciseId?: string) => {
+    setPrefilledExerciseId(exerciseId);
+    setIsModalOpen(true);
+  };
 
   return (
     <section className={styles.workoutPage} aria-labelledby="workout-title">
@@ -89,6 +108,48 @@ export function WorkoutTab() {
         })}
       </div>
 
+      {/* Today's planned session */}
+      {todayDay && (
+        <div className={styles.planPanel}>
+          <div className={styles.planPanelHeader}>
+            <h2>Today's Plan</h2>
+            {sessionDone && todayDay.exercises.length > 0 && (
+              <span className={styles.sessionDoneBadge}>Session complete</span>
+            )}
+          </div>
+          {todayDay.type === 'Rest' ? (
+            <p className={styles.restLabel}>Rest day — free logger is still available below.</p>
+          ) : todayDay.exercises.length === 0 ? (
+            <p className={styles.restLabel}>
+              {todayDay.type} session — no exercises planned. Log freely below.
+            </p>
+          ) : (
+            todayDay.exercises.map((ex, i) => (
+              <button
+                className={done[i] ? styles.planExerciseBtnDone : styles.planExerciseBtn}
+                key={ex.exerciseId + i}
+                type="button"
+                onClick={() => openModal(ex.exerciseId)}
+              >
+                <span className={styles.planExerciseName}>
+                  {exercisesById[ex.exerciseId]?.name ?? 'Unknown exercise'}
+                </span>
+                <span className={styles.planExerciseMeta}>
+                  {ex.targetSets}×{ex.targetReps}
+                </span>
+                {done[i] && (
+                  <CheckCircle2
+                    aria-label="Done"
+                    className={styles.planExerciseDoneIcon}
+                    size={16}
+                  />
+                )}
+              </button>
+            ))
+          )}
+        </div>
+      )}
+
       <div className={styles.dailyPanel}>
         <div className={styles.panelHeader}>
           <div>
@@ -118,7 +179,7 @@ export function WorkoutTab() {
           <div className={styles.emptyState}>
             <strong>No workouts for this date</strong>
             <span>Tap the add button to log the first set.</span>
-            <button type="button" onClick={() => setIsModalOpen(true)}>
+            <button type="button" onClick={() => openModal()}>
               <Plus size={17} />
               Add set
             </button>
@@ -156,14 +217,15 @@ export function WorkoutTab() {
         aria-label="Add workout set"
         className={styles.fab}
         type="button"
-        onClick={() => setIsModalOpen(true)}
+        onClick={() => openModal()}
       >
         <Plus size={26} strokeWidth={2.7} />
       </button>
 
       <AddWorkoutModal
-        date={todayKey === dayKey(selectedDate) ? new Date() : selectedDate}
+        date={prefilledExerciseId ? new Date() : todayKey === dayKey(selectedDate) ? new Date() : selectedDate}
         isOpen={isModalOpen}
+        prefilledExerciseId={prefilledExerciseId}
         onClose={() => setIsModalOpen(false)}
       />
     </section>

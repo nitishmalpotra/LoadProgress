@@ -487,6 +487,90 @@
   font-weight: 750;
 }
 
+.planPanel {
+  display: grid;
+  gap: 10px;
+  padding: 14px 16px;
+  border: 1px solid var(--app-glass-border);
+  border-radius: 14px;
+  background: var(--app-surface);
+  box-shadow: var(--app-shadow-soft);
+}
+
+.planPanel h2 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.planPanelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.sessionDoneBadge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgb(23 107 77 / 0.12);
+  color: var(--app-teal);
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.planExerciseBtn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--app-glass-border);
+  border-radius: 10px;
+  background: var(--app-background);
+  color: var(--app-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 160ms ease;
+}
+
+.planExerciseBtn:hover {
+  background: var(--app-surface-elevated);
+}
+
+.planExerciseBtn:focus-visible {
+  outline: 2px solid var(--app-focus);
+  outline-offset: 2px;
+}
+
+.planExerciseBtnDone {
+  composes: planExerciseBtn;
+  opacity: 0.55;
+}
+
+.planExerciseName {
+  flex: 1;
+  font-size: 0.9rem;
+  font-weight: 750;
+}
+
+.planExerciseMeta {
+  color: var(--app-text-secondary);
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.planExerciseDoneIcon {
+  color: var(--app-teal);
+  flex-shrink: 0;
+}
+
+.restLabel {
+  padding: 10px 0 2px;
+  color: var(--app-text-secondary);
+  font-size: 0.9rem;
+}
+
 @keyframes sheetIn {
   from {
     opacity: 0;

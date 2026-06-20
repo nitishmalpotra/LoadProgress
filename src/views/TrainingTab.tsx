@@ -133,13 +133,23 @@ type AddExerciseFormProps = {
   exercises: Exercise[];
 };
 
+const PLAN_GROUPS = ['Chest', 'Back', 'Legs', 'Shoulders', 'Arms', 'Core', 'Full Body', 'Glutes'] as const;
+const PLAN_GROUP_MEMBERS: Record<string, readonly string[]> = {
+  Chest: ['Chest'],
+  Back: ['Back', 'Upper Back', 'Lower Back'],
+  Legs: ['Legs'],
+  Shoulders: ['Shoulders'],
+  Arms: ['Arms', 'Forearms'],
+  Core: ['Core'],
+  'Full Body': ['Full Body'],
+  Glutes: ['Glutes'],
+};
+
 function AddExerciseForm({ dayId, exercises }: AddExerciseFormProps) {
   const addExercise = useRoutineStore((s) => s.addExercise);
   const [exerciseId, setExerciseId] = useState('');
   const [sets, setSets] = useState('3');
   const [reps, setReps] = useState('10');
-
-  const sorted = [...exercises].sort((a, b) => a.name.localeCompare(b.name));
 
   const handleAdd = () => {
     if (!exerciseId) return;
@@ -163,11 +173,19 @@ function AddExerciseForm({ dayId, exercises }: AddExerciseFormProps) {
           onChange={(e) => setExerciseId(e.target.value)}
         >
           <option value="">Add exercise…</option>
-          {sorted.map((ex) => (
-            <option key={ex.id} value={ex.id}>
-              {ex.name}
-            </option>
-          ))}
+          {PLAN_GROUPS.map((group) => {
+            const groupExs = exercises
+              .filter((ex) => PLAN_GROUP_MEMBERS[group].includes(ex.muscleGroup))
+              .sort((a, b) => a.name.localeCompare(b.name));
+            if (!groupExs.length) return null;
+            return (
+              <optgroup key={group} label={group}>
+                {groupExs.map((ex) => (
+                  <option key={ex.id} value={ex.id}>{ex.name}</option>
+                ))}
+              </optgroup>
+            );
+          })}
         </select>
       </div>
       <div className={styles.addMeta}>

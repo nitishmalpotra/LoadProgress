@@ -565,6 +565,72 @@
   flex-shrink: 0;
 }
 
+.planItem {
+  display: grid;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--app-glass-border);
+  border-radius: 10px;
+  background: var(--app-background);
+}
+
+.planItemDone {
+  composes: planItem;
+  opacity: 0.5;
+}
+
+.planItemHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.quickLog {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.quickWeightInput {
+  flex: 1;
+  min-width: 0;
+  padding: 6px 10px;
+  border: 1px solid var(--app-glass-border);
+  border-radius: 8px;
+  background: var(--app-surface);
+  color: var(--app-text);
+  font: inherit;
+  font-size: 0.86rem;
+}
+
+.quickWeightInput:focus {
+  outline: 2px solid var(--app-focus);
+  outline-offset: 2px;
+}
+
+.quickLogBtn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 8px;
+  background: var(--app-teal);
+  color: #fff;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 160ms ease;
+}
+
+.quickLogBtn:hover {
+  opacity: 0.88;
+}
+
+.quickLogBtn:focus-visible {
+  outline: 2px solid var(--app-focus);
+  outline-offset: 2px;
+}
+
 .restLabel {
   padding: 10px 0 2px;
   color: var(--app-text-secondary);

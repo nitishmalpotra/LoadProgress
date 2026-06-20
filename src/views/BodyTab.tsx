@@ -25,6 +25,7 @@ export function BodyTab() {
 
   const today = todayISO();
   const unit = profile?.unitSystem === 'imperial' ? 'lbs' : 'kg';
+  const measureUnit = profile?.unitSystem === 'imperial' ? 'in' : 'cm';
   const todayEntry = weights.find((w) => w.date === today);
 
   const measurements = useMeasurementStore((s) => s.measurements);
@@ -54,8 +55,8 @@ export function BodyTab() {
     const avgs = trailingAverage(weights);
     return weights.map((w, i) => ({
       label: w.date.slice(5), // MM-DD
-      weight: w.weight,
-      avg: Number(avgs[i]!.toFixed(1))
+      weight: Math.round(w.weight * 100) / 100,
+      avg: Math.round(avgs[i]! * 100) / 100,
     }));
   }, [weights]);
 
@@ -114,7 +115,7 @@ export function BodyTab() {
       <div className={styles.logPanel}>
         <form className={styles.logForm} onSubmit={handleMeasurementSubmit}>
           <label className={styles.logLabel}>
-            Waist ({unit})
+            Waist ({measureUnit})
             <input
               className={styles.logInput}
               min="0"
@@ -126,7 +127,7 @@ export function BodyTab() {
             />
           </label>
           <label className={styles.logLabel}>
-            Hips ({unit})
+            Hips ({measureUnit})
             <input
               className={styles.logInput}
               min="0"
@@ -144,7 +145,7 @@ export function BodyTab() {
       </div>
 
       {measurements.length > 0 && (
-        <article className={styles.chartPanel}>
+        <article className={styles.measurePanel}>
           <h2>Measurements history</h2>
           <table className={styles.measureTable}>
             <thead>
@@ -163,8 +164,8 @@ export function BodyTab() {
                 return (
                   <tr key={m.id}>
                     <td>{m.date.slice(5)}</td>
-                    <td>{m.waist} {unit}</td>
-                    <td>{m.hips} {unit}</td>
+                    <td>{m.waist} {measureUnit}</td>
+                    <td>{m.hips} {measureUnit}</td>
                     <td className={dw === null ? '' : dw < 0 ? styles.deltaGood : dw > 0 ? styles.deltaBad : ''}>
                       {dw === null ? '—' : `${dw > 0 ? '+' : ''}${dw.toFixed(1)}`}
                     </td>
@@ -202,9 +203,10 @@ export function BodyTab() {
                   axisLine={false}
                   domain={['auto', 'auto']}
                   tick={{ fill: 'var(--app-text-secondary)', fontSize: 12 }}
+                  tickFormatter={(v: number) => v.toFixed(2)}
                   tickLine={false}
                 />
-                <Tooltip formatter={(v: number) => [`${v} ${unit}`]} />
+                <Tooltip formatter={(v: number) => [`${v.toFixed(2)} ${unit}`]} />
                 <Legend wrapperStyle={{ color: 'var(--app-text-secondary)', fontSize: 12 }} />
                 <Line
                   activeDot={{ r: 5 }}

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowLeft, Dumbbell, Plus, RefreshCw, Search, Weight } from 'lucide-react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import type { Difficulty, Equipment, Exercise, ExerciseType, MuscleGroup } from '@/models';
@@ -90,6 +90,26 @@ export function ExercisesTab() {
   const [isAddingExercise, setIsAddingExercise] = useState(false);
   const [customExercise, setCustomExercise] = useState(emptyExercise);
   const [customError, setCustomError] = useState('');
+
+  const chipRef = useRef<HTMLDivElement>(null);
+  const [fadeLeft, setFadeLeft] = useState(false);
+  const [fadeRight, setFadeRight] = useState(true);
+
+  const updateFade = useCallback(() => {
+    const el = chipRef.current;
+    if (!el) return;
+    setFadeLeft(el.scrollLeft > 4);
+    setFadeRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 4);
+  }, []);
+
+  useEffect(() => { updateFade(); }, [updateFade]);
+
+  const scrollMask = (() => {
+    if (fadeLeft && fadeRight) return 'linear-gradient(to right, transparent, black 12%, black 88%, transparent)';
+    if (fadeLeft)  return 'linear-gradient(to right, transparent, black 12%)';
+    if (fadeRight) return 'linear-gradient(to right, black 88%, transparent)';
+    return 'none';
+  })();
 
   useEffect(() => {
     void loadWorkoutData().catch(() => undefined);
@@ -195,7 +215,13 @@ export function ExercisesTab() {
       </header>
 
       <div className={styles.filterPanel}>
-        <div className={styles.muscleBrowser} aria-label="Browse by muscle group">
+        <div
+          ref={chipRef}
+          aria-label="Browse by muscle group"
+          className={styles.muscleBrowser}
+          style={{ maskImage: scrollMask, WebkitMaskImage: scrollMask }}
+          onScroll={updateFade}
+        >
           <button
             aria-pressed={selectedMuscleGroup === 'All'}
             className={selectedMuscleGroup === 'All' ? styles.muscleChipSelected : styles.muscleChip}

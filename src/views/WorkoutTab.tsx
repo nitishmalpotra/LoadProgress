@@ -4,7 +4,7 @@ import { AddWorkoutModal } from '@/views/components/AddWorkoutModal';
 import { useWorkoutStore } from '@/store/useWorkoutStore';
 import { useRoutineStore } from '@/store/useRoutineStore';
 import { derivePlanCompletion, todayRoutineId } from '@/utils/planCompletion';
-import type { WorkoutSet } from '@/models';
+import type { RoutineExercise, WorkoutSet } from '@/models';
 import styles from '@/views/styles/Workout.module.css';
 
 const dayFormatter = new Intl.DateTimeFormat(undefined, { weekday: 'short' });
@@ -46,12 +46,14 @@ export function WorkoutTab() {
   const [selectedDate, setSelectedDate] = useState(() => startOfDay(new Date()));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [prefilledExerciseId, setPrefilledExerciseId] = useState<string | undefined>(undefined);
+  const [quickWeights, setQuickWeights] = useState<Record<string, string>>({});
   const exercisesById = useWorkoutStore((state) => state.exercisesById);
   const workoutSetsByDate = useWorkoutStore((state) => state.workoutSetsByDate);
   const unitSystem = useWorkoutStore((state) => state.unitSystem);
   const isLoading = useWorkoutStore((state) => state.isLoading);
   const error = useWorkoutStore((state) => state.error);
   const loadWorkoutData = useWorkoutStore((state) => state.loadWorkoutData);
+  const addWorkoutSet = useWorkoutStore((state) => state.addWorkoutSet);
   const routine = useRoutineStore((s) => s.routine);
   const loadRoutine = useRoutineStore((s) => s.loadRoutine);
   const dateWindow = useMemo(buildDateWindow, []);
@@ -76,6 +78,14 @@ export function WorkoutTab() {
   const openModal = (exerciseId?: string) => {
     setPrefilledExerciseId(exerciseId);
     setIsModalOpen(true);
+  };
+
+  const quickLog = async (ex: RoutineExercise) => {
+    const w = parseFloat(quickWeights[ex.exerciseId] ?? '');
+    const weight = isNaN(w) || w <= 0 ? undefined : w;
+    for (let i = 0; i < ex.targetSets; i++) {
+      await addWorkoutSet({ exerciseId: ex.exerciseId, weight, reps: ex.targetReps, date: new Date(), isFailureSet: false });
+    }
   };
 
   return (
@@ -125,26 +135,42 @@ export function WorkoutTab() {
             </p>
           ) : (
             todayDay.exercises.map((ex, i) => (
-              <button
-                className={done[i] ? styles.planExerciseBtnDone : styles.planExerciseBtn}
+              <div
+                className={done[i] ? styles.planItemDone : styles.planItem}
                 key={ex.exerciseId + i}
-                type="button"
-                onClick={() => openModal(ex.exerciseId)}
               >
-                <span className={styles.planExerciseName}>
-                  {exercisesById[ex.exerciseId]?.name ?? 'Unknown exercise'}
-                </span>
-                <span className={styles.planExerciseMeta}>
-                  {ex.targetSets}×{ex.targetReps}
-                </span>
-                {done[i] && (
-                  <CheckCircle2
-                    aria-label="Done"
-                    className={styles.planExerciseDoneIcon}
-                    size={16}
-                  />
+                <div className={styles.planItemHeader}>
+                  <span className={styles.planExerciseName}>
+                    {exercisesById[ex.exerciseId]?.name ?? 'Unknown exercise'}
+                  </span>
+                  <span className={styles.planExerciseMeta}>
+                    {ex.targetSets}×{ex.targetReps}
+                    {done[i] && <CheckCircle2 aria-label="Done" className={styles.planExerciseDoneIcon} size={15} />}
+                  </span>
+                </div>
+                {!done[i] && (
+                  <div className={styles.quickLog}>
+                    <input
+                      aria-label={`Weight for ${exercisesById[ex.exerciseId]?.name ?? 'exercise'}`}
+                      className={styles.quickWeightInput}
+                      inputMode="decimal"
+                      min="0"
+                      placeholder={`Weight (${unitLabel})`}
+                      step="0.5"
+                      type="number"
+                      value={quickWeights[ex.exerciseId] ?? ''}
+                      onChange={(e) => setQuickWeights((prev) => ({ ...prev, [ex.exerciseId]: e.target.value }))}
+                    />
+                    <button
+                      className={styles.quickLogBtn}
+                      type="button"
+                      onClick={() => void quickLog(ex)}
+                    >
+                      Log {ex.targetSets} sets
+                    </button>
+                  </div>
                 )}
-              </button>
+              </div>
             ))
           )}
         </div>

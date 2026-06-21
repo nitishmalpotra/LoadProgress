@@ -56,7 +56,7 @@ export function BodyTab() {
     return weights.map((w, i) => ({
       label: w.date.slice(5), // MM-DD
       weight: Math.round(w.weight * 100) / 100,
-      avg: Math.round(avgs[i]! * 100) / 100,
+      avg: Math.round(avgs[i]! * 100) / 100
     }));
   }, [weights]);
 
@@ -89,7 +89,10 @@ export function BodyTab() {
       <header className={styles.pageHeader}>
         <p className={styles.eyebrow}>Progress</p>
         <h1 id="body-title">Body Metrics</h1>
-        <p>Log weight each morning for consistent tracking. Measure waist &amp; hips monthly. Gaps are fine.</p>
+        <p>
+          Log weight each morning for consistent tracking. Measure waist &amp; hips monthly. Gaps
+          are fine.
+        </p>
       </header>
 
       <div className={styles.logPanel}>
@@ -164,12 +167,24 @@ export function BodyTab() {
                 return (
                   <tr key={m.id}>
                     <td>{m.date.slice(5)}</td>
-                    <td>{m.waist} {measureUnit}</td>
-                    <td>{m.hips} {measureUnit}</td>
-                    <td className={dw === null ? '' : dw < 0 ? styles.deltaGood : dw > 0 ? styles.deltaBad : ''}>
+                    <td>
+                      {m.waist} {measureUnit}
+                    </td>
+                    <td>
+                      {m.hips} {measureUnit}
+                    </td>
+                    <td
+                      className={
+                        dw === null ? '' : dw < 0 ? styles.deltaGood : dw > 0 ? styles.deltaBad : ''
+                      }
+                    >
                       {dw === null ? '—' : `${dw > 0 ? '+' : ''}${dw.toFixed(1)}`}
                     </td>
-                    <td className={dh === null ? '' : dh < 0 ? styles.deltaGood : dh > 0 ? styles.deltaBad : ''}>
+                    <td
+                      className={
+                        dh === null ? '' : dh < 0 ? styles.deltaGood : dh > 0 ? styles.deltaBad : ''
+                      }
+                    >
                       {dh === null ? '—' : `${dh > 0 ? '+' : ''}${dh.toFixed(1)}`}
                     </td>
                   </tr>
@@ -206,7 +221,7 @@ export function BodyTab() {
                   tickFormatter={(v: number) => v.toFixed(2)}
                   tickLine={false}
                 />
-                <Tooltip formatter={(v: number) => [`${v.toFixed(2)} ${unit}`]} />
+                <Tooltip formatter={(v) => [`${Number(v).toFixed(2)} ${unit}`]} />
                 <Legend wrapperStyle={{ color: 'var(--app-text-secondary)', fontSize: 12 }} />
                 <Line
                   activeDot={{ r: 5 }}

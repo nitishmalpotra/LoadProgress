@@ -1,14 +1,13 @@
 import type { IconType } from 'react-icons';
 import {
   GiBiceps,
-  GiBodyBalance,
   GiGymBag,
   GiLeg,
   GiMuscleFat,
   GiPull,
   GiPush,
   GiStomach,
-  GiWeightLiftingUp,
+  GiWeightLiftingUp
 } from 'react-icons/gi';
 import type { MuscleGroup } from '@/models';
 
@@ -23,7 +22,7 @@ const muscleIconMap: Record<MuscleGroup, IconType> = {
   Forearms: GiBiceps,
   Core: GiStomach,
   'Full Body': GiMuscleFat,
-  Glutes: GiLeg,
+  Glutes: GiLeg
 };
 
 type ExerciseIconProps = {

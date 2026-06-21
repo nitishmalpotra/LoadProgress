@@ -167,7 +167,10 @@ const isProfile = (v: unknown): v is Profile =>
   (v.unitSystem === 'metric' || v.unitSystem === 'imperial');
 
 const isTrainingRoutine = (v: unknown): v is TrainingRoutine =>
-  isRecord(v) && typeof v.id === 'string' && typeof v.type === 'string' && Array.isArray(v.exercises);
+  isRecord(v) &&
+  typeof v.id === 'string' &&
+  typeof v.type === 'string' &&
+  Array.isArray(v.exercises);
 
 const isBodyWeight = (v: unknown): v is BodyWeight =>
   isRecord(v) &&
@@ -292,12 +295,19 @@ export const parseBackupJson = (json: string): LoadProgressBackup => {
   }
 
   if (
-    (parsed.profile !== undefined && (!Array.isArray(parsed.profile) || !parsed.profile.every(isProfile))) ||
-    (parsed.trainingRoutine !== undefined && (!Array.isArray(parsed.trainingRoutine) || !parsed.trainingRoutine.every(isTrainingRoutine))) ||
-    (parsed.bodyWeights !== undefined && (!Array.isArray(parsed.bodyWeights) || !parsed.bodyWeights.every(isBodyWeight))) ||
-    (parsed.measurements !== undefined && (!Array.isArray(parsed.measurements) || !parsed.measurements.every(isMeasurement))) ||
-    (parsed.nutritionLog !== undefined && (!Array.isArray(parsed.nutritionLog) || !parsed.nutritionLog.every(isNutritionLog))) ||
-    (parsed.cycleState !== undefined && (!Array.isArray(parsed.cycleState) || !parsed.cycleState.every(isCycleState)))
+    (parsed.profile !== undefined &&
+      (!Array.isArray(parsed.profile) || !parsed.profile.every(isProfile))) ||
+    (parsed.trainingRoutine !== undefined &&
+      (!Array.isArray(parsed.trainingRoutine) ||
+        !parsed.trainingRoutine.every(isTrainingRoutine))) ||
+    (parsed.bodyWeights !== undefined &&
+      (!Array.isArray(parsed.bodyWeights) || !parsed.bodyWeights.every(isBodyWeight))) ||
+    (parsed.measurements !== undefined &&
+      (!Array.isArray(parsed.measurements) || !parsed.measurements.every(isMeasurement))) ||
+    (parsed.nutritionLog !== undefined &&
+      (!Array.isArray(parsed.nutritionLog) || !parsed.nutritionLog.every(isNutritionLog))) ||
+    (parsed.cycleState !== undefined &&
+      (!Array.isArray(parsed.cycleState) || !parsed.cycleState.every(isCycleState)))
   ) {
     throw new Error('Backup file contains unsupported records.');
   }
@@ -329,21 +339,24 @@ export const importBackupData = async (
 
   await database.transaction(
     'rw',
-    database.exercises,
-    database.workoutSets,
-    database.personalRecords,
-    database.profile,
-    database.trainingRoutine,
-    database.bodyWeights,
-    database.measurements,
-    database.nutritionLog,
-    database.cycleState,
+    [
+      database.exercises,
+      database.workoutSets,
+      database.personalRecords,
+      database.profile,
+      database.trainingRoutine,
+      database.bodyWeights,
+      database.measurements,
+      database.nutritionLog,
+      database.cycleState
+    ],
     async () => {
       await database.exercises.bulkPut(backup.exercises);
       await database.workoutSets.bulkPut(workoutSets);
       await database.personalRecords.bulkPut(personalRecords);
       if (backup.profile?.length) await database.profile.bulkPut(backup.profile);
-      if (backup.trainingRoutine?.length) await database.trainingRoutine.bulkPut(backup.trainingRoutine);
+      if (backup.trainingRoutine?.length)
+        await database.trainingRoutine.bulkPut(backup.trainingRoutine);
       if (backup.bodyWeights?.length) await database.bodyWeights.bulkPut(backup.bodyWeights);
       if (backup.measurements?.length) await database.measurements.bulkPut(backup.measurements);
       if (backup.nutritionLog?.length) await database.nutritionLog.bulkPut(backup.nutritionLog);

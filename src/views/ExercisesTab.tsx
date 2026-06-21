@@ -9,7 +9,16 @@ import styles from '@/views/styles/Exercises.module.css';
 
 const exerciseTypes: ExerciseType[] = ['Weight Training', 'Bodyweight'];
 
-const DISPLAY_GROUPS = ['Chest', 'Back', 'Legs', 'Shoulders', 'Arms', 'Core', 'Full Body', 'Glutes'] as const;
+const DISPLAY_GROUPS = [
+  'Chest',
+  'Back',
+  'Legs',
+  'Shoulders',
+  'Arms',
+  'Core',
+  'Full Body',
+  'Glutes'
+] as const;
 type DisplayGroup = (typeof DISPLAY_GROUPS)[number];
 
 const GROUP_MEMBERS: Record<DisplayGroup, readonly MuscleGroup[]> = {
@@ -20,7 +29,7 @@ const GROUP_MEMBERS: Record<DisplayGroup, readonly MuscleGroup[]> = {
   Arms: ['Arms', 'Forearms'],
   Core: ['Core'],
   'Full Body': ['Full Body'],
-  Glutes: ['Glutes'],
+  Glutes: ['Glutes']
 };
 const equipmentOptions: Equipment[] = [
   'Barbell',
@@ -41,7 +50,7 @@ const difficulties: Difficulty[] = ['Beginner', 'Intermediate', 'Advanced', 'Exp
 const emptyExercise = {
   name: '',
   type: 'Weight Training' as ExerciseType,
-  muscleGroup: 'Chest' as MuscleGroup,
+  muscleGroup: 'Chest' as DisplayGroup,
   equipment: 'Barbell' as Equipment,
   difficulty: 'Beginner' as Difficulty,
   description: '',
@@ -67,12 +76,10 @@ function matchesSearch(exercise: Exercise, query: string) {
 }
 
 function groupExercises(exercises: Exercise[]) {
-  return DISPLAY_GROUPS
-    .map((group) => ({
-      muscleGroup: group as MuscleGroup,
-      exercises: exercises.filter((ex) => GROUP_MEMBERS[group].includes(ex.muscleGroup))
-    }))
-    .filter((group) => group.exercises.length > 0);
+  return DISPLAY_GROUPS.map((group) => ({
+    muscleGroup: group as MuscleGroup,
+    exercises: exercises.filter((ex) => GROUP_MEMBERS[group].includes(ex.muscleGroup))
+  })).filter((group) => group.exercises.length > 0);
 }
 
 export function ExercisesTab() {
@@ -102,11 +109,14 @@ export function ExercisesTab() {
     setFadeRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 4);
   }, []);
 
-  useEffect(() => { updateFade(); }, [updateFade]);
+  useEffect(() => {
+    updateFade();
+  }, [updateFade]);
 
   const scrollMask = (() => {
-    if (fadeLeft && fadeRight) return 'linear-gradient(to right, transparent, black 12%, black 88%, transparent)';
-    if (fadeLeft)  return 'linear-gradient(to right, transparent, black 12%)';
+    if (fadeLeft && fadeRight)
+      return 'linear-gradient(to right, transparent, black 12%, black 88%, transparent)';
+    if (fadeLeft) return 'linear-gradient(to right, transparent, black 12%)';
     if (fadeRight) return 'linear-gradient(to right, black 88%, transparent)';
     return 'none';
   })();
@@ -224,7 +234,9 @@ export function ExercisesTab() {
         >
           <button
             aria-pressed={selectedMuscleGroup === 'All'}
-            className={selectedMuscleGroup === 'All' ? styles.muscleChipSelected : styles.muscleChip}
+            className={
+              selectedMuscleGroup === 'All' ? styles.muscleChipSelected : styles.muscleChip
+            }
             type="button"
             onClick={() => setSelectedMuscleGroup('All')}
           >
@@ -234,7 +246,9 @@ export function ExercisesTab() {
           {DISPLAY_GROUPS.map((group) => (
             <button
               aria-pressed={selectedMuscleGroup === group}
-              className={selectedMuscleGroup === group ? styles.muscleChipSelected : styles.muscleChip}
+              className={
+                selectedMuscleGroup === group ? styles.muscleChipSelected : styles.muscleChip
+              }
               key={group}
               type="button"
               onClick={() => setSelectedMuscleGroup(group)}
@@ -318,11 +332,11 @@ export function ExercisesTab() {
               onChange={(event) =>
                 setCustomExercise((exercise) => ({
                   ...exercise,
-                  muscleGroup: event.target.value as MuscleGroup
+                  muscleGroup: event.target.value as DisplayGroup
                 }))
               }
             >
-              {muscleGroups.map((group) => (
+              {DISPLAY_GROUPS.map((group) => (
                 <option key={group} value={group}>
                   {group}
                 </option>

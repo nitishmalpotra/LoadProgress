@@ -2,32 +2,30 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-0f766e?style=for-the-badge)](LICENSE)
 
-LoadProgress is a local-first React PWA for strength training. It runs entirely in the browser,
-stores workout data locally with IndexedDB, detects personal records automatically, and provides
-volume and progress analytics for strength training.
+LoadProgress is a local-first React PWA for strength training and body recomposition. It runs
+entirely in the browser, stores everything locally with IndexedDB, detects personal records
+automatically, and turns logged workouts into volume, progress, and body-composition analytics.
 
-The product direction is now a mobile-first app experience: desktop browsers should present the
-same phone-sized app shell centered on the page, with a light-first interface, bottom-tab
-navigation, muscle-first exercise browsing, and recoverable detail screens.
+The interface is a mobile-first app shell: desktop browsers render the same phone-sized app
+centered on the page, with bottom-tab navigation, a light-first design system, and muscle-first
+exercise browsing.
 
 ## Features
 
-- Mobile-first app shell: the primary interface is designed around a phone-sized viewport, even when
-  opened in a desktop browser.
-- Light-first design system: warm neutral backgrounds, white surfaces, charcoal text, restrained
-  borders, and a deep green primary action color replace the previous dark glassmorphism baseline.
-- Progressive overload engine: logs weight, reps, RPE, rest time, notes, and failure sets, then
-  detects new 1RM, daily volume, and weight-at-reps records with Brzycki estimates.
-- Local-first storage: Dexie persists exercises, workout sets, personal records, and backup data in
-  IndexedDB with no hosted database or account requirement.
-- Offline PWA: Vite PWA service worker caches app shell, scripts, styles, fonts, and images, then
-  prompts users when a fresh version is available.
-- Muscle-first exercise library: exercises are grouped and browsed by target muscle, with
-  muscle-specific iconography planned for the Library and detail views.
-- Recoverable navigation: secondary screens such as exercise detail should have visible back actions
-  and avoid blank-screen failure states.
-- Recharts analytics: muscle-group volume breakdowns and exercise-level trend charts for weight,
-  reps, and training history.
+- **Today** — plan-aware workout logging. Pick a date, add sets (weight, reps, RPE, notes, failure
+  marker), and quick-log the day's planned routine.
+- **Plan** — recomposition planning: calorie and macro targets from your profile, a weekly training
+  routine, daily nutrition logging, optional cycle tracking, and a guide.
+- **Progress** — exercise trend charts, muscle-group volume analytics, the personal-records board,
+  and body metrics (weight and measurements over time).
+- **Library** — muscle-first exercise catalog with search, custom exercises, and recoverable detail
+  screens (per-exercise route with a visible back path).
+- **Profile** — body stats, goal, activity level, diet style, units, plus one-tap JSON backup and
+  restore.
+- **Progressive overload engine** — detects new 1RM, daily volume, weight-at-reps, and total-reps
+  records using Brzycki estimates.
+- **Offline PWA** — the service worker caches the app shell, scripts, styles, and fonts, then
+  prompts when a fresh version is available.
 
 ## Developer Setup
 
@@ -53,41 +51,45 @@ npm run build
 
 ## Core Architecture
 
-`src/db/database.ts` defines the Dexie database and seeds the 28 default exercises once on first
-open.
+`src/db/database.ts` defines the Dexie database (schema v2) and seeds the 51 default exercises once
+on first open.
 
-| Table             | Purpose                                                                                   | Indexed Fields             |
-| ----------------- | ----------------------------------------------------------------------------------------- | -------------------------- |
-| `exercises`       | Exercise catalog with muscle group, type, equipment, difficulty, icon, and form cues.     | `id`                       |
-| `workoutSets`     | Logged sets with exercise, weight, reps, date, RPE, rest time, notes, and failure marker. | `id`, `exerciseId`, `date` |
-| `personalRecords` | Generated records for 1RM, volume, and weight-at-reps achievements.                       | `id`, `exerciseId`, `type` |
+| Table             | Purpose                                                            | Indexed Fields             |
+| ----------------- | ------------------------------------------------------------------ | -------------------------- |
+| `exercises`       | Exercise catalog: muscle group, type, equipment, difficulty, cues. | `id`                       |
+| `workoutSets`     | Logged sets: weight, reps, date, RPE, notes, failure marker.       | `id`, `exerciseId`, `date` |
+| `personalRecords` | Generated 1RM, volume, weight-at-reps, and total-reps records.     | `id`, `exerciseId`, `type` |
+| `profile`         | User profile: stats, goal, activity, diet style, units.            | `id`                       |
+| `trainingRoutine` | Weekly training routine and its exercises.                         | `id`                       |
+| `bodyWeights`     | Body-weight log over time.                                         | `id`, `date`               |
+| `measurements`    | Body measurements (waist, hips, …) over time.                      | `id`, `date`               |
+| `nutritionLog`    | Daily protein, carbs, and fat entries.                             | `id`, `date`               |
+| `cycleState`      | Optional menstrual-cycle phase tracking.                           | `id`                       |
 
-`src/store/useWorkoutStore.ts` is the Zustand state layer. It loads Dexie records, maintains O(1)
-lookup maps for exercises, sets, and records, applies validation rules, and runs PR checks when new
-sets are added.
+State lives in Zustand stores under `src/store/`:
 
-`src/views/` contains the routed React interface. Recharts powers the analytics and progress views,
-while CSS modules consume app tokens from `src/views/styles/Theme.module.css` and global foundations
-from `src/index.css`.
+- `useWorkoutStore` — exercises, sets, and records with O(1) lookup maps, validation, and the
+  progressive-overload engine.
+- `useProfileStore`, `useRoutineStore`, `useBodyWeightStore`, `useMeasurementStore`,
+  `useNutritionStore`, `useCycleStore` — the recomposition-tracking slices.
 
-Current routes are `/`, `/records`, `/analytics`, `/exercises`, `/progress`, and `/styleguide`.
-Exercise detail currently opens from Library state rather than a route; the redesign should make
-that flow recoverable with an explicit back path.
+`src/db/backup.ts` exports and validates the full JSON backup. `src/views/` holds the routed UI;
+Recharts powers the analytics views, and CSS modules consume tokens from
+`src/views/styles/Theme.module.css` and global foundations from `src/index.css`.
 
-## Redesign Direction
+Routes (bottom tabs: **Today · Plan · Progress · Library · Profile**):
 
-- Treat desktop as a framed mobile app, not a separate sidebar-first product.
-- Keep bottom navigation as the primary app model.
-- Make `Workout`, `Library`, `Progress`, `Volume`, and `Records` focused single-purpose screens.
-- Make Library muscle-first with compact exercise rows/cards and clear detail access.
-- Replace generic exercise symbols with consistent muscle-specific icons.
-- Design loading, empty, and error states as first-class screens.
-- Keep dark mode optional and token-driven later; it is no longer the default design baseline.
+- `/` — Today (workout logging)
+- `/plan` — calories, training, nutrition, cycle, guide
+- `/progress` — trends, volume, records, body
+- `/exercises` and `/exercises/:exerciseId` — Library and exercise detail
+- `/profile` — profile and backup/restore
+- `/styleguide` — design-system reference
 
 ## Progressive Overload Rules
 
-- Reps must be 1-100, weight must be greater than 0 and at most 1000, and future-dated sets are
-  rejected.
+- Reps must be 1-100, weight (when given) must be greater than 0 and at most 1000, and future-dated
+  sets are rejected.
 - Estimated 1RM uses the Brzycki formula: `weight * (36 / (37 - reps))`.
 - Daily volume is `sum(weight * reps)` for the exercise on the selected date.
 - Weight-at-reps records are tracked separately per exercise and rep count.
@@ -106,14 +108,15 @@ that flow recoverable with an explicit back path.
 
 ```text
 src/
-  db/                 Dexie schema, seeding, backup helpers, and database tests
-  models/             Exercise, workout set, and personal record TypeScript types
-  store/              Zustand workout store and progressive overload tests
-  views/              Routed UI views, components, hooks, analytics helpers, and CSS modules
-docs/                 Implementation plan, prompts, design notes, and product references
-ios-archive/          Archived source from the original native iOS implementation
+  db/       Dexie schema, seeding, backup helpers, and tests
+  models/   TypeScript types for exercises, sets, records, and profile data
+  store/    Zustand stores (workout engine plus recomposition slices)
+  utils/    Macro/calorie targets and plan-completion helpers
+  views/    Routed UI views, components, hooks, analytics helpers, and CSS modules
+docs/       PRD, implementation plan, issues, deployment, and design notes
 ```
 
 ## License
 
 MIT. See [LICENSE](LICENSE).
+</content>

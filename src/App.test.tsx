@@ -31,13 +31,13 @@ describe('environment sanity', () => {
     expect(screen.getByRole('link', { name: 'Today' })).toHaveAttribute('href', '/');
   });
 
-  it('renders the style guide route', () => {
+  it('renders the style guide route', async () => {
     render(
       <MemoryRouter initialEntries={['/styleguide']}>
         <App />
       </MemoryRouter>
     );
 
-    expect(screen.getByRole('heading', { name: 'LoadProgress Theme' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'LoadProgress Theme' })).toBeInTheDocument();
   });
 });

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { Suspense, useEffect, useRef } from 'react';
 import { BookOpen, CalendarDays, Download, Dumbbell, TrendingUp, Upload, User } from 'lucide-react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { downloadBackupFile, importBackupFile } from '@/db/backup';
@@ -121,40 +121,13 @@ export function Layout() {
       <div className={styles.layoutFrame}>
         <main className={styles.mainContent}>
           <BackupControls />
-          <Outlet />
+          <Suspense fallback={null}>
+            <Outlet />
+          </Suspense>
         </main>
         <TabBar />
       </div>
       <ServiceWorkerUpdateToast open={needsRefresh} onUpdate={update} />
     </div>
-  );
-}
-
-type DashboardViewProps = {
-  eyebrow: string;
-  title: string;
-  summary: string;
-  panels: Array<{ title: string; body: string }>;
-};
-
-export function DashboardView({ eyebrow, title, summary, panels }: DashboardViewProps) {
-  return (
-    <section className={styles.contentGrid} aria-labelledby="page-title">
-      <header className={styles.dashboardHeader}>
-        <p className={styles.eyebrow}>{eyebrow}</p>
-        <h1 className={styles.title} id="page-title">
-          {title}
-        </h1>
-        <p className={styles.summary}>{summary}</p>
-      </header>
-      <div className={styles.panelGrid}>
-        {panels.map((panel) => (
-          <article className={styles.panel} key={panel.title}>
-            <h2>{panel.title}</h2>
-            <p>{panel.body}</p>
-          </article>
-        ))}
-      </div>
-    </section>
   );
 }

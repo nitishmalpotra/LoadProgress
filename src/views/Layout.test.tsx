@@ -67,20 +67,20 @@ describe('Layout', () => {
     expect(screen.getByRole('link', { name: 'Profile' })).toBeInTheDocument();
   });
 
-  it('updates browser history when navigation elements are clicked', () => {
+  it('updates browser history when navigation elements are clicked', async () => {
     setViewportWidth(375);
     renderRoutedApp();
 
     fireEvent.click(screen.getByRole('link', { name: 'Profile' }));
 
     expect(window.location.pathname).toBe('/profile');
-    expect(screen.getByRole('heading', { name: 'Profile' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'Profile' })).toBeInTheDocument();
   });
 
-  it('shows Progress sub-tabs (Trends, Volume, PRs) when navigating to /progress', () => {
+  it('shows Progress sub-tabs (Trends, Volume, PRs) when navigating to /progress', async () => {
     renderRoutedApp('/progress/trends');
 
-    const subNav = screen.getByLabelText('Progress sub-tabs');
+    const subNav = await screen.findByLabelText('Progress sub-tabs');
     expect(subNav).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Trends' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Volume' })).toBeInTheDocument();

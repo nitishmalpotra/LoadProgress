@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 import { useProfileStore } from '@/store/useProfileStore';
 import { shouldShowCycleTab } from '@/store/useCycleStore';
@@ -31,7 +32,9 @@ export function PlanHub() {
           </NavLink>
         ))}
       </nav>
-      <Outlet />
+      <Suspense fallback={null}>
+        <Outlet />
+      </Suspense>
     </>
   );
 }

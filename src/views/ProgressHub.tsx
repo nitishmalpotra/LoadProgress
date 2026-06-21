@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 import styles from '@/views/styles/Layout.module.css';
 
@@ -24,7 +25,9 @@ export function ProgressHub() {
           </NavLink>
         ))}
       </nav>
-      <Outlet />
+      <Suspense fallback={null}>
+        <Outlet />
+      </Suspense>
     </>
   );
 }

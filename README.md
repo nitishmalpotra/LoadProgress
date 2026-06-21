@@ -75,7 +75,9 @@ State lives in Zustand stores under `src/store/`:
 
 `src/db/backup.ts` exports and validates the full JSON backup. `src/views/` holds the routed UI;
 Recharts powers the analytics views, and CSS modules consume tokens from
-`src/views/styles/Theme.module.css` and global foundations from `src/index.css`.
+`src/views/styles/Theme.module.css` and global foundations from `src/index.css`. Routes are
+lazy-loaded, so Recharts and the secondary screens stay out of the initial bundle and the Today
+view loads fast.
 
 Routes (bottom tabs: **Today · Plan · Progress · Library · Profile**):
 

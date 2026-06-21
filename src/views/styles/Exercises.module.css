@@ -243,9 +243,11 @@
 }
 
 .errorText {
-  color: #b42318;
-  font-size: 0.82rem;
-  font-weight: 750;
+  margin-top: 6px;
+  color: var(--system-error);
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1.4;
 }
 
 .exerciseList {

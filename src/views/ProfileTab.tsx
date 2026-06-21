@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Check } from 'lucide-react';
+import { AlertCircle, Check } from 'lucide-react';
 import type { ActivityLevel, DietStyle, Goal, Profile, Sex } from '@/models';
 import { useProfileStore } from '@/store/useProfileStore';
 import styles from '@/views/styles/Profile.module.css';
@@ -115,6 +115,60 @@ const dietOptions: { value: DietStyle; label: string }[] = [
   { value: 'paleo', label: 'Paleo' }
 ];
 
+type NumericFieldKey =
+  | 'weight'
+  | 'height'
+  | 'age'
+  | 'trainingDaysPerWeek'
+  | 'trainingMinutesPerSession';
+
+// Required numeric fields and their bounds. `id` matches the input's DOM id so
+// we can focus the first invalid field on submit.
+const NUMERIC_FIELDS: {
+  key: NumericFieldKey;
+  id: string;
+  label: string;
+  min: number;
+  max?: number;
+}[] = [
+  { key: 'weight', id: 'weight', label: 'weight', min: 1 },
+  { key: 'height', id: 'height', label: 'height', min: 1 },
+  { key: 'age', id: 'age', label: 'age', min: 10, max: 100 },
+  { key: 'trainingDaysPerWeek', id: 'trainingDays', label: 'training days', min: 1, max: 7 },
+  { key: 'trainingMinutesPerSession', id: 'trainingMinutes', label: 'minutes per session', min: 10 }
+];
+
+type FormErrors = Partial<Record<keyof FormState, string>>;
+
+export function validate(form: FormState): FormErrors {
+  const errors: FormErrors = {};
+  for (const { key, label, min, max } of NUMERIC_FIELDS) {
+    const raw = form[key].trim();
+    const value = Number(raw);
+    const sentenceLabel = `${label[0].toUpperCase()}${label.slice(1)}`;
+    if (!raw) {
+      errors[key] = `Please enter your ${label}.`;
+    } else if (!Number.isFinite(value)) {
+      errors[key] = `Enter a valid ${label}.`;
+    } else if (value < min || (max !== undefined && value > max)) {
+      errors[key] =
+        max !== undefined
+          ? `${sentenceLabel} must be between ${min} and ${max}.`
+          : `${sentenceLabel} must be at least ${min}.`;
+    }
+  }
+  return errors;
+}
+
+function FieldError({ id, children }: { id: string; children: React.ReactNode }) {
+  return (
+    <p className={styles.fieldError} id={id} role="alert">
+      <AlertCircle aria-hidden size={14} />
+      {children}
+    </p>
+  );
+}
+
 export function ProfileTab() {
   const profile = useProfileStore((s) => s.profile);
   const isLoading = useProfileStore((s) => s.isLoading);
@@ -123,22 +177,38 @@ export function ProfileTab() {
   const [form, setForm] = useState<FormState>(defaults);
   const [isSaving, setIsSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [formError, setFormError] = useState('');
 
   useEffect(() => {
     if (profile) setForm(profileToForm(profile));
   }, [profile]);
 
-  const set = <K extends keyof FormState>(key: K, value: FormState[K]) =>
+  const set = <K extends keyof FormState>(key: K, value: FormState[K]) => {
+    setErrors((prev) => (prev[key] ? { ...prev, [key]: undefined } : prev));
     setForm((prev) => ({ ...prev, [key]: value }));
+  };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    setFormError('');
+
+    const nextErrors = validate(form);
+    setErrors(nextErrors);
+    const firstInvalid = NUMERIC_FIELDS.find((field) => nextErrors[field.key]);
+    if (firstInvalid) {
+      document.getElementById(firstInvalid.id)?.focus();
+      return;
+    }
+
     setIsSaving(true);
     setSaved(false);
     try {
       await saveProfile(formToProfile(form));
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
+    } catch {
+      setFormError('Could not save your profile. Please try again.');
     } finally {
       setIsSaving(false);
     }
@@ -167,7 +237,7 @@ export function ProfileTab() {
         <p>{isEditing ? 'Edit your profile below.' : 'Fill in your stats to unlock your plan.'}</p>
       </header>
 
-      <form className={styles.form} onSubmit={(e) => void handleSubmit(e)}>
+      <form className={styles.form} noValidate onSubmit={(e) => void handleSubmit(e)}>
         {/* Units */}
         <div className={styles.card}>
           <div className={styles.fieldGroup}>
@@ -199,6 +269,8 @@ export function ProfileTab() {
             </label>
             <div className={styles.inputWithToggle}>
               <input
+                aria-describedby={errors.weight ? 'weight-error' : undefined}
+                aria-invalid={Boolean(errors.weight)}
                 className={styles.input}
                 id="weight"
                 inputMode="decimal"
@@ -217,6 +289,7 @@ export function ProfileTab() {
                 {weightUnit}
               </button>
             </div>
+            {errors.weight && <FieldError id="weight-error">{errors.weight}</FieldError>}
           </div>
 
           <div className={styles.fieldGroup}>
@@ -225,6 +298,8 @@ export function ProfileTab() {
             </label>
             <div className={styles.inputWithToggle}>
               <input
+                aria-describedby={errors.height ? 'height-error' : undefined}
+                aria-invalid={Boolean(errors.height)}
                 className={styles.input}
                 id="height"
                 inputMode="decimal"
@@ -243,6 +318,7 @@ export function ProfileTab() {
                 {heightUnit}
               </button>
             </div>
+            {errors.height && <FieldError id="height-error">{errors.height}</FieldError>}
           </div>
 
           <div className={styles.fieldGroup}>
@@ -250,6 +326,8 @@ export function ProfileTab() {
               Age
             </label>
             <input
+              aria-describedby={errors.age ? 'age-error' : undefined}
+              aria-invalid={Boolean(errors.age)}
               className={styles.input}
               id="age"
               inputMode="numeric"
@@ -261,6 +339,7 @@ export function ProfileTab() {
               value={form.age}
               onChange={(e) => set('age', e.target.value)}
             />
+            {errors.age && <FieldError id="age-error">{errors.age}</FieldError>}
           </div>
         </div>
 
@@ -340,6 +419,8 @@ export function ProfileTab() {
               Training days per week
             </label>
             <input
+              aria-describedby={errors.trainingDaysPerWeek ? 'trainingDays-error' : undefined}
+              aria-invalid={Boolean(errors.trainingDaysPerWeek)}
               className={styles.input}
               id="trainingDays"
               inputMode="numeric"
@@ -351,6 +432,9 @@ export function ProfileTab() {
               value={form.trainingDaysPerWeek}
               onChange={(e) => set('trainingDaysPerWeek', e.target.value)}
             />
+            {errors.trainingDaysPerWeek && (
+              <FieldError id="trainingDays-error">{errors.trainingDaysPerWeek}</FieldError>
+            )}
           </div>
 
           <div className={styles.fieldGroup}>
@@ -358,6 +442,10 @@ export function ProfileTab() {
               Minutes per session
             </label>
             <input
+              aria-describedby={
+                errors.trainingMinutesPerSession ? 'trainingMinutes-error' : undefined
+              }
+              aria-invalid={Boolean(errors.trainingMinutesPerSession)}
               className={styles.input}
               id="trainingMinutes"
               inputMode="numeric"
@@ -368,6 +456,9 @@ export function ProfileTab() {
               value={form.trainingMinutesPerSession}
               onChange={(e) => set('trainingMinutesPerSession', e.target.value)}
             />
+            {errors.trainingMinutesPerSession && (
+              <FieldError id="trainingMinutes-error">{errors.trainingMinutesPerSession}</FieldError>
+            )}
           </div>
         </div>
 
@@ -405,6 +496,13 @@ export function ProfileTab() {
             />
           </div>
         </div>
+
+        {formError && (
+          <p className={styles.formError} role="alert">
+            <AlertCircle aria-hidden size={16} />
+            {formError}
+          </p>
+        )}
 
         <button className={styles.saveButton} disabled={isSaving} type="submit">
           <Check size={17} />

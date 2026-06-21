@@ -1,7 +1,32 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import App from '@/App';
+import { useProfileStore } from '@/store/useProfileStore';
+
+// Seed a profile so Layout's "no profile -> redirect to /profile" effect does
+// not race with route assertions. Without this, the async profile load can
+// redirect away from the route under test.
+beforeEach(() => {
+  useProfileStore.setState({
+    profile: {
+      id: 'profile',
+      unitSystem: 'metric',
+      weight: 70,
+      height: 175,
+      age: 30,
+      sex: 'male',
+      goal: 'recomposition',
+      activityLevel: 'moderate',
+      dietStyle: 'standard',
+      trainingDaysPerWeek: 4,
+      trainingMinutesPerSession: 60,
+      cycleTrackingOptIn: false
+    },
+    isLoading: false,
+    loadProfile: async () => {}
+  });
+});
 
 function setViewportWidth(width: number) {
   Object.defineProperty(window, 'innerWidth', {

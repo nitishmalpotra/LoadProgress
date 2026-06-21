@@ -84,12 +84,8 @@ function toggleUnit(form: FormState): FormState {
   return {
     ...form,
     unitSystem: toImperial ? 'imperial' : 'metric',
-    weight: rawWeight
-      ? String(toImperial ? kgToLb(rawWeight) : lbToKg(rawWeight))
-      : form.weight,
-    height: rawHeight
-      ? String(toImperial ? cmToIn(rawHeight) : inToCm(rawHeight))
-      : form.height
+    weight: rawWeight ? String(toImperial ? kgToLb(rawWeight) : lbToKg(rawWeight)) : form.weight,
+    height: rawHeight ? String(toImperial ? cmToIn(rawHeight) : inToCm(rawHeight)) : form.height
   };
 }
 
@@ -174,242 +170,240 @@ export function ProfileTab() {
       <form className={styles.form} onSubmit={(e) => void handleSubmit(e)}>
         {/* Units */}
         <div className={styles.card}>
-        <div className={styles.fieldGroup}>
-          <span className={styles.label}>Units</span>
-          <div className={styles.segmentedRow}>
-            <button
-              className={form.unitSystem === 'metric' ? styles.segmentSelected : styles.segment}
-              type="button"
-              onClick={() => setForm(toggleUnit({ ...form, unitSystem: 'imperial' }))}
-            >
-              Metric (kg / cm)
-            </button>
-            <button
-              className={form.unitSystem === 'imperial' ? styles.segmentSelected : styles.segment}
-              type="button"
-              onClick={() => setForm(toggleUnit({ ...form, unitSystem: 'metric' }))}
-            >
-              Imperial (lb / in)
-            </button>
+          <div className={styles.fieldGroup}>
+            <span className={styles.label}>Units</span>
+            <div className={styles.segmentedRow}>
+              <button
+                className={form.unitSystem === 'metric' ? styles.segmentSelected : styles.segment}
+                type="button"
+                onClick={() => setForm(toggleUnit({ ...form, unitSystem: 'imperial' }))}
+              >
+                Metric (kg / cm)
+              </button>
+              <button
+                className={form.unitSystem === 'imperial' ? styles.segmentSelected : styles.segment}
+                type="button"
+                onClick={() => setForm(toggleUnit({ ...form, unitSystem: 'metric' }))}
+              >
+                Imperial (lb / in)
+              </button>
+            </div>
           </div>
-        </div>
         </div>
 
         {/* Body */}
         <div className={styles.card}>
-        <div className={styles.fieldGroup}>
-          <label className={styles.label} htmlFor="weight">
-            Weight ({weightUnit})
-          </label>
-          <div className={styles.inputWithToggle}>
+          <div className={styles.fieldGroup}>
+            <label className={styles.label} htmlFor="weight">
+              Weight ({weightUnit})
+            </label>
+            <div className={styles.inputWithToggle}>
+              <input
+                className={styles.input}
+                id="weight"
+                inputMode="decimal"
+                min="1"
+                placeholder={weightUnit === 'kg' ? '70' : '154'}
+                required
+                type="number"
+                value={form.weight}
+                onChange={(e) => set('weight', e.target.value)}
+              />
+              <button
+                className={styles.unitToggle}
+                type="button"
+                onClick={() => setForm(toggleUnit(form))}
+              >
+                {weightUnit}
+              </button>
+            </div>
+          </div>
+
+          <div className={styles.fieldGroup}>
+            <label className={styles.label} htmlFor="height">
+              Height ({heightUnit})
+            </label>
+            <div className={styles.inputWithToggle}>
+              <input
+                className={styles.input}
+                id="height"
+                inputMode="decimal"
+                min="1"
+                placeholder={heightUnit === 'cm' ? '175' : '69'}
+                required
+                type="number"
+                value={form.height}
+                onChange={(e) => set('height', e.target.value)}
+              />
+              <button
+                className={styles.unitToggle}
+                type="button"
+                onClick={() => setForm(toggleUnit(form))}
+              >
+                {heightUnit}
+              </button>
+            </div>
+          </div>
+
+          <div className={styles.fieldGroup}>
+            <label className={styles.label} htmlFor="age">
+              Age
+            </label>
             <input
               className={styles.input}
-              id="weight"
-              inputMode="decimal"
-              min="1"
-              placeholder={weightUnit === 'kg' ? '70' : '154'}
+              id="age"
+              inputMode="numeric"
+              min="10"
+              max="100"
+              placeholder="30"
               required
               type="number"
-              value={form.weight}
-              onChange={(e) => set('weight', e.target.value)}
+              value={form.age}
+              onChange={(e) => set('age', e.target.value)}
             />
-            <button
-              className={styles.unitToggle}
-              type="button"
-              onClick={() => setForm(toggleUnit(form))}
-            >
-              {weightUnit}
-            </button>
           </div>
-        </div>
-
-        <div className={styles.fieldGroup}>
-          <label className={styles.label} htmlFor="height">
-            Height ({heightUnit})
-          </label>
-          <div className={styles.inputWithToggle}>
-            <input
-              className={styles.input}
-              id="height"
-              inputMode="decimal"
-              min="1"
-              placeholder={heightUnit === 'cm' ? '175' : '69'}
-              required
-              type="number"
-              value={form.height}
-              onChange={(e) => set('height', e.target.value)}
-            />
-            <button
-              className={styles.unitToggle}
-              type="button"
-              onClick={() => setForm(toggleUnit(form))}
-            >
-              {heightUnit}
-            </button>
-          </div>
-        </div>
-
-        <div className={styles.fieldGroup}>
-          <label className={styles.label} htmlFor="age">
-            Age
-          </label>
-          <input
-            className={styles.input}
-            id="age"
-            inputMode="numeric"
-            min="10"
-            max="100"
-            placeholder="30"
-            required
-            type="number"
-            value={form.age}
-            onChange={(e) => set('age', e.target.value)}
-          />
-        </div>
         </div>
 
         {/* Sex / Goal / Activity */}
         <div className={styles.card}>
-        {/* Sex */}
-        <div className={styles.fieldGroup}>
-          <span className={styles.label}>Sex</span>
-          <div className={styles.segmentedRow}>
-            {sexOptions.map(({ value, label }) => (
-              <button
-                className={form.sex === value ? styles.segmentSelected : styles.segment}
-                key={value}
-                type="button"
-                onClick={() => set('sex', value)}
-              >
-                {label}
-              </button>
-            ))}
+          {/* Sex */}
+          <div className={styles.fieldGroup}>
+            <span className={styles.label}>Sex</span>
+            <div className={styles.segmentedRow}>
+              {sexOptions.map(({ value, label }) => (
+                <button
+                  className={form.sex === value ? styles.segmentSelected : styles.segment}
+                  key={value}
+                  type="button"
+                  onClick={() => set('sex', value)}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* Cycle tracking — only when female */}
-        {form.sex === 'female' && (
-          <label className={styles.checkboxRow}>
-            <input
-              checked={form.cycleTrackingOptIn}
-              type="checkbox"
-              onChange={(e) => set('cycleTrackingOptIn', e.target.checked)}
-            />
-            Enable cycle tracking
-          </label>
-        )}
-
+          {/* Cycle tracking — only when female */}
+          {form.sex === 'female' && (
+            <label className={styles.checkboxRow}>
+              <input
+                checked={form.cycleTrackingOptIn}
+                type="checkbox"
+                onChange={(e) => set('cycleTrackingOptIn', e.target.checked)}
+              />
+              Enable cycle tracking
+            </label>
+          )}
         </div>
 
         {/* Goal / Activity */}
         <div className={styles.card}>
-        {/* Goal */}
-        <div className={styles.fieldGroup}>
-          <span className={styles.label}>Goal</span>
-          <div className={styles.segmentedRow}>
-            {goalOptions.map(({ value, label }) => (
-              <button
-                className={form.goal === value ? styles.segmentSelected : styles.segment}
-                key={value}
-                type="button"
-                onClick={() => set('goal', value)}
-              >
-                {label}
-              </button>
-            ))}
+          {/* Goal */}
+          <div className={styles.fieldGroup}>
+            <span className={styles.label}>Goal</span>
+            <div className={styles.segmentedRow}>
+              {goalOptions.map(({ value, label }) => (
+                <button
+                  className={form.goal === value ? styles.segmentSelected : styles.segment}
+                  key={value}
+                  type="button"
+                  onClick={() => set('goal', value)}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* Activity level */}
-        <div className={styles.fieldGroup}>
-          <span className={styles.label}>Activity level</span>
-          <div className={styles.segmentedRow}>
-            {activityOptions.map(({ value, label }) => (
-              <button
-                className={form.activityLevel === value ? styles.segmentSelected : styles.segment}
-                key={value}
-                type="button"
-                onClick={() => set('activityLevel', value)}
-              >
-                {label}
-              </button>
-            ))}
+          {/* Activity level */}
+          <div className={styles.fieldGroup}>
+            <span className={styles.label}>Activity level</span>
+            <div className={styles.segmentedRow}>
+              {activityOptions.map(({ value, label }) => (
+                <button
+                  className={form.activityLevel === value ? styles.segmentSelected : styles.segment}
+                  key={value}
+                  type="button"
+                  onClick={() => set('activityLevel', value)}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
         </div>
 
         {/* Training */}
         <div className={styles.card}>
-        <div className={styles.fieldGroup}>
-          <label className={styles.label} htmlFor="trainingDays">
-            Training days per week
-          </label>
-          <input
-            className={styles.input}
-            id="trainingDays"
-            inputMode="numeric"
-            max="7"
-            min="1"
-            placeholder="4"
-            required
-            type="number"
-            value={form.trainingDaysPerWeek}
-            onChange={(e) => set('trainingDaysPerWeek', e.target.value)}
-          />
-        </div>
+          <div className={styles.fieldGroup}>
+            <label className={styles.label} htmlFor="trainingDays">
+              Training days per week
+            </label>
+            <input
+              className={styles.input}
+              id="trainingDays"
+              inputMode="numeric"
+              max="7"
+              min="1"
+              placeholder="4"
+              required
+              type="number"
+              value={form.trainingDaysPerWeek}
+              onChange={(e) => set('trainingDaysPerWeek', e.target.value)}
+            />
+          </div>
 
-        <div className={styles.fieldGroup}>
-          <label className={styles.label} htmlFor="trainingMinutes">
-            Minutes per session
-          </label>
-          <input
-            className={styles.input}
-            id="trainingMinutes"
-            inputMode="numeric"
-            min="10"
-            placeholder="60"
-            required
-            type="number"
-            value={form.trainingMinutesPerSession}
-            onChange={(e) => set('trainingMinutesPerSession', e.target.value)}
-          />
-        </div>
+          <div className={styles.fieldGroup}>
+            <label className={styles.label} htmlFor="trainingMinutes">
+              Minutes per session
+            </label>
+            <input
+              className={styles.input}
+              id="trainingMinutes"
+              inputMode="numeric"
+              min="10"
+              placeholder="60"
+              required
+              type="number"
+              value={form.trainingMinutesPerSession}
+              onChange={(e) => set('trainingMinutesPerSession', e.target.value)}
+            />
+          </div>
         </div>
 
         {/* Diet & location */}
         <div className={styles.card}>
-        <div className={styles.fieldGroup}>
-          <label className={styles.label} htmlFor="diet">
-            Diet style
-          </label>
-          <select
-            className={styles.select}
-            id="diet"
-            value={form.dietStyle}
-            onChange={(e) => set('dietStyle', e.target.value as DietStyle)}
-          >
-            {dietOptions.map(({ value, label }) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </select>
-        </div>
+          <div className={styles.fieldGroup}>
+            <label className={styles.label} htmlFor="diet">
+              Diet style
+            </label>
+            <select
+              className={styles.select}
+              id="diet"
+              value={form.dietStyle}
+              onChange={(e) => set('dietStyle', e.target.value as DietStyle)}
+            >
+              {dietOptions.map(({ value, label }) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        <div className={styles.fieldGroup}>
-          <label className={styles.label} htmlFor="location">
-            Location{' '}
-            <span className={styles.sublabel}>(optional)</span>
-          </label>
-          <input
-            className={styles.input}
-            id="location"
-            placeholder="City or region"
-            type="text"
-            value={form.location}
-            onChange={(e) => set('location', e.target.value)}
-          />
-        </div>
+          <div className={styles.fieldGroup}>
+            <label className={styles.label} htmlFor="location">
+              Location <span className={styles.sublabel}>(optional)</span>
+            </label>
+            <input
+              className={styles.input}
+              id="location"
+              placeholder="City or region"
+              type="text"
+              value={form.location}
+              onChange={(e) => set('location', e.target.value)}
+            />
+          </div>
         </div>
 
         <button className={styles.saveButton} disabled={isSaving} type="submit">

@@ -13,13 +13,13 @@ const ACTIVITY: Record<ActivityLevel, number> = {
   sedentary: 1.2,
   light: 1.375,
   moderate: 1.55,
-  very_active: 1.725,
+  very_active: 1.725
 };
 
 const GOAL_DELTA: Record<Goal, number> = {
   lose: -500,
   recomposition: -250,
-  gain: 200,
+  gain: 200
 };
 
 function mifflin(sex: Sex, weight: number, height: number, age: number): number {

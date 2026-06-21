@@ -37,11 +37,13 @@ export const createBodyWeightStore = (database: LoadProgressDatabase = db) =>
 
     logWeight: async (date, weight) => {
       const existing = await database.bodyWeights.where('date').equals(date).first();
-      const entry: BodyWeight = existing ? { ...existing, weight } : { id: createUuid(), date, weight };
+      const entry: BodyWeight = existing
+        ? { ...existing, weight }
+        : { id: createUuid(), date, weight };
       await database.bodyWeights.put(entry);
       const rows = await database.bodyWeights.orderBy('date').toArray();
       set({ weights: rows });
-    },
+    }
   }));
 
 export const useBodyWeightStore = createBodyWeightStore();

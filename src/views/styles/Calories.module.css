@@ -98,9 +98,15 @@
   transition: width 400ms ease;
 }
 
-.stackProtein { background: var(--app-teal); }
-.stackCarbs   { background: #f59e0b; }
-.stackFat     { background: #8b5cf6; }
+.stackProtein {
+  background: var(--app-teal);
+}
+.stackCarbs {
+  background: #f59e0b;
+}
+.stackFat {
+  background: #8b5cf6;
+}
 
 .macroLegend {
   display: grid;
@@ -120,9 +126,15 @@
   border-radius: 50%;
 }
 
-.dotProtein { background: var(--app-teal); }
-.dotCarbs   { background: #f59e0b; }
-.dotFat     { background: #8b5cf6; }
+.dotProtein {
+  background: var(--app-teal);
+}
+.dotCarbs {
+  background: #f59e0b;
+}
+.dotFat {
+  background: #8b5cf6;
+}
 
 .macroName {
   flex: 1;

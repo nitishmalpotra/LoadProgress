@@ -16,7 +16,7 @@ describe('trailingAverage', () => {
     const entries = [
       { id: '1', date: '2025-01-01', weight: 80 },
       { id: '2', date: '2025-01-07', weight: 82 }, // day 7 — both in window
-      { id: '3', date: '2025-01-08', weight: 84 }, // day 8 — only 2 & 3 in window (day 1 is outside)
+      { id: '3', date: '2025-01-08', weight: 84 } // day 8 — only 2 & 3 in window (day 1 is outside)
     ];
     const avgs = trailingAverage(entries);
     expect(avgs[0]).toBeCloseTo(80);
@@ -27,7 +27,7 @@ describe('trailingAverage', () => {
   it('tolerates gaps (skipped days do not count as zeros)', () => {
     const entries = [
       { id: '1', date: '2025-03-01', weight: 75 },
-      { id: '2', date: '2025-03-15', weight: 77 }, // 14 days later — only entry 2 in its window
+      { id: '2', date: '2025-03-15', weight: 77 } // 14 days later — only entry 2 in its window
     ];
     const avgs = trailingAverage(entries);
     expect(avgs[1]).toBeCloseTo(77);
@@ -38,7 +38,7 @@ describe('trailingAverage', () => {
       { id: '1', date: '2025-05-01', weight: 70 },
       { id: '2', date: '2025-05-03', weight: 72 },
       { id: '3', date: '2025-05-05', weight: 74 },
-      { id: '4', date: '2025-05-07', weight: 76 }, // window [May 1–7]: all 4 entries
+      { id: '4', date: '2025-05-07', weight: 76 } // window [May 1–7]: all 4 entries
     ];
     const avgs = trailingAverage(entries);
     expect(avgs[3]).toBeCloseTo(73); // (70+72+74+76)/4

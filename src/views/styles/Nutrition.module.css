@@ -148,10 +148,18 @@
   transition: width 300ms ease;
 }
 
-.barProtein { background: var(--app-teal); }
-.barCarbs   { background: #f59e0b; }
-.barFat     { background: #8b5cf6; }
-.barOver    { background: #ef4444; }
+.barProtein {
+  background: var(--app-teal);
+}
+.barCarbs {
+  background: #f59e0b;
+}
+.barFat {
+  background: #8b5cf6;
+}
+.barOver {
+  background: #ef4444;
+}
 
 .kcalRow {
   display: flex;

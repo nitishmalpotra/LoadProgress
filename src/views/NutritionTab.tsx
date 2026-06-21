@@ -8,17 +8,17 @@ import styles from '@/views/styles/Nutrition.module.css';
 const todayISO = () => new Date().toISOString().slice(0, 10);
 
 const PROTEIN_SOURCES = [
-  { food: 'Chicken breast',    per: '100g', protein: 31 },
-  { food: 'Canned tuna',       per: '100g', protein: 28 },
-  { food: 'Canned salmon',     per: '100g', protein: 20 },
-  { food: 'Whey protein',      per: '30g scoop', protein: 25 },
-  { food: 'Tempeh',            per: '100g', protein: 19 },
-  { food: 'Eggs (2 large)',    per: '~120g', protein: 13 },
-  { food: 'Cottage cheese',    per: '100g', protein: 11 },
-  { food: 'Edamame',           per: '100g', protein: 11 },
-  { food: 'Greek yogurt',      per: '100g', protein: 10 },
-  { food: 'Lentils (cooked)',  per: '100g', protein: 9  },
-  { food: 'Firm tofu',         per: '100g', protein: 8  },
+  { food: 'Chicken breast', per: '100g', protein: 31 },
+  { food: 'Canned tuna', per: '100g', protein: 28 },
+  { food: 'Canned salmon', per: '100g', protein: 20 },
+  { food: 'Whey protein', per: '30g scoop', protein: 25 },
+  { food: 'Tempeh', per: '100g', protein: 19 },
+  { food: 'Eggs (2 large)', per: '~120g', protein: 13 },
+  { food: 'Cottage cheese', per: '100g', protein: 11 },
+  { food: 'Edamame', per: '100g', protein: 11 },
+  { food: 'Greek yogurt', per: '100g', protein: 10 },
+  { food: 'Lentils (cooked)', per: '100g', protein: 9 },
+  { food: 'Firm tofu', per: '100g', protein: 8 }
 ];
 
 type MacroBarProps = {
@@ -78,9 +78,9 @@ export function NutritionTab() {
   const { proteinG, carbsG, fatG, calorieTarget } = computeMacros(profile);
 
   const loggedProtein = Math.max(0, parseFloat(proteinInput) || 0);
-  const loggedCarbs   = Math.max(0, parseFloat(carbsInput)   || 0);
-  const loggedFat     = Math.max(0, parseFloat(fatInput)     || 0);
-  const loggedKcal    = Math.round(loggedProtein * 4 + loggedCarbs * 4 + loggedFat * 9);
+  const loggedCarbs = Math.max(0, parseFloat(carbsInput) || 0);
+  const loggedFat = Math.max(0, parseFloat(fatInput) || 0);
+  const loggedKcal = Math.round(loggedProtein * 4 + loggedCarbs * 4 + loggedFat * 9);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -200,8 +200,8 @@ export function NutritionTab() {
       <div className={styles.infoCard}>
         <h2>Supplements</h2>
         <p>
-          <strong>Creatine monohydrate</strong> — 3–5g daily, any time, mix with water or juice.
-          The most studied supplement for strength and muscle gain. No loading phase needed.
+          <strong>Creatine monohydrate</strong> — 3–5g daily, any time, mix with water or juice. The
+          most studied supplement for strength and muscle gain. No loading phase needed.
         </p>
         <p style={{ marginTop: 10 }}>
           <strong>Whey protein</strong> — 20–40g per serving. Convenient way to hit daily protein

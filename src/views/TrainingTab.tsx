@@ -9,7 +9,7 @@ import styles from '@/views/styles/Training.module.css';
 type SessionBase = 'Rest' | 'Push' | 'Pull' | 'Lower' | 'Run';
 
 const sessionBase = (type: TrainingRoutine['type']): SessionBase =>
-  (type.includes('+') ? (type.split('+')[0] as SessionBase) : type as SessionBase);
+  type.includes('+') ? (type.split('+')[0] as SessionBase) : (type as SessionBase);
 
 const sessionHasRun = (type: TrainingRoutine['type']): boolean =>
   type === 'Run' || type.endsWith('+Run');
@@ -133,7 +133,16 @@ type AddExerciseFormProps = {
   exercises: Exercise[];
 };
 
-const PLAN_GROUPS = ['Chest', 'Back', 'Legs', 'Shoulders', 'Arms', 'Core', 'Full Body', 'Glutes'] as const;
+const PLAN_GROUPS = [
+  'Chest',
+  'Back',
+  'Legs',
+  'Shoulders',
+  'Arms',
+  'Core',
+  'Full Body',
+  'Glutes'
+] as const;
 const PLAN_GROUP_MEMBERS: Record<string, readonly string[]> = {
   Chest: ['Chest'],
   Back: ['Back', 'Upper Back', 'Lower Back'],
@@ -142,7 +151,7 @@ const PLAN_GROUP_MEMBERS: Record<string, readonly string[]> = {
   Arms: ['Arms', 'Forearms'],
   Core: ['Core'],
   'Full Body': ['Full Body'],
-  Glutes: ['Glutes'],
+  Glutes: ['Glutes']
 };
 
 function AddExerciseForm({ dayId, exercises }: AddExerciseFormProps) {
@@ -156,7 +165,7 @@ function AddExerciseForm({ dayId, exercises }: AddExerciseFormProps) {
     void addExercise(dayId, {
       exerciseId,
       targetSets: Math.max(1, parseInt(sets, 10) || 3),
-      targetReps: Math.max(1, parseInt(reps, 10) || 10),
+      targetReps: Math.max(1, parseInt(reps, 10) || 10)
     });
     setExerciseId('');
     setSets('3');
@@ -181,7 +190,9 @@ function AddExerciseForm({ dayId, exercises }: AddExerciseFormProps) {
             return (
               <optgroup key={group} label={group}>
                 {groupExs.map((ex) => (
-                  <option key={ex.id} value={ex.id}>{ex.name}</option>
+                  <option key={ex.id} value={ex.id}>
+                    {ex.name}
+                  </option>
                 ))}
               </optgroup>
             );
@@ -209,12 +220,7 @@ function AddExerciseForm({ dayId, exercises }: AddExerciseFormProps) {
           value={reps}
           onChange={(e) => setReps(e.target.value)}
         />
-        <button
-          className={styles.addBtn}
-          disabled={!exerciseId}
-          type="button"
-          onClick={handleAdd}
-        >
+        <button className={styles.addBtn} disabled={!exerciseId} type="button" onClick={handleAdd}>
           <Plus size={13} />
           Add
         </button>

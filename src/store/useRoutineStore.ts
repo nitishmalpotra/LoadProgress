@@ -9,32 +9,32 @@ export const DEFAULT_ROUTINE: TrainingRoutine[] = [
     id: '0',
     type: 'Push',
     exercises: [
-      { exerciseId: '10000000-0000-4000-8000-000000000001', targetSets: 4, targetReps: 5 },  // Bench Press
-      { exerciseId: '10000000-0000-4000-8000-00000000000d', targetSets: 3, targetReps: 8 },  // Overhead Press
+      { exerciseId: '10000000-0000-4000-8000-000000000001', targetSets: 4, targetReps: 5 }, // Bench Press
+      { exerciseId: '10000000-0000-4000-8000-00000000000d', targetSets: 3, targetReps: 8 }, // Overhead Press
       { exerciseId: '10000000-0000-4000-8000-00000000000e', targetSets: 3, targetReps: 12 }, // Lateral Raises
-      { exerciseId: '10000000-0000-4000-8000-000000000012', targetSets: 3, targetReps: 12 }, // Tricep Extensions
-    ],
+      { exerciseId: '10000000-0000-4000-8000-000000000012', targetSets: 3, targetReps: 12 } // Tricep Extensions
+    ]
   },
   {
     id: '1',
     type: 'Pull',
     exercises: [
-      { exerciseId: '10000000-0000-4000-8000-000000000007', targetSets: 4, targetReps: 8 },  // Barbell Rows
+      { exerciseId: '10000000-0000-4000-8000-000000000007', targetSets: 4, targetReps: 8 }, // Barbell Rows
       { exerciseId: '10000000-0000-4000-8000-000000000008', targetSets: 3, targetReps: 10 }, // Lat Pulldown
       { exerciseId: '10000000-0000-4000-8000-000000000022', targetSets: 3, targetReps: 15 }, // Face Pulls
-      { exerciseId: '10000000-0000-4000-8000-000000000011', targetSets: 3, targetReps: 12 }, // Bicep Curls
-    ],
+      { exerciseId: '10000000-0000-4000-8000-000000000011', targetSets: 3, targetReps: 12 } // Bicep Curls
+    ]
   },
   { id: '2', type: 'Run', exercises: [] }, // Easy Zone 2
   {
     id: '3',
     type: 'Lower',
     exercises: [
-      { exerciseId: '10000000-0000-4000-8000-000000000009', targetSets: 4, targetReps: 5 },  // Squats
-      { exerciseId: '10000000-0000-4000-8000-00000000000a', targetSets: 3, targetReps: 8 },  // Romanian Deadlift
+      { exerciseId: '10000000-0000-4000-8000-000000000009', targetSets: 4, targetReps: 5 }, // Squats
+      { exerciseId: '10000000-0000-4000-8000-00000000000a', targetSets: 3, targetReps: 8 }, // Romanian Deadlift
       { exerciseId: '10000000-0000-4000-8000-00000000000c', targetSets: 3, targetReps: 10 }, // Leg Press
-      { exerciseId: '10000000-0000-4000-8000-000000000026', targetSets: 3, targetReps: 12 }, // Leg Curls
-    ],
+      { exerciseId: '10000000-0000-4000-8000-000000000026', targetSets: 3, targetReps: 12 } // Leg Curls
+    ]
   },
   {
     id: '4',
@@ -42,11 +42,11 @@ export const DEFAULT_ROUTINE: TrainingRoutine[] = [
     exercises: [
       { exerciseId: '10000000-0000-4000-8000-000000000002', targetSets: 3, targetReps: 10 }, // Incline Dumbbell Press
       { exerciseId: '10000000-0000-4000-8000-000000000004', targetSets: 3, targetReps: 10 }, // Dips
-      { exerciseId: '10000000-0000-4000-8000-00000000000e', targetSets: 3, targetReps: 15 }, // Lateral Raises
-    ],
+      { exerciseId: '10000000-0000-4000-8000-00000000000e', targetSets: 3, targetReps: 15 } // Lateral Raises
+    ]
   },
   { id: '5', type: 'Run', exercises: [] }, // Intervals
-  { id: '6', type: 'Rest', exercises: [] },
+  { id: '6', type: 'Rest', exercises: [] }
 ];
 
 export interface RoutineStoreState {
@@ -57,7 +57,11 @@ export interface RoutineStoreState {
   addExercise: (dayId: string, exercise: RoutineExercise) => Promise<void>;
   removeExercise: (dayId: string, index: number) => Promise<void>;
   moveExercise: (dayId: string, fromIndex: number, toIndex: number) => Promise<void>;
-  updateExercise: (dayId: string, index: number, updates: Partial<RoutineExercise>) => Promise<void>;
+  updateExercise: (
+    dayId: string,
+    index: number,
+    updates: Partial<RoutineExercise>
+  ) => Promise<void>;
 }
 
 function patchDay(
@@ -100,7 +104,7 @@ export const createRoutineStore = (database: LoadProgressDatabase = db) =>
     addExercise: async (dayId, exercise) => {
       const updated = patchDay(get().routine, dayId, (d) => ({
         ...d,
-        exercises: [...d.exercises, exercise],
+        exercises: [...d.exercises, exercise]
       }));
       set({ routine: updated });
       const day = updated.find((d) => d.id === dayId)!;
@@ -110,7 +114,7 @@ export const createRoutineStore = (database: LoadProgressDatabase = db) =>
     removeExercise: async (dayId, index) => {
       const updated = patchDay(get().routine, dayId, (d) => ({
         ...d,
-        exercises: d.exercises.filter((_, i) => i !== index),
+        exercises: d.exercises.filter((_, i) => i !== index)
       }));
       set({ routine: updated });
       const day = updated.find((d) => d.id === dayId)!;
@@ -132,12 +136,12 @@ export const createRoutineStore = (database: LoadProgressDatabase = db) =>
     updateExercise: async (dayId, index, updates) => {
       const updated = patchDay(get().routine, dayId, (d) => ({
         ...d,
-        exercises: d.exercises.map((ex, i) => (i === index ? { ...ex, ...updates } : ex)),
+        exercises: d.exercises.map((ex, i) => (i === index ? { ...ex, ...updates } : ex))
       }));
       set({ routine: updated });
       const day = updated.find((d) => d.id === dayId)!;
       await database.trainingRoutine.put(day);
-    },
+    }
   }));
 
 export const useRoutineStore = createRoutineStore();

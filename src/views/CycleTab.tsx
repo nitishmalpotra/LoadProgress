@@ -18,7 +18,7 @@ const PHASES: Array<{
     days: 'Days ~1–13',
     energy: 'Steadily rising. Estrogen climbs — mood and motivation often improve.',
     training: 'Good window for progressive overload and higher-volume sessions.',
-    nutrition: 'Regular protein and carb targets. Carbs are well-tolerated as activity ramps up.',
+    nutrition: 'Regular protein and carb targets. Carbs are well-tolerated as activity ramps up.'
   },
   {
     id: 'ovulatory',
@@ -26,7 +26,7 @@ const PHASES: Array<{
     days: 'Days ~14–16',
     energy: 'Peak energy and strength for many. Estrogen is at its highest.',
     training: 'Push heavier or test PRs. High-intensity sessions suit this window.',
-    nutrition: 'Maintain protein targets. Prioritize iron-rich foods if appetite dips.',
+    nutrition: 'Maintain protein targets. Prioritize iron-rich foods if appetite dips.'
   },
   {
     id: 'luteal',
@@ -34,7 +34,8 @@ const PHASES: Array<{
     days: 'Days ~17–28',
     energy: 'Progesterone rises; energy may plateau or dip in the second half.',
     training: 'Moderate intensity. Steady-state cardio or skill work if fatigue builds.',
-    nutrition: 'Complex carbs help with cravings. Magnesium from leafy greens and nuts may ease PMS.',
+    nutrition:
+      'Complex carbs help with cravings. Magnesium from leafy greens and nuts may ease PMS.'
   },
   {
     id: 'menstrual',
@@ -42,8 +43,8 @@ const PHASES: Array<{
     days: 'Days ~1–5',
     energy: 'Often lowest energy of the cycle. Rest without guilt.',
     training: 'Easy walks, yoga, or gentle mobility. Skip intense sessions if your body says no.',
-    nutrition: 'Iron-rich foods (red meat, lentils) to replenish. Omega-3s may ease discomfort.',
-  },
+    nutrition: 'Iron-rich foods (red meat, lentils) to replenish. Omega-3s may ease discomfort.'
+  }
 ];
 
 export function CycleTab() {
@@ -75,8 +76,8 @@ export function CycleTab() {
         <p className={styles.eyebrow}>Plan</p>
         <h1 id="cycle-title">Cycle</h1>
         <p>
-          Select your current phase to highlight its guidance. These are qualitative notes — they
-          do not change your calorie or macro targets.
+          Select your current phase to highlight its guidance. These are qualitative notes — they do
+          not change your calorie or macro targets.
         </p>
       </header>
 

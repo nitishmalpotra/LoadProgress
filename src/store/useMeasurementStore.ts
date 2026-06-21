@@ -32,7 +32,7 @@ export const createMeasurementStore = (database: LoadProgressDatabase = db) =>
       await database.measurements.put(entry);
       const rows = await database.measurements.orderBy('date').toArray();
       set({ measurements: rows });
-    },
+    }
   }));
 
 export const useMeasurementStore = createMeasurementStore();

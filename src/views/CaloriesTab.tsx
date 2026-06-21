@@ -20,9 +20,30 @@ export function CaloriesTab() {
   const pF = 100 - pP - pC;
 
   const macros = [
-    { label: 'Protein', grams: proteinG, kcal: proteinKcal, pct: pP, segClass: styles.stackProtein, dotClass: styles.dotProtein },
-    { label: 'Carbs',   grams: carbsG,   kcal: carbsKcal,   pct: pC, segClass: styles.stackCarbs,   dotClass: styles.dotCarbs   },
-    { label: 'Fat',     grams: fatG,      kcal: fatKcal,     pct: pF, segClass: styles.stackFat,     dotClass: styles.dotFat     },
+    {
+      label: 'Protein',
+      grams: proteinG,
+      kcal: proteinKcal,
+      pct: pP,
+      segClass: styles.stackProtein,
+      dotClass: styles.dotProtein
+    },
+    {
+      label: 'Carbs',
+      grams: carbsG,
+      kcal: carbsKcal,
+      pct: pC,
+      segClass: styles.stackCarbs,
+      dotClass: styles.dotCarbs
+    },
+    {
+      label: 'Fat',
+      grams: fatG,
+      kcal: fatKcal,
+      pct: pF,
+      segClass: styles.stackFat,
+      dotClass: styles.dotFat
+    }
   ];
 
   return (
@@ -70,7 +91,9 @@ export function CaloriesTab() {
             <div className={styles.macroRow} key={m.label}>
               <span className={`${styles.dot} ${m.dotClass}`} />
               <span className={styles.macroName}>{m.label}</span>
-              <span className={styles.macroNums}>{m.grams}g · {m.kcal} kcal</span>
+              <span className={styles.macroNums}>
+                {m.grams}g · {m.kcal} kcal
+              </span>
               <span className={styles.macroPct}>{m.pct}%</span>
             </div>
           ))}
@@ -81,9 +104,9 @@ export function CaloriesTab() {
         <div className={styles.infoCard}>
           <h2>Why a small deficit?</h2>
           <p>
-            A {profile.goal === 'lose' ? '500' : '250'} kcal daily deficit creates steady fat
-            loss while preserving the muscle you build in the gym. Larger cuts accelerate muscle
-            loss and tank performance — the small deficit is the efficient path.
+            A {profile.goal === 'lose' ? '500' : '250'} kcal daily deficit creates steady fat loss
+            while preserving the muscle you build in the gym. Larger cuts accelerate muscle loss and
+            tank performance — the small deficit is the efficient path.
           </p>
         </div>
       )}
@@ -92,10 +115,9 @@ export function CaloriesTab() {
         <div className={styles.infoCard}>
           <h2>Recomp reality check</h2>
           <p>
-            Recomposition — losing fat and gaining muscle simultaneously — is real but slow.
-            Expect scale weight to stay roughly flat for weeks while your body composition
-            shifts. Progress shows up in measurements, photos, and how your clothes fit, not
-            the scale.
+            Recomposition — losing fat and gaining muscle simultaneously — is real but slow. Expect
+            scale weight to stay roughly flat for weeks while your body composition shifts. Progress
+            shows up in measurements, photos, and how your clothes fit, not the scale.
           </p>
         </div>
       )}

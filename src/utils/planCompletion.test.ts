@@ -22,7 +22,7 @@ describe('todayRoutineId', () => {
       '2024-01-11', // Thu
       '2024-01-12', // Fri
       '2024-01-13', // Sat
-      '2024-01-14', // Sun
+      '2024-01-14' // Sun
     ];
     const ids = dates.map((d) => todayRoutineId(new Date(d)));
     expect(ids).toEqual(['0', '1', '2', '3', '4', '5', '6']);
@@ -36,13 +36,13 @@ const makeSet = (exerciseId: string): WorkoutSet => ({
   exerciseId,
   reps: 10,
   date: new Date(),
-  isFailureSet: false,
+  isFailureSet: false
 });
 
 describe('derivePlanCompletion', () => {
   const plan = [
     { exerciseId: 'a', targetSets: 3, targetReps: 10 },
-    { exerciseId: 'b', targetSets: 3, targetReps: 8 },
+    { exerciseId: 'b', targetSets: 3, targetReps: 8 }
   ];
 
   it('returns all false when no sets logged', () => {

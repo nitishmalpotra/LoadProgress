@@ -29,7 +29,12 @@ function uniqueMuscleGroups(exercises: Exercise[], exerciseType: ExerciseType | 
   ).sort();
 }
 
-export function AddWorkoutModal({ date, isOpen, onClose, prefilledExerciseId }: AddWorkoutModalProps) {
+export function AddWorkoutModal({
+  date,
+  isOpen,
+  onClose,
+  prefilledExerciseId
+}: AddWorkoutModalProps) {
   const exercises = useWorkoutStore((state) => state.exercises);
   const addWorkoutSet = useWorkoutStore((state) => state.addWorkoutSet);
   const unitSystem = useWorkoutStore((state) => state.unitSystem);
@@ -60,8 +65,8 @@ export function AddWorkoutModal({ date, isOpen, onClose, prefilledExerciseId }: 
     setNotes('');
     setIsFailureSet(false);
     setErrors({});
-  // ponytail: intentionally omit exercises — stable after load; re-running on exercises change mid-open is wrong
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // ponytail: intentionally omit exercises — stable after load; re-running on exercises change mid-open is wrong
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, prefilledExerciseId]);
 
   const muscleGroups = useMemo(

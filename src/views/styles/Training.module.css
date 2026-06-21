@@ -148,7 +148,9 @@
   color: var(--app-text-secondary);
   font-size: 0.75rem;
   cursor: pointer;
-  transition: background 160ms ease, color 160ms ease;
+  transition:
+    background 160ms ease,
+    color 160ms ease;
 }
 
 .iconBtn:hover:not(:disabled) {

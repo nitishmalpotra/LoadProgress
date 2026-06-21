@@ -7,7 +7,7 @@ const BASE_TABS = [
   { label: 'Calories', path: '/plan/calories' },
   { label: 'Training', path: '/plan/training' },
   { label: 'Nutrition', path: '/plan/nutrition' },
-  { label: 'Guide', path: '/plan/guide' },
+  { label: 'Guide', path: '/plan/guide' }
 ];
 
 const CYCLE_TAB = { label: 'Cycle', path: '/plan/cycle' };

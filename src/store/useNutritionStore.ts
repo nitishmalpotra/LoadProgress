@@ -32,7 +32,7 @@ export const createNutritionStore = (database: LoadProgressDatabase = db) =>
       await database.nutritionLog.put(entry);
       const rows = await database.nutritionLog.orderBy('date').toArray();
       set({ entries: rows });
-    },
+    }
   }));
 
 export const useNutritionStore = createNutritionStore();

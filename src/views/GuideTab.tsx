@@ -7,42 +7,42 @@ const CHECKIN_STEPS = [
   'Review nutrition: did you hit protein targets on most days?',
   'Rate your energy and recovery this week (1–5). Low scores point at sleep or calories.',
   'Run through the decision-trigger table below — make one adjustment at a time.',
-  'Set one focus for next week and note it somewhere visible.',
+  'Set one focus for next week and note it somewhere visible.'
 ];
 
 const DECISION_TRIGGERS: Array<{ condition: string; action: string }> = [
   {
     condition: 'Scale up >0.5 kg/week for 2+ weeks, body fat visibly increasing',
-    action: 'Cut 200 kcal from carbs',
+    action: 'Cut 200 kcal from carbs'
   },
   {
     condition: 'Scale stalled 2–3 weeks, strength declining',
-    action: 'Add 100–150 kcal (carbs on training days first)',
+    action: 'Add 100–150 kcal (carbs on training days first)'
   },
   {
     condition: 'Scale stalled 2–3 weeks, strength holding or improving',
-    action: 'Stay the course — recomp is working; scale will lag',
+    action: 'Stay the course — recomp is working; scale will lag'
   },
   {
     condition: 'Protein consistently below target most days',
-    action: 'Prioritise protein first; add a shake if whole-food sources fall short',
+    action: 'Prioritise protein first; add a shake if whole-food sources fall short'
   },
   {
     condition: 'Energy consistently low throughout the day',
-    action: 'Check sleep quality; try adding 100 kcal of carbs on training days',
+    action: 'Check sleep quality; try adding 100 kcal of carbs on training days'
   },
   {
     condition: 'Strength plateaued 3+ consecutive weeks',
-    action: 'Deload: drop volume ~40% for one week, then return and push',
+    action: 'Deload: drop volume ~40% for one week, then return and push'
   },
   {
     condition: 'Waist/hips unchanged for 4 weeks, scale also flat',
-    action: 'Audit nutrition logging accuracy; consider a 1-week maintenance break',
+    action: 'Audit nutrition logging accuracy; consider a 1-week maintenance break'
   },
   {
     condition: 'Missing 2+ planned sessions per week',
-    action: 'Reduce the routine to what you will actually do — consistency beats perfect',
-  },
+    action: 'Reduce the routine to what you will actually do — consistency beats perfect'
+  }
 ];
 
 const ROADMAP: Array<{ weeks: string; title: string; focus: string[] }> = [
@@ -53,8 +53,8 @@ const ROADMAP: Array<{ weeks: string; title: string; focus: string[] }> = [
       'Establish training consistency — show up, not hero weight.',
       'Learn your true maintenance via scale trends; week 1 noise is high.',
       'Hit protein target most days before fine-tuning carbs or fat.',
-      'Take baseline measurements (waist, hips) on day 1.',
-    ],
+      'Take baseline measurements (waist, hips) on day 1.'
+    ]
   },
   {
     weeks: 'Weeks 5–8',
@@ -63,8 +63,8 @@ const ROADMAP: Array<{ weeks: string; title: string; focus: string[] }> = [
       'First real trend data — apply decision triggers as needed.',
       'Progressive overload should start showing in your training logs.',
       'Scale should be flat or very slightly down; measurements may already shift.',
-      'If nothing has changed, audit one variable at a time.',
-    ],
+      'If nothing has changed, audit one variable at a time.'
+    ]
   },
   {
     weeks: 'Weeks 9–12',
@@ -73,9 +73,9 @@ const ROADMAP: Array<{ weeks: string; title: string; focus: string[] }> = [
       'Adjust calories or macros based on 8 weeks of real trend data.',
       'Consider a 1-week maintenance break to reset hunger hormones.',
       'Compare week 12 measurements to week 1 baseline — the scale may lie; these will not.',
-      'Strength gains are most visible now; use them as the primary progress signal.',
-    ],
-  },
+      'Strength gains are most visible now; use them as the primary progress signal.'
+    ]
+  }
 ];
 
 export function GuideTab() {
@@ -100,8 +100,8 @@ export function GuideTab() {
       <div className={styles.card}>
         <h2>Decision triggers</h2>
         <p className={styles.cardSub}>
-          Make one change at a time, then wait two weeks before changing again.
-          Auto-detection from your weight trend is deferred — check manually for now.
+          Make one change at a time, then wait two weeks before changing again. Auto-detection from
+          your weight trend is deferred — check manually for now.
         </p>
         <div className={styles.tableWrap}>
           <table className={styles.triggerTable}>

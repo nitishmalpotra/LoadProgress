@@ -84,7 +84,13 @@ export function WorkoutTab() {
     const w = parseFloat(quickWeights[ex.exerciseId] ?? '');
     const weight = isNaN(w) || w <= 0 ? undefined : w;
     for (let i = 0; i < ex.targetSets; i++) {
-      await addWorkoutSet({ exerciseId: ex.exerciseId, weight, reps: ex.targetReps, date: new Date(), isFailureSet: false });
+      await addWorkoutSet({
+        exerciseId: ex.exerciseId,
+        weight,
+        reps: ex.targetReps,
+        date: new Date(),
+        isFailureSet: false
+      });
     }
   };
 
@@ -131,7 +137,8 @@ export function WorkoutTab() {
             <p className={styles.restLabel}>Rest day — free logger is still available below.</p>
           ) : todayDay.exercises.length === 0 ? (
             <p className={styles.restLabel}>
-              {todayDay.type.replace('+Run', ' + Run')} session — no exercises planned. Log freely below.
+              {todayDay.type.replace('+Run', ' + Run')} session — no exercises planned. Log freely
+              below.
             </p>
           ) : (
             todayDay.exercises.map((ex, i) => (
@@ -145,7 +152,13 @@ export function WorkoutTab() {
                   </span>
                   <span className={styles.planExerciseMeta}>
                     {ex.targetSets}×{ex.targetReps}
-                    {done[i] && <CheckCircle2 aria-label="Done" className={styles.planExerciseDoneIcon} size={15} />}
+                    {done[i] && (
+                      <CheckCircle2
+                        aria-label="Done"
+                        className={styles.planExerciseDoneIcon}
+                        size={15}
+                      />
+                    )}
                   </span>
                 </div>
                 {!done[i] && (
@@ -159,7 +172,9 @@ export function WorkoutTab() {
                       step="0.5"
                       type="number"
                       value={quickWeights[ex.exerciseId] ?? ''}
-                      onChange={(e) => setQuickWeights((prev) => ({ ...prev, [ex.exerciseId]: e.target.value }))}
+                      onChange={(e) =>
+                        setQuickWeights((prev) => ({ ...prev, [ex.exerciseId]: e.target.value }))
+                      }
                     />
                     <button
                       className={styles.quickLogBtn}
@@ -250,7 +265,13 @@ export function WorkoutTab() {
       </button>
 
       <AddWorkoutModal
-        date={prefilledExerciseId ? new Date() : todayKey === dayKey(selectedDate) ? new Date() : selectedDate}
+        date={
+          prefilledExerciseId
+            ? new Date()
+            : todayKey === dayKey(selectedDate)
+              ? new Date()
+              : selectedDate
+        }
         isOpen={isModalOpen}
         prefilledExerciseId={prefilledExerciseId}
         onClose={() => setIsModalOpen(false)}

@@ -7,7 +7,7 @@ const base = {
   height: 175,
   age: 30,
   activityLevel: 'moderate',
-  goal: 'recomposition',
+  goal: 'recomposition'
 } as const;
 
 describe('computeMacros', () => {

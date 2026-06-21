@@ -47,9 +47,7 @@ describe('useRoutineStore', () => {
   it('days are ordered Mon–Sun (id 0–6) after load', async () => {
     const { store } = await createTestStore();
     await store.getState().loadRoutine();
-    expect(store.getState().routine.map((d) => d.id)).toEqual(
-      ['0', '1', '2', '3', '4', '5', '6']
-    );
+    expect(store.getState().routine.map((d) => d.id)).toEqual(['0', '1', '2', '3', '4', '5', '6']);
   });
 
   it('updateDayType persists to DB', async () => {
@@ -67,7 +65,7 @@ describe('useRoutineStore', () => {
     await store.getState().addExercise('0', {
       exerciseId: 'test-id',
       targetSets: 3,
-      targetReps: 10,
+      targetReps: 10
     });
     expect(store.getState().routine[0].exercises).toHaveLength(before + 1);
     const day = await database.trainingRoutine.get('0');
@@ -100,7 +98,7 @@ describe('useRoutineStore', () => {
     await store.getState().updateExercise('0', 0, {
       targetSets: 5,
       targetReps: 3,
-      note: 'Heavy',
+      note: 'Heavy'
     });
     const ex = store.getState().routine[0].exercises[0];
     expect(ex.targetSets).toBe(5);
@@ -119,7 +117,7 @@ describe('useRoutineStore', () => {
     expect(backup.trainingRoutine).toHaveLength(7);
 
     const file = new File([JSON.stringify(backup)], 'backup.json', {
-      type: 'application/json',
+      type: 'application/json'
     });
     await importBackupFile(file, targetDb);
 

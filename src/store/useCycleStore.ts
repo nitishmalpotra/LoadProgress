@@ -34,7 +34,7 @@ export const createCycleStore = (database: LoadProgressDatabase = db) =>
       const record: CycleState = { id: 'current', phase, updatedAt: new Date().toISOString() };
       await database.cycleState.put(record);
       set({ phase });
-    },
+    }
   }));
 
 export const useCycleStore = createCycleStore();
